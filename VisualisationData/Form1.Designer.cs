@@ -32,6 +32,7 @@
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadDataBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.deleteDataBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,7 +49,8 @@
             // файлToolStripMenuItem
             // 
             this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.downloadDataBtn});
+            this.downloadDataBtn,
+            this.deleteDataBtn});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
             this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.файлToolStripMenuItem.Text = "Файл";
@@ -56,13 +58,20 @@
             // downloadDataBtn
             // 
             this.downloadDataBtn.Name = "downloadDataBtn";
-            this.downloadDataBtn.Size = new System.Drawing.Size(172, 22);
-            this.downloadDataBtn.Text = "Загрузить данные";
+            this.downloadDataBtn.Size = new System.Drawing.Size(180, 22);
+            this.downloadDataBtn.Text = "Загрузить анкету";
             this.downloadDataBtn.Click += new System.EventHandler(this.downloadDataBtn_Click);
             // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "физвоспитание анкета.xlsx";
+            // 
+            // deleteDataBtn
+            // 
+            this.deleteDataBtn.Name = "deleteDataBtn";
+            this.deleteDataBtn.Size = new System.Drawing.Size(180, 22);
+            this.deleteDataBtn.Text = "Удалить анкету";
+            this.deleteDataBtn.Click += new System.EventHandler(this.deleteDataBtn_Click);
             // 
             // Form1
             // 
@@ -86,6 +95,7 @@
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downloadDataBtn;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem deleteDataBtn;
     }
 }
 

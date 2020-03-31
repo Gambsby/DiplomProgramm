@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VisualisationData.Excel
 {
-    class ExcelAnswer
+    public class ExcelAnswer
     {
         public string Id { get; set; }
         public int ProfileNum { get; set; }

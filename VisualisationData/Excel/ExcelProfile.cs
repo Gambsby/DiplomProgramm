@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace VisualisationData.Excel
 {
-    class ExcelProfile
+    public class ExcelProfile
     {
-        public int Id { get; set; }
-        public string Content { get; set; }
-        public string leftLimit { get; set; }
-        public string rightLimit { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public List<ExcelQuestion> Questions { get; set; } = new List<ExcelQuestion>();
     }
 }

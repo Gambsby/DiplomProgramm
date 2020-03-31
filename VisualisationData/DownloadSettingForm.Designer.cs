@@ -31,12 +31,12 @@
             this.chooseInfoSheetCB = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.nextBtn = new System.Windows.Forms.Button();
-            this.correlateProfileDG = new System.Windows.Forms.DataGridView();
-            this.sheetName = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.answer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.profileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.correlateProfileDG)).BeginInit();
+            this.chooseDG = new System.Windows.Forms.DataGridView();
+            this.acceptBtn = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.chooseAnswerSheetDG = new System.Windows.Forms.ComboBox();
+            this.cancelBtn = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.chooseDG)).BeginInit();
             this.SuspendLayout();
             // 
             // chooseInfoSheetCB
@@ -58,7 +58,7 @@
             // 
             // nextBtn
             // 
-            this.nextBtn.Location = new System.Drawing.Point(713, 415);
+            this.nextBtn.Location = new System.Drawing.Point(657, 262);
             this.nextBtn.Name = "nextBtn";
             this.nextBtn.Size = new System.Drawing.Size(75, 23);
             this.nextBtn.TabIndex = 2;
@@ -66,61 +66,72 @@
             this.nextBtn.UseVisualStyleBackColor = true;
             this.nextBtn.Click += new System.EventHandler(this.nextBtn_Click);
             // 
-            // correlateProfileDG
+            // chooseDG
             // 
-            this.correlateProfileDG.AllowUserToAddRows = false;
-            this.correlateProfileDG.AllowUserToDeleteRows = false;
-            this.correlateProfileDG.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.correlateProfileDG.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id,
-            this.profileName,
-            this.answer,
-            this.sheetName});
-            this.correlateProfileDG.Location = new System.Drawing.Point(15, 39);
-            this.correlateProfileDG.Name = "correlateProfileDG";
-            this.correlateProfileDG.ReadOnly = true;
-            this.correlateProfileDG.Size = new System.Drawing.Size(773, 370);
-            this.correlateProfileDG.TabIndex = 3;
+            this.chooseDG.AllowUserToAddRows = false;
+            this.chooseDG.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.chooseDG.Location = new System.Drawing.Point(12, 66);
+            this.chooseDG.Name = "chooseDG";
+            this.chooseDG.Size = new System.Drawing.Size(720, 190);
+            this.chooseDG.TabIndex = 3;
             // 
-            // sheetName
+            // acceptBtn
             // 
-            this.sheetName.HeaderText = "Название листа";
-            this.sheetName.Name = "sheetName";
-            this.sheetName.ReadOnly = true;
+            this.acceptBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.acceptBtn.Location = new System.Drawing.Point(657, 262);
+            this.acceptBtn.Name = "acceptBtn";
+            this.acceptBtn.Size = new System.Drawing.Size(75, 23);
+            this.acceptBtn.TabIndex = 4;
+            this.acceptBtn.Text = "Принять";
+            this.acceptBtn.UseVisualStyleBackColor = true;
+            this.acceptBtn.Visible = false;
+            this.acceptBtn.Click += new System.EventHandler(this.acceptBtn_Click);
             // 
-            // answer
+            // label2
             // 
-            this.answer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.answer.HeaderText = "Возможные ответы";
-            this.answer.Name = "answer";
-            this.answer.ReadOnly = true;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(44, 42);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(249, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Выберите лист с результатами анкетирования:";
             // 
-            // profileName
+            // chooseAnswerSheetDG
             // 
-            this.profileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.profileName.HeaderText = "Название анкеты";
-            this.profileName.Name = "profileName";
-            this.profileName.ReadOnly = true;
+            this.chooseAnswerSheetDG.FormattingEnabled = true;
+            this.chooseAnswerSheetDG.Location = new System.Drawing.Point(302, 39);
+            this.chooseAnswerSheetDG.Name = "chooseAnswerSheetDG";
+            this.chooseAnswerSheetDG.Size = new System.Drawing.Size(121, 21);
+            this.chooseAnswerSheetDG.TabIndex = 5;
             // 
-            // id
+            // cancelBtn
             // 
-            this.id.HeaderText = "Идентификатор";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
+            this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelBtn.Location = new System.Drawing.Point(12, 262);
+            this.cancelBtn.Name = "cancelBtn";
+            this.cancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.cancelBtn.TabIndex = 7;
+            this.cancelBtn.Text = "Отменить";
+            this.cancelBtn.UseVisualStyleBackColor = true;
+            this.cancelBtn.Visible = false;
             // 
             // DownloadSettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.correlateProfileDG);
+            this.ClientSize = new System.Drawing.Size(744, 297);
+            this.Controls.Add(this.cancelBtn);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.chooseAnswerSheetDG);
+            this.Controls.Add(this.acceptBtn);
+            this.Controls.Add(this.chooseDG);
             this.Controls.Add(this.nextBtn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.chooseInfoSheetCB);
             this.Name = "DownloadSettingForm";
             this.Text = "DownloadSettingForm";
             this.Load += new System.EventHandler(this.DownloadSettingForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.correlateProfileDG)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chooseDG)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -131,10 +142,10 @@
         private System.Windows.Forms.ComboBox chooseInfoSheetCB;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button nextBtn;
-        private System.Windows.Forms.DataGridView correlateProfileDG;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn profileName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn answer;
-        private System.Windows.Forms.DataGridViewComboBoxColumn sheetName;
+        private System.Windows.Forms.DataGridView chooseDG;
+        private System.Windows.Forms.Button acceptBtn;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox chooseAnswerSheetDG;
+        private System.Windows.Forms.Button cancelBtn;
     }
 }

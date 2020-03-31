@@ -54,9 +54,9 @@ namespace VisualisationData.Services
             return excelQuestionTypes;
         }
 
-        public static List<ExcelProfile> GetProfiles(string pathToExcelFile, string sheetName, string profileType)
+        public static List<ExcelQuestion> GetQuestions(string pathToExcelFile, string sheetName, string profileType)
         {
-            List<ExcelProfile> excelProfile = new List<ExcelProfile>();
+            List<ExcelQuestion> excelProfile = new List<ExcelQuestion>();
 
             ConnexionExcel ConxObject = new ConnexionExcel(pathToExcelFile);
             var ids = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[0].Value).ToList();
@@ -82,10 +82,10 @@ namespace VisualisationData.Services
                     {
                         throw new Exception("Id is not int");
                     }
-                    ExcelProfile profile;
+                    ExcelQuestion profile;
                     if (leftLimits == null && rightLimits == null)
                     {
-                        profile = new ExcelProfile()
+                        profile = new ExcelQuestion()
                         {
                             Id = id,
                             Content = GetClearString(question[i].ToString()),
@@ -95,7 +95,7 @@ namespace VisualisationData.Services
                     }
                     else
                     {
-                        profile = new ExcelProfile()
+                        profile = new ExcelQuestion()
                         {
                             Id = id,
                             Content = GetClearString(question[i].ToString()),
