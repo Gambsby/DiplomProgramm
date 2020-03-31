@@ -81,7 +81,7 @@ namespace VisualisationData
                     }
             }
 
-            using (profilesfiscContext db = new profilesfiscContext())
+            using (profiletransactionContext db = new profiletransactionContext())
             {
                 using (var transaction = db.Database.BeginTransaction())
                 {
@@ -89,88 +89,76 @@ namespace VisualisationData
                     {
                         foreach (var profile in ProfilesListContent)
                         {
+                            Profile profileToDB = null;
+                            Questiontype typeToDB = null;
+                            List<Answer> answersToDB = null;
+                            List<QuestionAnswer> questionAnswersToDB = null;
+
                             #region Add Profiles
-                            var profileInDB = db.Profile.SingleOrDefault(p => p.Name == profile.Name);
-                            if (profileInDB == null)
+                            if (db.Profile.SingleOrDefault(p => p.Name == profile.Name) == null)
                             {
-                                Profile profileToDB = new Profile { Name = profile.Name };
-                                db.Profile.Add(profileToDB);
-                                db.SaveChanges();
+                                profileToDB = new Profile { Name = profile.Name };
+                            }
+                            else
+                            {
+                                throw new Exception("Анкета с таким названием уже существует: " + profile.Name);
                             }
                             #endregion
 
                             #region Add QuestionsType
-                            var typeInDB = db.Questiontype.SingleOrDefault(t => t.Type == profile.Type);
-                            if (typeInDB == null)
+                            typeToDB = db.Questiontype.SingleOrDefault(t => t.Type == profile.Type);
+                            if (typeToDB == null)
                             {
-                                Questiontype typeToDB = new Questiontype { Type = profile.Type };
-                                db.Questiontype.Add(typeToDB);
-                                db.SaveChanges();
+                                typeToDB = new Questiontype { Type = profile.Type };
                             }
                             #endregion
 
                             #region Add Answers
                             List<string> answers = GetAnswers(InfoListContent, profile);
+                            answersToDB = new List<Answer>();
                             foreach (var answerItem in answers)
                             {
-                                var answerInDB = db.Answer.SingleOrDefault(a => a.Content == answerItem);
-                                if (answerInDB == null)
-                                {
-                                    Answer answerToDB = new Answer { Content = answerItem };
-                                    db.Answer.Add(answerToDB);
-                                    db.SaveChanges();
-                                }
+                                answersToDB.Add(new Answer { Content = answerItem, Profile = profileToDB });
                             }
+                            db.Answer.AddRange(answersToDB.ToArray());
                             #endregion
 
-                            #region Add Questions
+                            db.SaveChanges();
+
                             foreach (var questionItem in profile.Questions)
                             {
                                 Limits limitsToDB = null;
-                                typeInDB = db.Questiontype.SingleOrDefault(t => t.Type == profile.Type);
-                                Question questionInDB;
-                                if (typeInDB.Type == "range")
+                                if (typeToDB.Type == "range")
                                 {
-                                    limitsToDB = new Limits { Start = questionItem.leftLimit, End = questionItem.rightLimit };
-                                    questionInDB = db.Question.SingleOrDefault(q => q.Content == questionItem.Content && q.Limits.Start == limitsToDB.Start && q.Limits.End == limitsToDB.End);
-                                }
-                                else
-                                {
-                                    questionInDB = db.Question.SingleOrDefault(q => q.Content == questionItem.Content);
+                                    limitsToDB = new Limits { Start = questionItem.leftLimit, End = questionItem.rightLimit, Profile = profileToDB };
                                 }
 
-                                if (questionInDB == null)
-                                {
-                                    profileInDB = db.Profile.SingleOrDefault(p => p.Name == profile.Name);
-                                    Question questionToDb = new Question
-                                    {
-                                        Content = questionItem.Content,
-                                        Profile = profileInDB,
-                                        SerialNumber = questionItem.Id,
-                                        Type = typeInDB,
-                                        Limits = limitsToDB
-                                    };
+                                Question questionToDB = new Question 
+                                { 
+                                    Content = questionItem.Content, 
+                                    SerialNumber = questionItem.Id, 
+                                    Profile = profileToDB, 
+                                    Type = typeToDB, 
+                                    Limits = limitsToDB 
+                                };
 
-                                    foreach (var answerItem in answers)
-                                    {
-                                        var answerToDB = db.Answer.SingleOrDefault(a => a.Content == answerItem);
-                                        QuestionAnswer questionAnswerToDB = new QuestionAnswer { Question = questionToDb, Answer = answerToDB };
-                                        db.QuestionAnswer.Add(questionAnswerToDB);
-                                        db.SaveChanges();
-                                    }
+                                questionAnswersToDB = new List<QuestionAnswer>();
+                                foreach (var answerItem in answersToDB)
+                                {
+                                    questionAnswersToDB.Add(new QuestionAnswer { Question = questionToDB, Answer = answerItem });
                                 }
+                                db.QuestionAnswer.AddRange(questionAnswersToDB.ToArray());
                             }
-                            #endregion
 
+                            db.SaveChanges();
                         }
 
-                        db.SaveChanges();
                         transaction.Commit();
                     }
                     catch (Exception ex)
                     {
-
                         transaction.Rollback();
+                        MessageBox.Show(ex.ToString());
                     }
                 }
             }
@@ -178,7 +166,7 @@ namespace VisualisationData
 
         private void deleteDataBtn_Click(object sender, EventArgs e)
         {
-            using (profilesfiscContext db = new profilesfiscContext())
+            using (profiletransactionContext db = new profiletransactionContext())
             {
                 List<Profile> deleteProfiles;
                 var profilesInDB = db.Profile.Select(p => p).ToList();
@@ -189,7 +177,11 @@ namespace VisualisationData
                     case DialogResult.OK:
                         {
                             deleteProfiles = deleteSettingForm.deleteProfiles;
-                            //Тут должно быть удаление
+                            foreach (var deleteProfilesItem in deleteProfiles)
+                            {
+                                db.Profile.Remove(deleteProfilesItem);
+                            }
+                            db.SaveChanges();
                             break;
                         }
                     case DialogResult.Cancel:

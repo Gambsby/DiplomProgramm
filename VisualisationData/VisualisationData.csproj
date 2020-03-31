@@ -334,7 +334,7 @@
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Limits.cs" />
     <Compile Include="Models\Profile.cs" />
-    <Compile Include="Models\profilesfiscContext.cs" />
+    <Compile Include="Models\profiletransactionContext.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionAnswer.cs" />
     <Compile Include="Models\Questioned.cs" />

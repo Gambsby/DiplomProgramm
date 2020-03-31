@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace VisualisationData.Models
 {
-    public partial class profilesfiscContext : DbContext
+    public partial class profiletransactionContext : DbContext
     {
-        public profilesfiscContext()
+        public profiletransactionContext()
         {
         }
 
-        public profilesfiscContext(DbContextOptions<profilesfiscContext> options)
+        public profiletransactionContext(DbContextOptions<profiletransactionContext> options)
             : base(options)
         {
         }
@@ -29,7 +29,7 @@ namespace VisualisationData.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=localhost;port=3306;user=mysql;password=mysql;database=profilesfisc", x => x.ServerVersion("5.6.41-mysql"));
+                optionsBuilder.UseMySql("server=localhost;port=3306;user=mysql;password=mysql;database=profiletransaction", x => x.ServerVersion("5.6.41-mysql"));
             }
         }
 
@@ -39,9 +39,8 @@ namespace VisualisationData.Models
             {
                 entity.ToTable("answer");
 
-                entity.HasIndex(e => e.Content)
-                    .HasName("Content")
-                    .IsUnique();
+                entity.HasIndex(e => e.ProfileId)
+                    .HasName("profile_id");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -52,11 +51,23 @@ namespace VisualisationData.Models
                     .HasColumnType("varchar(128)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.ProfileId)
+                    .HasColumnName("profile_id")
+                    .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Profile)
+                    .WithMany(p => p.Answer)
+                    .HasForeignKey(d => d.ProfileId)
+                    .HasConstraintName("answer_ibfk_1");
             });
 
             modelBuilder.Entity<Limits>(entity =>
             {
                 entity.ToTable("limits");
+
+                entity.HasIndex(e => e.ProfileId)
+                    .HasName("profile_id");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -69,12 +80,21 @@ namespace VisualisationData.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
+                entity.Property(e => e.ProfileId)
+                    .HasColumnName("profile_id")
+                    .HasColumnType("int(11)");
+
                 entity.Property(e => e.Start)
                     .IsRequired()
                     .HasColumnName("start")
                     .HasColumnType("text")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
+
+                entity.HasOne(d => d.Profile)
+                    .WithMany(p => p.Limits)
+                    .HasForeignKey(d => d.ProfileId)
+                    .HasConstraintName("limits_ibfk_1");
             });
 
             modelBuilder.Entity<Profile>(entity =>
@@ -102,10 +122,10 @@ namespace VisualisationData.Models
                 entity.ToTable("question");
 
                 entity.HasIndex(e => e.LimitsId)
-                    .HasName("limits_id");
+                    .HasName("question_ibfk_3");
 
                 entity.HasIndex(e => e.ProfileId)
-                    .HasName("profile_id");
+                    .HasName("question_ibfk_1");
 
                 entity.HasIndex(e => e.TypeId)
                     .HasName("type_id");
@@ -140,12 +160,12 @@ namespace VisualisationData.Models
                 entity.HasOne(d => d.Limits)
                     .WithMany(p => p.Question)
                     .HasForeignKey(d => d.LimitsId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("question_ibfk_3");
 
                 entity.HasOne(d => d.Profile)
                     .WithMany(p => p.Question)
                     .HasForeignKey(d => d.ProfileId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("question_ibfk_1");
 
                 entity.HasOne(d => d.Type)
@@ -163,7 +183,7 @@ namespace VisualisationData.Models
                     .HasName("answer_id");
 
                 entity.HasIndex(e => e.QuestionId)
-                    .HasName("question_id");
+                    .HasName("question_answer_ibfk_2");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -180,13 +200,11 @@ namespace VisualisationData.Models
                 entity.HasOne(d => d.Answer)
                     .WithMany(p => p.QuestionAnswer)
                     .HasForeignKey(d => d.AnswerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("question_answer_ibfk_1");
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.QuestionAnswer)
                     .HasForeignKey(d => d.QuestionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("question_answer_ibfk_2");
             });
 
@@ -235,10 +253,10 @@ namespace VisualisationData.Models
                 entity.ToTable("result");
 
                 entity.HasIndex(e => e.QuestionAnswerId)
-                    .HasName("question_answer_id");
+                    .HasName("result_ibfk_2");
 
                 entity.HasIndex(e => e.QuestionedId)
-                    .HasName("questioned_id");
+                    .HasName("result_ibfk_1");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -255,13 +273,11 @@ namespace VisualisationData.Models
                 entity.HasOne(d => d.QuestionAnswer)
                     .WithMany(p => p.Result)
                     .HasForeignKey(d => d.QuestionAnswerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("result_ibfk_2");
 
                 entity.HasOne(d => d.Questioned)
                     .WithMany(p => p.Result)
                     .HasForeignKey(d => d.QuestionedId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("result_ibfk_1");
             });
 

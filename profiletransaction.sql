@@ -11,13 +11,15 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `answer` (
   `id` int(11) NOT NULL,
-  `Content` varchar(128) NOT NULL
+  `Content` varchar(128) NOT NULL,
+  `profile_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `limits` (
   `id` int(11) NOT NULL,
   `start` text NOT NULL,
-  `end` text NOT NULL
+  `end` text NOT NULL,
+  `profile_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `profile` (
@@ -59,10 +61,11 @@ CREATE TABLE `result` (
 
 ALTER TABLE `answer`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `Content` (`Content`);
+  ADD KEY `profile_id` (`profile_id`);
 
 ALTER TABLE `limits`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `profile_id` (`profile_id`);
 
 ALTER TABLE `profile`
   ADD PRIMARY KEY (`id`),
@@ -118,13 +121,19 @@ ALTER TABLE `result`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 
+ALTER TABLE `answer`
+  ADD CONSTRAINT `answer_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `limits`
+  ADD CONSTRAINT `limits_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE `question`
   ADD CONSTRAINT `question_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `question_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `questiontype` (`id`),
   ADD CONSTRAINT `question_ibfk_3` FOREIGN KEY (`limits_id`) REFERENCES `limits` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `question_answer`
-  ADD CONSTRAINT `question_answer_ibfk_1` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`),
+  ADD CONSTRAINT `question_answer_ibfk_1` FOREIGN KEY (`answer_id`) REFERENCES `answer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `question_answer_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `result`

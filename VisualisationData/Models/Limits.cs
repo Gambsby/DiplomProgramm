@@ -13,7 +13,9 @@ namespace VisualisationData.Models
         public int Id { get; set; }
         public string Start { get; set; }
         public string End { get; set; }
+        public int ProfileId { get; set; }
 
+        public virtual Profile Profile { get; set; }
         public virtual ICollection<Question> Question { get; set; }
     }
 }
