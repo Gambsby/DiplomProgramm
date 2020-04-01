@@ -29,6 +29,7 @@ namespace VisualisationData.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                //optionsBuilder.UseMySql("server=remotemysql.com;port=3306;user=xVpoPVpBoJ;password=e9ji45qzRZ;database=xVpoPVpBoJ", x => x.ServerVersion("5.6.41-mysql"));
                 optionsBuilder.UseMySql("server=localhost;port=3306;user=mysql;password=mysql;database=profiletransaction", x => x.ServerVersion("5.6.41-mysql"));
             }
         }
