@@ -12,6 +12,8 @@ using VisualisationData.Excel;
 using VisualisationData.Services;
 using VisualisationData.Models;
 using System.IO;
+using MySql.Data.MySqlClient;
+using Z.BulkOperations;
 
 namespace VisualisationData
 {
@@ -84,6 +86,7 @@ namespace VisualisationData
                     }
             }
 
+            #region Add Profile
             using (profiletransactionContext db = new profiletransactionContext())
             {
                 using (var transaction = db.Database.BeginTransaction())
@@ -107,7 +110,6 @@ namespace VisualisationData
                             List<Answer> answersToDB = null;
                             List<QuestionAnswer> questionAnswersToDB = null;
 
-                            #region Add Profiles
                             if (db.Profile.SingleOrDefault(p => p.Name == profile.Name) == null)
                             {
                                 profileToDB = new Profile { Name = profile.Name, MainProfile = mainProfileToDB };
@@ -116,17 +118,13 @@ namespace VisualisationData
                             {
                                 throw new Exception("Часть анкеты с таким названием уже существует: " + profile.Name);
                             }
-                            #endregion
 
-                            #region Add QuestionsType
                             typeToDB = db.Questiontype.SingleOrDefault(t => t.Type == profile.Type);
                             if (typeToDB == null)
                             {
                                 typeToDB = new Questiontype { Type = profile.Type };
                             }
-                            #endregion
 
-                            #region Add Answers
                             List<string> answers = GetAnswers(InfoListContent, profile);
                             answers.Add(string.Empty);
                             answersToDB = new List<Answer>();
@@ -135,7 +133,6 @@ namespace VisualisationData
                                 answersToDB.Add(new Answer { Content = answerItem, Profile = profileToDB });
                             }
                             db.Answer.AddRange(answersToDB.ToArray());
-                            #endregion
 
                             db.SaveChanges();
 
@@ -167,7 +164,7 @@ namespace VisualisationData
                             db.SaveChanges();
                         }
 
-                        foreach (var answerItem in AnswerListContent)
+                        /*foreach (var answerItem in AnswerListContent)
                         {
                             var questionedToDB = db.Questioned.SingleOrDefault(q => q.Number == answerItem.Id);
                             if (questionedToDB == null)
@@ -191,7 +188,7 @@ namespace VisualisationData
 
                         }
 
-                        db.SaveChanges();
+                        db.SaveChanges();*/
 
                         transaction.Commit();
                     }
@@ -202,6 +199,56 @@ namespace VisualisationData
                     }
                 }
             }
+            #endregion
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("id");
+            dataTable.Columns.Add("number");
+           
+            foreach (var answerItem in AnswerListContent)
+            {
+                DataRow dataRow = dataTable.NewRow();
+                dataRow["id"] = null;
+                dataRow["number"] = answerItem.Id;
+                dataTable.Rows.Add(dataRow);
+            }
+            dataTable = dataTable.DefaultView.ToTable(true, new string[] { "id", "number" });
+
+            MySqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (var bulk = new BulkOperation(conn))
+            {
+                bulk.DestinationTableName = "questioned";
+
+                bulk.BulkInsert(dataTable);
+            }
+            conn.Close();
+            /*foreach (var answerItem in AnswerListContent)
+                        {
+                            var questionedToDB = db.Questioned.SingleOrDefault(q => q.Number == answerItem.Id);
+                            if (questionedToDB == null)
+                            {
+                                questionedToDB = new Questioned { Number = answerItem.Id };
+                                db.Questioned.Add(questionedToDB);
+                                db.SaveChanges();
+                            }
+                           
+                            var profileName = InfoListContent.SingleOrDefault(i => i.Id == answerItem.ProfileNum).ProfileName;
+                            var profileInDb = db.Profile.SingleOrDefault(p => p.Name == profileName);
+
+                            var questionInDB = db.Question.SingleOrDefault(q => q.SerialNumber == answerItem.QuestionNum && q.ProfileId == profileInDb.Id);
+                            var answerInDB = db.Answer.SingleOrDefault(a => a.Content == answerItem.Answer && a.ProfileId == profileInDb.Id);
+                            
+                            var questionAnswerToDB = db.QuestionAnswer.SingleOrDefault(qa => qa.QuestionId == questionInDB.Id && qa.AnswerId == answerInDB.Id);
+
+                            Result resultToDB = new Result { QuestionAnswer = questionAnswerToDB, Questioned = questionedToDB, Profile = profileInDb };
+                            db.Result.Add(resultToDB);
+                            Application.DoEvents();
+
+                        }
+
+                        db.SaveChanges();*/
+
         }
 
         private void deleteDataBtn_Click(object sender, EventArgs e)

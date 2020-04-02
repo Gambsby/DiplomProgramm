@@ -306,8 +306,13 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Z.BulkOperations, Version=3.0.10.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.BulkOperations.3.0.10\lib\net45\Z.BulkOperations.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBMySQLUtils.cs" />
+    <Compile Include="DBUtils.cs" />
     <Compile Include="DeleteSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
