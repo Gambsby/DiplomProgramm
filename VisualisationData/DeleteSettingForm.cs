@@ -13,9 +13,9 @@ namespace VisualisationData
 {
     public partial class DeleteSettingForm : Form
     {
-        private List<Profile> profiles;
-        public List<Profile> deleteProfiles;
-        public DeleteSettingForm(List<Profile> profiles)
+        private List<MainProfile> profiles;
+        public List<MainProfile> deleteProfiles;
+        public DeleteSettingForm(List<MainProfile> profiles)
         {
             InitializeComponent();
             this.profiles = profiles;
@@ -28,7 +28,7 @@ namespace VisualisationData
 
         private void acceptBtn_Click(object sender, EventArgs e)
         {
-            deleteProfiles = deleteLB.SelectedItems.Cast<Profile>().ToList();
+            deleteProfiles = deleteLB.SelectedItems.Cast<MainProfile>().ToList();
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using VisualisationData.Excel;
 using VisualisationData.Services;
 using VisualisationData.Models;
+using System.IO;
 
 namespace VisualisationData
 {
@@ -64,6 +65,8 @@ namespace VisualisationData
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
             string filePath = openFileDialog.FileName;
+            string fileName = Path.GetFileNameWithoutExtension(openFileDialog.SafeFileName);
+
             DownloadSettingForm downloadSettingForm = new DownloadSettingForm(filePath);
             downloadSettingForm.ShowDialog();
             switch (downloadSettingForm.DialogResult)
@@ -87,6 +90,16 @@ namespace VisualisationData
                 {
                     try
                     {
+                        var mainProfileToDB = db.MainProfile.SingleOrDefault(p => p.Name == fileName);
+                        if (mainProfileToDB == null)
+                        {
+                            mainProfileToDB = new MainProfile { Name = fileName };
+                        }
+                        else
+                        {
+                            throw new Exception("Анкета с таким названием уже существует: " + fileName);
+                        }
+                        
                         foreach (var profile in ProfilesListContent)
                         {
                             Profile profileToDB = null;
@@ -97,11 +110,11 @@ namespace VisualisationData
                             #region Add Profiles
                             if (db.Profile.SingleOrDefault(p => p.Name == profile.Name) == null)
                             {
-                                profileToDB = new Profile { Name = profile.Name };
+                                profileToDB = new Profile { Name = profile.Name, MainProfile = mainProfileToDB };
                             }
                             else
                             {
-                                throw new Exception("Анкета с таким названием уже существует: " + profile.Name);
+                                throw new Exception("Часть анкеты с таким названием уже существует: " + profile.Name);
                             }
                             #endregion
 
@@ -115,6 +128,7 @@ namespace VisualisationData
 
                             #region Add Answers
                             List<string> answers = GetAnswers(InfoListContent, profile);
+                            answers.Add(string.Empty);
                             answersToDB = new List<Answer>();
                             foreach (var answerItem in answers)
                             {
@@ -153,6 +167,32 @@ namespace VisualisationData
                             db.SaveChanges();
                         }
 
+                        foreach (var answerItem in AnswerListContent)
+                        {
+                            var questionedToDB = db.Questioned.SingleOrDefault(q => q.Number == answerItem.Id);
+                            if (questionedToDB == null)
+                            {
+                                questionedToDB = new Questioned { Number = answerItem.Id };
+                                db.Questioned.Add(questionedToDB);
+                                db.SaveChanges();
+                            }
+                           
+                            var profileName = InfoListContent.SingleOrDefault(i => i.Id == answerItem.ProfileNum).ProfileName;
+                            var profileInDb = db.Profile.SingleOrDefault(p => p.Name == profileName);
+
+                            var questionInDB = db.Question.SingleOrDefault(q => q.SerialNumber == answerItem.QuestionNum && q.ProfileId == profileInDb.Id);
+                            var answerInDB = db.Answer.SingleOrDefault(a => a.Content == answerItem.Answer && a.ProfileId == profileInDb.Id);
+                            
+                            var questionAnswerToDB = db.QuestionAnswer.SingleOrDefault(qa => qa.QuestionId == questionInDB.Id && qa.AnswerId == answerInDB.Id);
+
+                            Result resultToDB = new Result { QuestionAnswer = questionAnswerToDB, Questioned = questionedToDB, Profile = profileInDb };
+                            db.Result.Add(resultToDB);
+                            Application.DoEvents();
+
+                        }
+
+                        db.SaveChanges();
+
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -168,9 +208,9 @@ namespace VisualisationData
         {
             using (profiletransactionContext db = new profiletransactionContext())
             {
-                List<Profile> deleteProfiles;
-                var profilesInDB = db.Profile.Select(p => p).ToList();
-                DeleteSettingForm deleteSettingForm = new DeleteSettingForm(profilesInDB);
+                List<MainProfile> deleteProfiles;
+                var mainProfilesInDB = db.MainProfile.Select(p => p).ToList();
+                DeleteSettingForm deleteSettingForm = new DeleteSettingForm(mainProfilesInDB);
                 deleteSettingForm.ShowDialog();
                 switch (deleteSettingForm.DialogResult)
                 {
@@ -179,7 +219,7 @@ namespace VisualisationData
                             deleteProfiles = deleteSettingForm.deleteProfiles;
                             foreach (var deleteProfilesItem in deleteProfiles)
                             {
-                                db.Profile.Remove(deleteProfilesItem);
+                                db.MainProfile.Remove(deleteProfilesItem);
                             }
                             db.SaveChanges();
                             break;

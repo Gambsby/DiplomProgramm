@@ -17,6 +17,7 @@ namespace VisualisationData.Models
 
         public virtual DbSet<Answer> Answer { get; set; }
         public virtual DbSet<Limits> Limits { get; set; }
+        public virtual DbSet<MainProfile> MainProfile { get; set; }
         public virtual DbSet<Profile> Profile { get; set; }
         public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<QuestionAnswer> QuestionAnswer { get; set; }
@@ -29,8 +30,7 @@ namespace VisualisationData.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                //optionsBuilder.UseMySql("server=remotemysql.com;port=3306;user=xVpoPVpBoJ;password=e9ji45qzRZ;database=xVpoPVpBoJ", x => x.ServerVersion("5.6.41-mysql"));
-                optionsBuilder.UseMySql("server=localhost;port=3306;user=mysql;password=mysql;database=profiletransaction", x => x.ServerVersion("5.6.41-mysql"));
+                optionsBuilder.UseMySql("server=remotemysql.com;port=3306;user=xVpoPVpBoJ;password=e9ji45qzRZ;database=xVpoPVpBoJ", x => x.ServerVersion("5.6.41-mysql"));
             }
         }
 
@@ -98,9 +98,9 @@ namespace VisualisationData.Models
                     .HasConstraintName("limits_ibfk_1");
             });
 
-            modelBuilder.Entity<Profile>(entity =>
+            modelBuilder.Entity<MainProfile>(entity =>
             {
-                entity.ToTable("profile");
+                entity.ToTable("main_profile");
 
                 entity.HasIndex(e => e.Name)
                     .HasName("name")
@@ -113,9 +113,41 @@ namespace VisualisationData.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
+                    .HasColumnType("varchar(128)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+            });
+
+            modelBuilder.Entity<Profile>(entity =>
+            {
+                entity.ToTable("profile");
+
+                entity.HasIndex(e => e.MainProfileId)
+                    .HasName("main_profile_id");
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("name")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.MainProfileId)
+                    .HasColumnName("main_profile_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
                     .HasColumnType("varchar(64)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
+
+                entity.HasOne(d => d.MainProfile)
+                    .WithMany(p => p.Profile)
+                    .HasForeignKey(d => d.MainProfileId)
+                    .HasConstraintName("profile_ibfk_1");
             });
 
             modelBuilder.Entity<Question>(entity =>
@@ -253,6 +285,9 @@ namespace VisualisationData.Models
             {
                 entity.ToTable("result");
 
+                entity.HasIndex(e => e.ProfileId)
+                    .HasName("profile_id");
+
                 entity.HasIndex(e => e.QuestionAnswerId)
                     .HasName("result_ibfk_2");
 
@@ -263,6 +298,10 @@ namespace VisualisationData.Models
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.ProfileId)
+                    .HasColumnName("profile_id")
+                    .HasColumnType("int(11)");
+
                 entity.Property(e => e.QuestionAnswerId)
                     .HasColumnName("question_answer_id")
                     .HasColumnType("int(11)");
@@ -270,6 +309,11 @@ namespace VisualisationData.Models
                 entity.Property(e => e.QuestionedId)
                     .HasColumnName("questioned_id")
                     .HasColumnType("int(11)");
+
+                entity.HasOne(d => d.Profile)
+                    .WithMany(p => p.Result)
+                    .HasForeignKey(d => d.ProfileId)
+                    .HasConstraintName("result_ibfk_3");
 
                 entity.HasOne(d => d.QuestionAnswer)
                     .WithMany(p => p.Result)
@@ -279,6 +323,7 @@ namespace VisualisationData.Models
                 entity.HasOne(d => d.Questioned)
                     .WithMany(p => p.Result)
                     .HasForeignKey(d => d.QuestionedId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("result_ibfk_1");
             });
 

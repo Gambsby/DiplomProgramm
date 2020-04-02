@@ -22,9 +22,15 @@ CREATE TABLE `limits` (
   `profile_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `main_profile` (
+  `id` int(11) NOT NULL,
+  `name` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `profile` (
   `id` int(11) NOT NULL,
-  `name` varchar(64) NOT NULL
+  `name` varchar(64) NOT NULL,
+  `main_profile_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `question` (
@@ -55,7 +61,8 @@ CREATE TABLE `question_answer` (
 CREATE TABLE `result` (
   `id` int(11) NOT NULL,
   `questioned_id` int(11) NOT NULL,
-  `question_answer_id` int(11) NOT NULL
+  `question_answer_id` int(11) NOT NULL,
+  `profile_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -67,9 +74,14 @@ ALTER TABLE `limits`
   ADD PRIMARY KEY (`id`),
   ADD KEY `profile_id` (`profile_id`);
 
-ALTER TABLE `profile`
+ALTER TABLE `main_profile`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+
+ALTER TABLE `profile`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `main_profile_id` (`main_profile_id`);
 
 ALTER TABLE `question`
   ADD PRIMARY KEY (`id`),
@@ -92,14 +104,18 @@ ALTER TABLE `question_answer`
 
 ALTER TABLE `result`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `result_ibfk_1` (`questioned_id`),
-  ADD KEY `result_ibfk_2` (`question_answer_id`);
+  ADD KEY `result_ibfk_2` (`question_answer_id`),
+  ADD KEY `profile_id` (`profile_id`),
+  ADD KEY `questioned_id` (`questioned_id`);
 
 
 ALTER TABLE `answer`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `limits`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `main_profile`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `profile`
@@ -127,6 +143,9 @@ ALTER TABLE `answer`
 ALTER TABLE `limits`
   ADD CONSTRAINT `limits_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE `profile`
+  ADD CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`main_profile_id`) REFERENCES `main_profile` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE `question`
   ADD CONSTRAINT `question_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `question_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `questiontype` (`id`),
@@ -137,8 +156,9 @@ ALTER TABLE `question_answer`
   ADD CONSTRAINT `question_answer_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `result`
-  ADD CONSTRAINT `result_ibfk_1` FOREIGN KEY (`questioned_id`) REFERENCES `questioned` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `result_ibfk_2` FOREIGN KEY (`question_answer_id`) REFERENCES `question_answer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `result_ibfk_2` FOREIGN KEY (`question_answer_id`) REFERENCES `question_answer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `result_ibfk_3` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `result_ibfk_4` FOREIGN KEY (`questioned_id`) REFERENCES `questioned` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
