@@ -64,6 +64,12 @@ namespace VisualisationData
 
         private void downloadDataBtn_Click(object sender, EventArgs e)
         {
+            var profilesMap = new Dictionary<int, int>();
+            var questionedsMap = new Dictionary<string, int>();
+            var answersMap = new Dictionary<string, int>();
+            var questionsMap = new Dictionary<string, int>();
+            var questionAnswersMap = new Dictionary<string, int>();
+
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
             string filePath = openFileDialog.FileName;
@@ -132,8 +138,8 @@ namespace VisualisationData
                             {
                                 answersToDB.Add(new Answer { Content = answerItem, Profile = profileToDB });
                             }
-                            db.Answer.AddRange(answersToDB.ToArray());
 
+                            db.Answer.AddRange(answersToDB.ToArray());
                             db.SaveChanges();
 
                             foreach (var questionItem in profile.Questions)
@@ -163,33 +169,6 @@ namespace VisualisationData
 
                             db.SaveChanges();
                         }
-
-                        /*foreach (var answerItem in AnswerListContent)
-                        {
-                            var questionedToDB = db.Questioned.SingleOrDefault(q => q.Number == answerItem.Id);
-                            if (questionedToDB == null)
-                            {
-                                questionedToDB = new Questioned { Number = answerItem.Id };
-                                db.Questioned.Add(questionedToDB);
-                                db.SaveChanges();
-                            }
-                           
-                            var profileName = InfoListContent.SingleOrDefault(i => i.Id == answerItem.ProfileNum).ProfileName;
-                            var profileInDb = db.Profile.SingleOrDefault(p => p.Name == profileName);
-
-                            var questionInDB = db.Question.SingleOrDefault(q => q.SerialNumber == answerItem.QuestionNum && q.ProfileId == profileInDb.Id);
-                            var answerInDB = db.Answer.SingleOrDefault(a => a.Content == answerItem.Answer && a.ProfileId == profileInDb.Id);
-                            
-                            var questionAnswerToDB = db.QuestionAnswer.SingleOrDefault(qa => qa.QuestionId == questionInDB.Id && qa.AnswerId == answerInDB.Id);
-
-                            Result resultToDB = new Result { QuestionAnswer = questionAnswerToDB, Questioned = questionedToDB, Profile = profileInDb };
-                            db.Result.Add(resultToDB);
-                            Application.DoEvents();
-
-                        }
-
-                        db.SaveChanges();*/
-
                         transaction.Commit();
                     }
                     catch (Exception ex)
@@ -214,15 +193,85 @@ namespace VisualisationData
             }
             dataTable = dataTable.DefaultView.ToTable(true, new string[] { "id", "number" });
 
-            MySqlConnection conn = DBUtils.GetDBConnection();
-            conn.Open();
-            using (var bulk = new BulkOperation(conn))
+            try
             {
-                bulk.DestinationTableName = "questioned";
+                MySqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (var bulk = new BulkOperation(conn))
+                {
+                    bulk.DestinationTableName = "questioned";
 
-                bulk.BulkInsert(dataTable);
+                    bulk.BulkInsert(dataTable);
+                }
+                conn.Close();
             }
-            conn.Close();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            using(profiletransactionContext db = new profiletransactionContext())
+            {
+                var questionedsList = db.Questioned.Select(q => q).ToList();
+                questionedsMap = questionedsList.ToDictionary(q => q.Number, q => q.Id, StringComparer.OrdinalIgnoreCase);
+                var answersList = db.Answer.Select(a => a).ToList();
+                answersMap = answersList.ToDictionary(a => a.ProfileId.ToString() + "-" + a.Content, a => a.Id, StringComparer.OrdinalIgnoreCase);
+                var questionsList = db.Question.Select(q => q).ToList();
+                questionsMap = questionsList.ToDictionary(q => q.ProfileId.ToString() + "-" + q.SerialNumber, q => q.Id, StringComparer.OrdinalIgnoreCase);
+
+                var questionAnswersList = db.QuestionAnswer.Select(qa => qa).ToList();
+                questionAnswersMap = questionAnswersList.ToDictionary(qa => qa.AnswerId.ToString() + "-" + qa.QuestionId, qa => qa.Id);
+                var profilesList = db.Profile.Select(p => p).ToList();
+                foreach (var infoItem in InfoListContent)
+                {
+                    var profileId = profilesList.SingleOrDefault(p => p.Name == infoItem.ProfileName).Id;
+                    profilesMap.Add(infoItem.Id, profileId);
+                }
+            }
+
+            DataTable resultsTable = new DataTable();
+            resultsTable.Columns.Add("id");
+            resultsTable.Columns.Add("questioned_id");
+            resultsTable.Columns.Add("question_answer_id");
+            resultsTable.Columns.Add("profile_id");
+
+            using (profiletransactionContext db = new profiletransactionContext())
+            {
+                foreach (var answerItem in AnswerListContent)
+                {
+                    var questionedId = questionedsMap[answerItem.Id];
+                    var profileId = profilesMap[answerItem.ProfileNum];
+                    var answerId = answersMap[profileId.ToString() + "-" + answerItem.Answer];
+                    var questionId = questionsMap[profileId.ToString() + "-" + answerItem.QuestionNum];
+                    var questionAnswerId = questionAnswersMap[answerId.ToString() + "-" + questionId.ToString()];
+                    //var questionAnswerId = db.QuestionAnswer.SingleOrDefault(q => q.QuestionId == questionId && q.AnswerId == answerId).Id;
+
+                    DataRow dataRow = resultsTable.NewRow();
+                    dataRow["id"] = null;
+                    dataRow["questioned_id"] = questionedId;
+                    dataRow["question_answer_id"] = questionAnswerId;
+                    dataRow["profile_id"] = profileId;
+                    resultsTable.Rows.Add(dataRow);
+                }
+            }
+
+            try
+            {
+                MySqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (var bulk = new BulkOperation(conn))
+                {
+                    bulk.DestinationTableName = "result";
+
+                    bulk.BulkInsert(resultsTable);
+                }
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
             /*foreach (var answerItem in AnswerListContent)
                         {
                             var questionedToDB = db.Questioned.SingleOrDefault(q => q.Number == answerItem.Id);
