@@ -14,12 +14,12 @@ namespace VisualisationData.Services
         {
             return Regex.Replace(source, "\\r\\n", " ");
         }
-        
+
         public static List<ExcelQuestionType> GetProfileNames(string pathToExcelFile, string sheetName)
         {
             List<ExcelQuestionType> excelQuestionTypes = new List<ExcelQuestionType>();
 
-            ConnexionExcel ConxObject = new ConnexionExcel(pathToExcelFile);
+            ConnectionExcel ConxObject = new ConnectionExcel(pathToExcelFile);
             var ids = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[0].Value).ToList();
             var profileNames = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[1].Value).ToList();
             var answers = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[5].Value).ToList();
@@ -58,7 +58,7 @@ namespace VisualisationData.Services
         {
             List<ExcelQuestion> excelProfile = new List<ExcelQuestion>();
 
-            ConnexionExcel ConxObject = new ConnexionExcel(pathToExcelFile);
+            ConnectionExcel ConxObject = new ConnectionExcel(pathToExcelFile);
             var ids = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[0].Value).ToList();
             var question = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[1].Value).ToList();
             List<object> leftLimits = null;
@@ -119,7 +119,7 @@ namespace VisualisationData.Services
         {
             List<ExcelAnswer> excelAnswer = new List<ExcelAnswer>();
 
-            ConnexionExcel ConxObject = new ConnexionExcel(pathToExcelFile);
+            ConnectionExcel ConxObject = new ConnectionExcel(pathToExcelFile);
             var ids = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[0].Value).ToList();
             var profileNums = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[1].Value).ToList();
             var questionNums = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[2].Value).ToList();
@@ -152,7 +152,7 @@ namespace VisualisationData.Services
                         Id = ids[i].ToString(),
                         ProfileNum = profileNum,
                         QuestionNum = questionNum,
-                        Answer = answers[i].ToString()
+                        Answer = answers[i].ToString().ToLower()
                     };
                     excelAnswer.Add(answer);
                 }

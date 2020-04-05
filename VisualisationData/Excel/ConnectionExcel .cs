@@ -7,11 +7,11 @@ using LinqToExcel;
 
 namespace VisualisationData.Excel
 {
-    class ConnexionExcel
+    class ConnectionExcel
     {
         private string _pathExcelFile;
         private ExcelQueryFactory _urlConnexion;
-        public ConnexionExcel(string path)
+        public ConnectionExcel(string path)
         {
             this._pathExcelFile = path;
             this._urlConnexion = new ExcelQueryFactory(_pathExcelFile);

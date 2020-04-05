@@ -14,62 +14,138 @@ using VisualisationData.Models;
 using System.IO;
 using MySql.Data.MySqlClient;
 using Z.BulkOperations;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace VisualisationData
 {
     public partial class Form1 : Form
     {
-        private List<ExcelQuestionType> InfoListContent { get; set; }
-        private List<ExcelAnswer> AnswerListContent { get; set; }
-        private List<ExcelProfile> ProfilesListContent { get; set; }
+        private ExcelDocument Document { get; set; }
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private List<string> GetAnswers(List<ExcelQuestionType> infoListContent, ExcelProfile profile)
+        private void BulkWriteToDB(DataTable dataTable, string tableName)
         {
-            string answer = infoListContent.Where(q => q.ProfileName == profile.Name).Select(q => q.Answers).ToList()[0];
-            List<string> answers = new List<string>();
-            switch (profile.Type)
+            try
             {
-                case "range":
-                    {
-                        var matches = Regex.Match(answer, "^от(-?\\d+) *до *(-?\\d+)$");
-                        var a = matches.Groups[1].Value;
-                        int start = Convert.ToInt32(matches.Groups[1].Value);
-                        int end = Convert.ToInt32(matches.Groups[2].Value);
-                        answers = new List<string>();
-                        for (int i = start; i <= end; i++)
-                        {
-                            answers.Add(i.ToString());
-                        }
-                        break;
-                    }
-                case "radio":
-                    {
-                        answers = answer.Split('/').ToList();
-                        break;
-                    }
-                case "checbox":
-                    {
-                        answers = answer.Split(';').ToList();
-                        break;
-                    }
+                
+                MySqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (var bulk = new BulkOperation(conn))
+                {
+                    bulk.DestinationTableName = tableName;
+
+                    bulk.BulkInsert(dataTable);
+                }
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private DataTable GetDataTableQuestioned()
+        {
+            /*var questionedsMap = new Dictionary<string, int>();
+            using (profiletransactionContext db = new profiletransactionContext())
+            {
+                var questionedsList = db.Questioned.Select(q => q).ToList();
+                questionedsMap = questionedsList.ToDictionary(q => q.Number, q => q.Id, StringComparer.OrdinalIgnoreCase);
             }
 
-            return answers;
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("id");
+            dataTable.Columns.Add("number");
+
+            foreach (var answerItem in AnswerListContent)
+            {
+                if (!questionedsMap.ContainsKey(answerItem.Id))
+                {
+                    DataRow dataRow = dataTable.NewRow();
+                    dataRow["id"] = null;
+                    dataRow["number"] = answerItem.Id;
+                    dataTable.Rows.Add(dataRow);
+                    questionedsMap.Add(answerItem.Id, 0);
+                }
+            }
+            //dataTable = dataTable.DefaultView.ToTable(true, new string[] { "id", "number" });
+            return dataTable;*/
+            return null;
         }
+
+        private DataTable GetDataTableResult()//Добавить проверку на наличие такой записи
+        {
+            /*Dictionary<int, int> profilesMap = new Dictionary<int, int>();
+            Dictionary<string, int> questionedsMap = new Dictionary<string, int>();
+            Dictionary<string, int> answersMap = new Dictionary<string, int>();
+            Dictionary<string, int> questionsMap = new Dictionary<string, int>();
+            Dictionary<string, int> questionAnswersMap = new Dictionary<string, int>();
+
+            using (profiletransactionContext db = new profiletransactionContext())
+            {
+                var questionedsList = db.Questioned.Select(q => q).ToList();
+                questionedsMap = questionedsList.ToDictionary(q => q.Number, q => q.Id, StringComparer.OrdinalIgnoreCase);
+
+                var answersList = db.Answer.Select(a => a).ToList();
+                answersMap = answersList.ToDictionary(a => a.ProfileId.ToString() + "-" + a.Content, a => a.Id, StringComparer.OrdinalIgnoreCase);
+
+                var questionsList = db.Question.Select(q => q).ToList();
+                questionsMap = questionsList.ToDictionary(q => q.ProfileId.ToString() + "-" + q.SerialNumber, q => q.Id, StringComparer.OrdinalIgnoreCase);
+
+                var questionAnswersList = db.QuestionAnswer.Select(qa => qa).ToList();
+                questionAnswersMap = questionAnswersList.ToDictionary(qa => qa.AnswerId.ToString() + "-" + qa.QuestionId, qa => qa.Id);
+
+                var profilesList = db.Profile.Select(p => p).ToList();
+                foreach (var infoItem in InfoListContent)
+                {
+                    var profileId = profilesList.SingleOrDefault(p => p.Name == infoItem.ProfileName).Id;
+                    profilesMap.Add(infoItem.Id, profileId);
+                }
+            }
+
+            DataTable resultsTable = new DataTable();
+            resultsTable.Columns.Add("id");
+            resultsTable.Columns.Add("questioned_id");
+            resultsTable.Columns.Add("question_answer_id");
+            resultsTable.Columns.Add("profile_id");
+
+            using (profiletransactionContext db = new profiletransactionContext())
+            {
+                foreach (var answerItem in AnswerListContent)
+                {
+                    var questionedId = questionedsMap[answerItem.Id];
+                    var profileId = profilesMap[answerItem.ProfileNum];
+                    var answerId = answersMap[profileId.ToString() + "-" + answerItem.Answer];
+                    var questionId = questionsMap[profileId.ToString() + "-" + answerItem.QuestionNum];
+                    var questionAnswerId = questionAnswersMap[answerId.ToString() + "-" + questionId.ToString()];
+
+                    DataRow dataRow = resultsTable.NewRow();
+                    dataRow["id"] = null;
+                    dataRow["questioned_id"] = questionedId;
+                    dataRow["question_answer_id"] = questionAnswerId;
+                    dataRow["profile_id"] = profileId;
+                    resultsTable.Rows.Add(dataRow);
+                }
+            }
+
+            return resultsTable;*/
+            return null;
+        }
+
+
+
+
+
 
         private void downloadDataBtn_Click(object sender, EventArgs e)
         {
-            var profilesMap = new Dictionary<int, int>();
-            var questionedsMap = new Dictionary<string, int>();
-            var answersMap = new Dictionary<string, int>();
-            var questionsMap = new Dictionary<string, int>();
-            var questionAnswersMap = new Dictionary<string, int>();
+            /*
 
+            #region Download Data
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
             string filePath = openFileDialog.FileName;
@@ -81,7 +157,6 @@ namespace VisualisationData
             {
                 case DialogResult.OK:
                     {
-                        InfoListContent = downloadSettingForm.infoListContent;
                         AnswerListContent = downloadSettingForm.answerListContent;
                         ProfilesListContent = downloadSettingForm.profilesListContent;
                         break;
@@ -91,8 +166,9 @@ namespace VisualisationData
                         break;
                     }
             }
+            #endregion
 
-            #region Add Profile
+            #region Add Profile Сделано
             using (profiletransactionContext db = new profiletransactionContext())
             {
                 using (var transaction = db.Database.BeginTransaction())
@@ -180,124 +256,17 @@ namespace VisualisationData
             }
             #endregion
 
-            DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("id");
-            dataTable.Columns.Add("number");
-           
-            foreach (var answerItem in AnswerListContent)
-            {
-                DataRow dataRow = dataTable.NewRow();
-                dataRow["id"] = null;
-                dataRow["number"] = answerItem.Id;
-                dataTable.Rows.Add(dataRow);
-            }
-            dataTable = dataTable.DefaultView.ToTable(true, new string[] { "id", "number" });
+            #region Add Questioned Сделано
+            DataTable questionedDataTable = GetDataTableQuestioned();
+            Application.DoEvents();
+            BulkWriteToDB(questionedDataTable, "questioned");
+            #endregion
 
-            try
-            {
-                MySqlConnection conn = DBUtils.GetDBConnection();
-                conn.Open();
-                using (var bulk = new BulkOperation(conn))
-                {
-                    bulk.DestinationTableName = "questioned";
-
-                    bulk.BulkInsert(dataTable);
-                }
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-
-            using(profiletransactionContext db = new profiletransactionContext())
-            {
-                var questionedsList = db.Questioned.Select(q => q).ToList();
-                questionedsMap = questionedsList.ToDictionary(q => q.Number, q => q.Id, StringComparer.OrdinalIgnoreCase);
-                var answersList = db.Answer.Select(a => a).ToList();
-                answersMap = answersList.ToDictionary(a => a.ProfileId.ToString() + "-" + a.Content, a => a.Id, StringComparer.OrdinalIgnoreCase);
-                var questionsList = db.Question.Select(q => q).ToList();
-                questionsMap = questionsList.ToDictionary(q => q.ProfileId.ToString() + "-" + q.SerialNumber, q => q.Id, StringComparer.OrdinalIgnoreCase);
-
-                var questionAnswersList = db.QuestionAnswer.Select(qa => qa).ToList();
-                questionAnswersMap = questionAnswersList.ToDictionary(qa => qa.AnswerId.ToString() + "-" + qa.QuestionId, qa => qa.Id);
-                var profilesList = db.Profile.Select(p => p).ToList();
-                foreach (var infoItem in InfoListContent)
-                {
-                    var profileId = profilesList.SingleOrDefault(p => p.Name == infoItem.ProfileName).Id;
-                    profilesMap.Add(infoItem.Id, profileId);
-                }
-            }
-
-            DataTable resultsTable = new DataTable();
-            resultsTable.Columns.Add("id");
-            resultsTable.Columns.Add("questioned_id");
-            resultsTable.Columns.Add("question_answer_id");
-            resultsTable.Columns.Add("profile_id");
-
-            using (profiletransactionContext db = new profiletransactionContext())
-            {
-                foreach (var answerItem in AnswerListContent)
-                {
-                    var questionedId = questionedsMap[answerItem.Id];
-                    var profileId = profilesMap[answerItem.ProfileNum];
-                    var answerId = answersMap[profileId.ToString() + "-" + answerItem.Answer];
-                    var questionId = questionsMap[profileId.ToString() + "-" + answerItem.QuestionNum];
-                    var questionAnswerId = questionAnswersMap[answerId.ToString() + "-" + questionId.ToString()];
-                    //var questionAnswerId = db.QuestionAnswer.SingleOrDefault(q => q.QuestionId == questionId && q.AnswerId == answerId).Id;
-
-                    DataRow dataRow = resultsTable.NewRow();
-                    dataRow["id"] = null;
-                    dataRow["questioned_id"] = questionedId;
-                    dataRow["question_answer_id"] = questionAnswerId;
-                    dataRow["profile_id"] = profileId;
-                    resultsTable.Rows.Add(dataRow);
-                }
-            }
-
-            try
-            {
-                MySqlConnection conn = DBUtils.GetDBConnection();
-                conn.Open();
-                using (var bulk = new BulkOperation(conn))
-                {
-                    bulk.DestinationTableName = "result";
-
-                    bulk.BulkInsert(resultsTable);
-                }
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-
-            /*foreach (var answerItem in AnswerListContent)
-                        {
-                            var questionedToDB = db.Questioned.SingleOrDefault(q => q.Number == answerItem.Id);
-                            if (questionedToDB == null)
-                            {
-                                questionedToDB = new Questioned { Number = answerItem.Id };
-                                db.Questioned.Add(questionedToDB);
-                                db.SaveChanges();
-                            }
-                           
-                            var profileName = InfoListContent.SingleOrDefault(i => i.Id == answerItem.ProfileNum).ProfileName;
-                            var profileInDb = db.Profile.SingleOrDefault(p => p.Name == profileName);
-
-                            var questionInDB = db.Question.SingleOrDefault(q => q.SerialNumber == answerItem.QuestionNum && q.ProfileId == profileInDb.Id);
-                            var answerInDB = db.Answer.SingleOrDefault(a => a.Content == answerItem.Answer && a.ProfileId == profileInDb.Id);
-                            
-                            var questionAnswerToDB = db.QuestionAnswer.SingleOrDefault(qa => qa.QuestionId == questionInDB.Id && qa.AnswerId == answerInDB.Id);
-
-                            Result resultToDB = new Result { QuestionAnswer = questionAnswerToDB, Questioned = questionedToDB, Profile = profileInDb };
-                            db.Result.Add(resultToDB);
-                            Application.DoEvents();
-
-                        }
-
-                        db.SaveChanges();*/
-
+            #region Add Results
+            DataTable resultDataTable = GetDataTableResult();
+            Application.DoEvents();
+            BulkWriteToDB(resultDataTable, "result");
+            #endregion*/
         }
 
         private void deleteDataBtn_Click(object sender, EventArgs e)
@@ -326,6 +295,163 @@ namespace VisualisationData
                         }
                 }
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            infoDG.MultiSelect = true;
+            /*List<MainProfile> mainProfilesList;
+            using (profiletransactionContext db = new profiletransactionContext())
+            {
+                mainProfilesList = db.MainProfile.OrderBy(p => p.Name).ToList();
+
+                profilesCB.Items.AddRange(mainProfilesList.ToArray());
+                if (profilesCB.Items.Count != 0)
+                {
+                    profilesCB.SelectedIndex = 0;
+                }
+            }*/
+             
+        }
+
+        private void profilesCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
+
+            infoDG.Columns.Clear();
+            infoDG.Rows.Clear();
+
+            infoDG.Columns.Add(CommonService.CreateTextColumn("Номер вопроса", "serielNumber", true));
+            infoDG.Columns.Add(CommonService.CreateTextColumn("Вопрос", "question", true));
+            if (selectedProfile.Type == "range")
+            {
+                infoDG.Columns.Add(CommonService.CreateTextColumn("Левая граница", "leftLimit", true));
+                infoDG.Columns.Add(CommonService.CreateTextColumn("Правая граница", "rightLimit", true));
+            }
+            foreach (var answerItem in selectedProfile.Answers)
+            {
+                infoDG.Columns.Add(CommonService.CreateTextColumn(answerItem, answerItem));
+            }
+            infoDG.Columns.Add(CommonService.CreateTextColumn("Всего", "all"));
+            foreach (var questionItem in selectedProfile.Questions)
+            {
+                if (selectedProfile.Type == "range")
+                {
+                    infoDG.Rows.Add(questionItem.Id, questionItem.Content, questionItem.leftLimit, questionItem.rightLimit);
+                }
+                else
+                {
+                    infoDG.Rows.Add(questionItem.Id, questionItem.Content);
+                }
+
+                int allSumm = 0;
+                foreach (var answerItem in selectedProfile.Answers)
+                {
+                    var countCurrentAnswers = Document.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == questionItem.Id && a.Answer == answerItem).Count();
+                    allSumm += countCurrentAnswers;
+                    infoDG[answerItem, infoDG.RowCount - 1].Value = countCurrentAnswers;
+                }
+                infoDG["all", infoDG.RowCount - 1].Value = allSumm;
+            }
+           
+        }
+
+        private void loadDataBtn_Click(object sender, EventArgs e)
+        {
+            #region Load Data
+            if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filePath = openFileDialog.FileName;
+            string fileName = Path.GetFileNameWithoutExtension(openFileDialog.SafeFileName);
+
+            DownloadSettingForm downloadSettingForm = new DownloadSettingForm(filePath);
+            downloadSettingForm.ShowDialog();
+            switch (downloadSettingForm.DialogResult)
+            {
+                case DialogResult.OK:
+                    {
+                        Document = downloadSettingForm.Document;
+                        MessageBox.Show("Данные успешно загруженны");
+                        break;
+                    }
+                case DialogResult.Cancel:
+                    {
+                        break;
+                    }
+            }
+            #endregion
+
+            profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
+            profilesCB.SelectedIndex = 0;
+        }
+
+        private void columnDiagramBtn_Click(object sender, EventArgs e)
+        {
+            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
+            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
+            {
+                var question = new ExcelQuestion
+                { 
+                    Id = Convert.ToInt32(rowItem.Cells["serielNumber"].Value), 
+                    Content = rowItem.Cells["question"].Value.ToString() 
+                };
+                selectedQuestions.Add(question);
+            }
+            //var selectedQuestion = new ExcelQuestion { 
+            //    Id = Convert.ToInt32(infoDG.SelectedRows[0].Cells["serielNumber"].Value), 
+            //    Content = infoDG.SelectedRows[0].Cells["question"].Value.ToString() 
+            //};
+            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
+
+            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, SeriesChartType.Column);
+            visualisationForm.Show();
+        }
+
+        private void barDiagramBtn_Click(object sender, EventArgs e)
+        {
+            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
+            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
+            {
+                var question = new ExcelQuestion
+                {
+                    Id = Convert.ToInt32(rowItem.Cells["serielNumber"].Value),
+                    Content = rowItem.Cells["question"].Value.ToString()
+                };
+                selectedQuestions.Add(question);
+            }
+            //var selectedQuestion = new ExcelQuestion
+            //{
+            //    Id = Convert.ToInt32(infoDG.SelectedRows[0].Cells["serielNumber"].Value),
+            //    Content = infoDG.SelectedRows[0].Cells["question"].Value.ToString()
+            //};
+            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
+
+            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, SeriesChartType.Bar);
+            visualisationForm.Show();
+        }
+
+        private void pieDiagramBtn_Click(object sender, EventArgs e)
+        {
+            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
+            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
+            {
+                var question = new ExcelQuestion
+                {
+                    Id = Convert.ToInt32(rowItem.Cells["serielNumber"].Value),
+                    Content = rowItem.Cells["question"].Value.ToString()
+                };
+                selectedQuestions.Add(question);
+            }
+            //var selectedQuestion = new ExcelQuestion
+            //{
+            //    Id = Convert.ToInt32(infoDG.SelectedRows[0].Cells["serielNumber"].Value),
+            //    Content = infoDG.SelectedRows[0].Cells["question"].Value.ToString()
+            //};
+            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
+
+            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, SeriesChartType.Pie);
+            visualisationForm.Show();
         }
     }
 }

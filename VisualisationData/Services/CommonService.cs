@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace VisualisationData.Services
 {
     class CommonService
     {
+
         public static DataGridViewTextBoxColumn CreateTextColumn(string nameCol, string nameVar, bool fill = false, bool readOnly = true)
         {
             DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
@@ -49,6 +51,85 @@ namespace VisualisationData.Services
             }
 
             return column;
+        }
+
+        public static SeriesChartType? ConvertToSeriesChartType(string source)
+        {
+            switch (source)
+            {
+                case "Area":
+                    {
+                        return SeriesChartType.Area;
+                    }
+                case "SplineArea":
+                    {
+                        return SeriesChartType.SplineArea;
+                    }
+                case "StackedArea":
+                    {
+                        return SeriesChartType.StackedArea;
+                    }
+                case "StackedArea100":
+                    {
+                        return SeriesChartType.StackedArea100;
+                    }
+                case "Pie":
+                    {
+                        return SeriesChartType.Pie;
+                    }
+                case "Doughnut":
+                    {
+                        return SeriesChartType.Doughnut;
+                    }
+                case "Bar":
+                    {
+                        return SeriesChartType.Bar;
+                    }
+                case "StackedBar":
+                    {
+                        return SeriesChartType.StackedBar;
+                    }
+                case "StackedBar100":
+                    {
+                        return SeriesChartType.StackedBar100;
+                    }
+                case "Column":
+                    {
+                        return SeriesChartType.Column;
+                    }
+                case "StackedColumn":
+                    {
+                        return SeriesChartType.StackedColumn;
+                    }
+                case "StackedColumn100":
+                    {
+                        return SeriesChartType.StackedColumn100;
+                    }
+                case "Line":
+                    {
+                        return SeriesChartType.Line;
+                    }
+                case "FastLine":
+                    {
+                        return SeriesChartType.FastLine;
+                    }
+                case "Spline":
+                    {
+                        return SeriesChartType.Spline;
+                    }
+                case "FastPoint":
+                    {
+                        return SeriesChartType.FastPoint;
+                    }
+                case "Point":
+                    {
+                        return SeriesChartType.Point;
+                    }
+                default:
+                    {
+                        return null;
+                    }
+            }
         }
     }
 }
