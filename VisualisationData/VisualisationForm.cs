@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using VisualisationData.Excel;
+using VisualisationData.SettingsForm;
 
 namespace VisualisationData
 {
@@ -45,10 +46,86 @@ namespace VisualisationData
             }
         }
 
-        private void settingDiagramBtn_Click(object sender, EventArgs e)
+        private void BGSettingBtn_Click(object sender, EventArgs e)
         {
-            SettingChartDataWindow settingChartDataForm = new SettingChartDataWindow(visualChart);
-            settingChartDataForm.Show();
+            AppearanceSettingForm appearanceSettingForm = new AppearanceSettingForm(visualChart, "Настройка фона", "background");
+            appearanceSettingForm.Show();
+        }
+
+        private void diagramBGSettingRtn_Click(object sender, EventArgs e)
+        {
+            AppearanceSettingForm appearanceSettingForm = new AppearanceSettingForm(visualChart, "Настройка фона", "diagram");
+            appearanceSettingForm.Show();
+        }
+
+        private void borderSettingBtn_Click(object sender, EventArgs e)
+        {
+            AppearanceSettingForm appearanceSettingForm = new AppearanceSettingForm(visualChart, "Настройка рамки", "border");
+            appearanceSettingForm.Show();
+        }
+
+        private void signatureSettingBtn_Click(object sender, EventArgs e)
+        {
+            if (signatureSettingBtn.Checked)
+            {
+                signatureSettingBtn.Checked = false;
+            }
+            else
+            {
+                signatureSettingBtn.Checked = true;
+            }
+            foreach (var seriesItem in visualChart.Series)
+            {
+                seriesItem.IsValueShownAsLabel = signatureSettingBtn.Checked;
+            }
+        }
+
+        private void mode3DSettingBtn_Click(object sender, EventArgs e)
+        {
+            if (mode3DSettingBtn.Checked)
+            {
+                mode3DSettingBtn.Checked = false;
+            }
+            else
+            {
+                mode3DSettingBtn.Checked = true;
+            }
+            visualChart.ChartAreas[0].Area3DStyle.Enable3D = mode3DSettingBtn.Checked;
+        }
+
+        private void diagramTypeSettingBtn_Click(object sender, EventArgs e)
+        {
+            DataSettingForm dataSettingForm = new DataSettingForm(visualChart, "Настройка типа диаграммы", "diagramType");
+            dataSettingForm.Show();
+        }
+
+        private void titleSettingBtn_Click(object sender, EventArgs e)
+        {
+            string title = string.Empty;
+            if (visualChart.Titles.Count > 0)
+            {
+                title = visualChart.Titles[0].Text;
+            }
+            TextDialog textDialog = new TextDialog("Введите желаемый заголовок:", title);
+            textDialog.ShowDialog();
+            if (textDialog.DialogResult == DialogResult.OK)
+            {
+                visualChart.Titles.Clear();
+                visualChart.Titles.Add(textDialog.Result);
+            }
+            
+        }
+
+        private void seriesSettingBtn_Click(object sender, EventArgs e)
+        {
+            DataSettingForm dataSettingForm = new DataSettingForm(visualChart, "Настройка цвета серии данных", "seriesColor");
+            dataSettingForm.Show();
+        }
+
+        private void pointsSettingBtn_Click(object sender, EventArgs e)
+        {
+            DataSettingForm dataSettingForm = new DataSettingForm(visualChart, "Настройка цвета элементов серии", "pointColor");
+            dataSettingForm.Show();
         }
     }
 }

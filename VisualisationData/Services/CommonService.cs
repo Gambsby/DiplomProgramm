@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Drawing;
 
 namespace VisualisationData.Services
 {
@@ -130,6 +131,17 @@ namespace VisualisationData.Services
                         return null;
                     }
             }
+        }
+
+        public static Color ChooseColor(ColorDialog colorDialog, Color oldColor)
+        {
+            colorDialog.FullOpen = true;
+            colorDialog.Color = oldColor;
+
+            if (colorDialog.ShowDialog() == DialogResult.Cancel)
+                return oldColor;
+
+            return colorDialog.Color;
         }
     }
 }

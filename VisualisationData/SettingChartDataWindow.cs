@@ -141,12 +141,24 @@ namespace VisualisationData
             #endregion
 
             #region Series Color Setting
-            var selectedSeries = seriesCB.SelectedItem.ToString();
-            visualChart.Series.FindByName(selectedSeries).Color = seriesColorBtn.BackColor;
+            visualChart.Series.FindByName(seriesCB.SelectedItem.ToString()).Color = seriesColorBtn.BackColor;
             #endregion
 
             #region Points Color Setting
-
+            if (pointColorCheck.Checked)
+            {
+                var selectedPointLabel = pointsCB.SelectedItem.ToString();
+                var selectedSeries = visualChart.Series.FindByName(seriesCB.SelectedItem.ToString());
+                DataPoint selectedPoint = null;
+                foreach (var pointItem in selectedSeries.Points)
+                {
+                    if (pointItem.AxisLabel == selectedPointLabel)
+                    {
+                        selectedPoint = pointItem;
+                    }
+                }
+                selectedPoint.Color = pointColorBtn.BackColor;
+            }
             #endregion
         }
 
@@ -216,24 +228,44 @@ namespace VisualisationData
             #endregion
 
             #region Points Color Setting
-            var selectedSeries = visualChart.Series.FindByName(seriesCB.SelectedItem.ToString());
+            /*var selectedSeries = visualChart.Series.FindByName(seriesCB.SelectedItem.ToString());
             foreach (var pointItem in selectedSeries.Points)
             {
                 pointsCB.Items.Add(pointItem.AxisLabel);
             }
-            pointsCB.SelectedIndex = 0;
+            pointsCB.SelectedIndex = 0;*/
             #endregion
-        }
-
-        private void pointsCB_SelectedIndexChanged(object sender, EventArgs e)
-        {
-           
         }
 
         private void seriesCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selectedSeries = seriesCB.SelectedItem.ToString();
-            seriesColorBtn.BackColor = visualChart.Series.FindByName(selectedSeries).Color;
+            var selectedSeries = visualChart.Series.FindByName(seriesCB.SelectedItem.ToString());
+            seriesColorBtn.BackColor = selectedSeries.Color;
+
+            if (pointColorCheck.Checked)
+            {
+                foreach (var pointItem in selectedSeries.Points)
+                {
+                    pointsCB.Items.Add(pointItem.AxisLabel);
+                }
+                pointsCB.SelectedIndex = 0;
+            }
+        }
+
+        private void pointsCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedPointLabel = pointsCB.SelectedItem.ToString();
+            var selectedSeries = visualChart.Series.FindByName(seriesCB.SelectedItem.ToString());
+            DataPoint selectedPoint = null;
+            foreach (var pointItem in selectedSeries.Points)
+            {
+                if (pointItem.AxisLabel == selectedPointLabel)
+                {
+                    selectedPoint = pointItem;
+                }
+            }
+
+            pointColorBtn.BackColor = selectedPoint.Color;
         }
 
         private void BGColorBtn_Click(object sender, EventArgs e)
@@ -266,6 +298,11 @@ namespace VisualisationData
             seriesColorBtn.BackColor = ChooseColor(seriesColorBtn.BackColor);
         }
 
+        private void pointColorBtn_Click(object sender, EventArgs e)
+        {
+            pointColorBtn.BackColor = ChooseColor(pointColorBtn.BackColor);
+        }
+
         private void closeBtn_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -292,6 +329,12 @@ namespace VisualisationData
                 this.toolTip1.Hide(seriesCB);
             }
             e.DrawFocusRectangle();
+        }
+
+        private void poinColorCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            pointColorBtn.Enabled = pointColorCheck.Checked;
+            pointsCB.Enabled = pointColorCheck.Checked;
         }
     }
 }

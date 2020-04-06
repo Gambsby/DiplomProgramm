@@ -312,6 +312,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SettingsForm\AppearanceSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsForm\AppearanceSettingForm.Designer.cs">
+      <DependentUpon>AppearanceSettingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DBMySQLUtils.cs" />
     <Compile Include="DBUtils.cs" />
     <Compile Include="DeleteSettingForm.cs">
@@ -358,12 +364,27 @@
     <Compile Include="SettingChartDataWindow.designer.cs">
       <DependentUpon>SettingChartDataWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsForm\DataSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsForm\DataSettingForm.Designer.cs">
+      <DependentUpon>DataSettingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsForm\TextDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsForm\TextDialog.Designer.cs">
+      <DependentUpon>TextDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="VisualisationForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="VisualisationForm.Designer.cs">
       <DependentUpon>VisualisationForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SettingsForm\AppearanceSettingForm.resx">
+      <DependentUpon>AppearanceSettingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DeleteSettingForm.resx">
       <DependentUpon>DeleteSettingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -384,6 +405,12 @@
     </Compile>
     <EmbeddedResource Include="SettingChartDataWindow.resx">
       <DependentUpon>SettingChartDataWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsForm\DataSettingForm.resx">
+      <DependentUpon>DataSettingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsForm\TextDialog.resx">
+      <DependentUpon>TextDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VisualisationForm.resx">
       <DependentUpon>VisualisationForm.cs</DependentUpon>

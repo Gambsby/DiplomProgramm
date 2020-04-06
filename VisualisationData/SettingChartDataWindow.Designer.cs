@@ -59,16 +59,17 @@
             this.label11 = new System.Windows.Forms.Label();
             this.borderColorBtn = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.pointColorBtn = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.pointsCB = new System.Windows.Forms.ComboBox();
             this.seriesColorBtn = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.titleTB = new System.Windows.Forms.TextBox();
             this.mode3DCheck = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.pointColorBtn = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.pointsCB = new System.Windows.Forms.ComboBox();
+            this.pointColorCheck = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -345,6 +346,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.pointColorCheck);
             this.groupBox4.Controls.Add(this.pointColorBtn);
             this.groupBox4.Controls.Add(this.label14);
             this.groupBox4.Controls.Add(this.label15);
@@ -365,6 +367,44 @@
             this.groupBox4.TabIndex = 15;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Настройка данных";
+            // 
+            // pointColorBtn
+            // 
+            this.pointColorBtn.Enabled = false;
+            this.pointColorBtn.Location = new System.Drawing.Point(117, 221);
+            this.pointColorBtn.Name = "pointColorBtn";
+            this.pointColorBtn.Size = new System.Drawing.Size(20, 20);
+            this.pointColorBtn.TabIndex = 21;
+            this.pointColorBtn.UseVisualStyleBackColor = true;
+            this.pointColorBtn.Click += new System.EventHandler(this.pointColorBtn_Click);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(27, 225);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(84, 13);
+            this.label14.TabIndex = 20;
+            this.label14.Text = "Цвет элемента";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(19, 197);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(92, 13);
+            this.label15.TabIndex = 19;
+            this.label15.Text = "Элементы серии";
+            // 
+            // pointsCB
+            // 
+            this.pointsCB.Enabled = false;
+            this.pointsCB.FormattingEnabled = true;
+            this.pointsCB.Location = new System.Drawing.Point(117, 194);
+            this.pointsCB.Name = "pointsCB";
+            this.pointsCB.Size = new System.Drawing.Size(271, 21);
+            this.pointsCB.TabIndex = 18;
+            this.pointsCB.SelectedIndexChanged += new System.EventHandler(this.pointsCB_SelectedIndexChanged);
             // 
             // seriesColorBtn
             // 
@@ -410,40 +450,16 @@
             this.mode3DCheck.Text = "Включить 3D режим";
             this.mode3DCheck.UseVisualStyleBackColor = true;
             // 
-            // pointColorBtn
+            // pointColorCheck
             // 
-            this.pointColorBtn.Location = new System.Drawing.Point(117, 198);
-            this.pointColorBtn.Name = "pointColorBtn";
-            this.pointColorBtn.Size = new System.Drawing.Size(20, 20);
-            this.pointColorBtn.TabIndex = 21;
-            this.pointColorBtn.UseVisualStyleBackColor = true;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(27, 202);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(84, 13);
-            this.label14.TabIndex = 20;
-            this.label14.Text = "Цвет элемента";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(19, 174);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(92, 13);
-            this.label15.TabIndex = 19;
-            this.label15.Text = "Элементы серии";
-            // 
-            // pointsCB
-            // 
-            this.pointsCB.FormattingEnabled = true;
-            this.pointsCB.Location = new System.Drawing.Point(117, 171);
-            this.pointsCB.Name = "pointsCB";
-            this.pointsCB.Size = new System.Drawing.Size(271, 21);
-            this.pointsCB.TabIndex = 18;
-            this.pointsCB.SelectedIndexChanged += new System.EventHandler(this.pointsCB_SelectedIndexChanged);
+            this.pointColorCheck.AutoSize = true;
+            this.pointColorCheck.Location = new System.Drawing.Point(9, 171);
+            this.pointColorCheck.Name = "pointColorCheck";
+            this.pointColorCheck.Size = new System.Drawing.Size(257, 17);
+            this.pointColorCheck.TabIndex = 22;
+            this.pointColorCheck.Text = "Задать цвет отдельно для каждого элемента";
+            this.pointColorCheck.UseVisualStyleBackColor = true;
+            this.pointColorCheck.CheckedChanged += new System.EventHandler(this.poinColorCheck_CheckedChanged);
             // 
             // SettingChartDataWindow
             // 
@@ -510,5 +526,6 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ComboBox pointsCB;
+        private System.Windows.Forms.CheckBox pointColorCheck;
     }
 }
