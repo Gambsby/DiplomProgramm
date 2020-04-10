@@ -16,6 +16,7 @@ namespace VisualisationData.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int MainProfileId { get; set; }
+        public int SerialNumber { get; set; }
 
         public virtual MainProfile MainProfile { get; set; }
         public virtual ICollection<Answer> Answer { get; set; }

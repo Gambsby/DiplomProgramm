@@ -15,23 +15,23 @@ namespace VisualisationData
 {
     public partial class VisualisationForm : Form
     {
-        private List<ExcelQuestion> selectedQuestion;
+        private List<ExcelQuestion> selectedQuestions;
         private ExcelProfile selectedProfile;
         private ExcelDocument selectedDocument;
         private SeriesChartType diagramType;
 
-        public VisualisationForm(List<ExcelQuestion> selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
+        public VisualisationForm(List<ExcelQuestion> selectedQuestions, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
         {
             InitializeComponent();
             this.selectedDocument = selectedDocument;
             this.selectedProfile = selectedProfile;
-            this.selectedQuestion = selectedQuestion;
+            this.selectedQuestions = selectedQuestions;
             this.diagramType = diagramType;
         }
 
         private void VisualisationForm_Load(object sender, EventArgs e)
         {
-            foreach (var selectedQuestionItem in selectedQuestion)
+            foreach (var selectedQuestionItem in selectedQuestions)
             {
                 visualChart.Series.Add(selectedQuestionItem.Content);
                 visualChart.Series[selectedQuestionItem.Content].ChartType = diagramType;
@@ -126,6 +126,26 @@ namespace VisualisationData
         {
             DataSettingForm dataSettingForm = new DataSettingForm(visualChart, "Настройка цвета элементов серии", "pointColor");
             dataSettingForm.Show();
+        }
+
+        private void savaDiagramBtn_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Title = "Сохранить изображение как ...";
+                sfd.Filter = "*.bmp|*.bmp;|*.png|*.png;|*.jpg|*.jpg";
+                sfd.AddExtension = true;
+                sfd.FileName = "graphicImage";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    switch (sfd.FilterIndex)
+                    {
+                        case 1: visualChart.SaveImage(sfd.FileName,ChartImageFormat.Bmp); break;
+                        case 2: visualChart.SaveImage(sfd.FileName, ChartImageFormat.Png); break;
+                        case 3: visualChart.SaveImage(sfd.FileName, ChartImageFormat.Jpeg); break;
+                    }
+                }
+            }
         }
     }
 }

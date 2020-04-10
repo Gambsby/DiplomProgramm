@@ -30,17 +30,21 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.downloadDataBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteDataBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.loadDataBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.profilesCB = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.infoDG = new System.Windows.Forms.DataGridView();
+            this.saveBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.cSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.excelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveDBBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteDataBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.закрытьАнкетуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.визуализацияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.columnDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.barDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pieDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.profilesCB = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.infoDG = new System.Windows.Forms.DataGridView();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.infoDG)).BeginInit();
             this.SuspendLayout();
@@ -59,26 +63,13 @@
             // файлToolStripMenuItem
             // 
             this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.downloadDataBtn,
+            this.loadDataBtn,
+            this.saveBtn,
             this.deleteDataBtn,
-            this.loadDataBtn});
+            this.закрытьАнкетуToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
             this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.файлToolStripMenuItem.Text = "Файл";
-            // 
-            // downloadDataBtn
-            // 
-            this.downloadDataBtn.Name = "downloadDataBtn";
-            this.downloadDataBtn.Size = new System.Drawing.Size(180, 22);
-            this.downloadDataBtn.Text = "Сохранить анкету";
-            this.downloadDataBtn.Click += new System.EventHandler(this.downloadDataBtn_Click);
-            // 
-            // deleteDataBtn
-            // 
-            this.deleteDataBtn.Name = "deleteDataBtn";
-            this.deleteDataBtn.Size = new System.Drawing.Size(180, 22);
-            this.deleteDataBtn.Text = "Удалить анкету";
-            this.deleteDataBtn.Click += new System.EventHandler(this.deleteDataBtn_Click);
             // 
             // loadDataBtn
             // 
@@ -86,6 +77,82 @@
             this.loadDataBtn.Size = new System.Drawing.Size(180, 22);
             this.loadDataBtn.Text = "Загрузить анкету";
             this.loadDataBtn.Click += new System.EventHandler(this.loadDataBtn_Click);
+            // 
+            // saveBtn
+            // 
+            this.saveBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cSVToolStripMenuItem,
+            this.excelToolStripMenuItem,
+            this.saveDBBtn});
+            this.saveBtn.Name = "saveBtn";
+            this.saveBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveBtn.Text = "Сохранить анкету";
+            // 
+            // cSVToolStripMenuItem
+            // 
+            this.cSVToolStripMenuItem.Enabled = false;
+            this.cSVToolStripMenuItem.Name = "cSVToolStripMenuItem";
+            this.cSVToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cSVToolStripMenuItem.Text = "CSV";
+            // 
+            // excelToolStripMenuItem
+            // 
+            this.excelToolStripMenuItem.Enabled = false;
+            this.excelToolStripMenuItem.Name = "excelToolStripMenuItem";
+            this.excelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.excelToolStripMenuItem.Text = "Excel";
+            // 
+            // saveDBBtn
+            // 
+            this.saveDBBtn.Name = "saveDBBtn";
+            this.saveDBBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveDBBtn.Text = "База данных";
+            this.saveDBBtn.Click += new System.EventHandler(this.saveDBBtn_Click);
+            // 
+            // deleteDataBtn
+            // 
+            this.deleteDataBtn.Enabled = false;
+            this.deleteDataBtn.Name = "deleteDataBtn";
+            this.deleteDataBtn.Size = new System.Drawing.Size(180, 22);
+            this.deleteDataBtn.Text = "Удалить анкету";
+            // 
+            // закрытьАнкетуToolStripMenuItem
+            // 
+            this.закрытьАнкетуToolStripMenuItem.Enabled = false;
+            this.закрытьАнкетуToolStripMenuItem.Name = "закрытьАнкетуToolStripMenuItem";
+            this.закрытьАнкетуToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.закрытьАнкетуToolStripMenuItem.Text = "Закрыть анкету";
+            // 
+            // визуализацияToolStripMenuItem
+            // 
+            this.визуализацияToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.columnDiagramBtn,
+            this.barDiagramBtn,
+            this.pieDiagramBtn});
+            this.визуализацияToolStripMenuItem.Name = "визуализацияToolStripMenuItem";
+            this.визуализацияToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
+            this.визуализацияToolStripMenuItem.Text = "Визуализация";
+            // 
+            // columnDiagramBtn
+            // 
+            this.columnDiagramBtn.Name = "columnDiagramBtn";
+            this.columnDiagramBtn.Size = new System.Drawing.Size(229, 22);
+            this.columnDiagramBtn.Text = "Столбчатая диаграмма";
+            this.columnDiagramBtn.Click += new System.EventHandler(this.columnDiagramBtn_Click);
+            // 
+            // barDiagramBtn
+            // 
+            this.barDiagramBtn.Name = "barDiagramBtn";
+            this.barDiagramBtn.Size = new System.Drawing.Size(229, 22);
+            this.barDiagramBtn.Text = "Горизонтальная дианрамма";
+            this.barDiagramBtn.Click += new System.EventHandler(this.barDiagramBtn_Click);
+            // 
+            // pieDiagramBtn
+            // 
+            this.pieDiagramBtn.Name = "pieDiagramBtn";
+            this.pieDiagramBtn.Size = new System.Drawing.Size(229, 22);
+            this.pieDiagramBtn.Text = "Круговая диаграмма";
+            this.pieDiagramBtn.Click += new System.EventHandler(this.pieDiagramBtn_Click);
             // 
             // openFileDialog
             // 
@@ -125,37 +192,6 @@
             this.infoDG.Size = new System.Drawing.Size(866, 519);
             this.infoDG.TabIndex = 4;
             // 
-            // визуализацияToolStripMenuItem
-            // 
-            this.визуализацияToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.columnDiagramBtn,
-            this.barDiagramBtn,
-            this.pieDiagramBtn});
-            this.визуализацияToolStripMenuItem.Name = "визуализацияToolStripMenuItem";
-            this.визуализацияToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
-            this.визуализацияToolStripMenuItem.Text = "Визуализация";
-            // 
-            // columnDiagramBtn
-            // 
-            this.columnDiagramBtn.Name = "columnDiagramBtn";
-            this.columnDiagramBtn.Size = new System.Drawing.Size(229, 22);
-            this.columnDiagramBtn.Text = "Столбчатая диаграмма";
-            this.columnDiagramBtn.Click += new System.EventHandler(this.columnDiagramBtn_Click);
-            // 
-            // barDiagramBtn
-            // 
-            this.barDiagramBtn.Name = "barDiagramBtn";
-            this.barDiagramBtn.Size = new System.Drawing.Size(229, 22);
-            this.barDiagramBtn.Text = "Горизонтальная дианрамма";
-            this.barDiagramBtn.Click += new System.EventHandler(this.barDiagramBtn_Click);
-            // 
-            // pieDiagramBtn
-            // 
-            this.pieDiagramBtn.Name = "pieDiagramBtn";
-            this.pieDiagramBtn.Size = new System.Drawing.Size(229, 22);
-            this.pieDiagramBtn.Text = "Круговая диаграмма";
-            this.pieDiagramBtn.Click += new System.EventHandler(this.pieDiagramBtn_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -181,7 +217,7 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem downloadDataBtn;
+        private System.Windows.Forms.ToolStripMenuItem saveBtn;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripMenuItem deleteDataBtn;
         private System.Windows.Forms.ComboBox profilesCB;
@@ -192,6 +228,10 @@
         private System.Windows.Forms.ToolStripMenuItem columnDiagramBtn;
         private System.Windows.Forms.ToolStripMenuItem barDiagramBtn;
         private System.Windows.Forms.ToolStripMenuItem pieDiagramBtn;
+        private System.Windows.Forms.ToolStripMenuItem cSVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem excelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveDBBtn;
+        private System.Windows.Forms.ToolStripMenuItem закрытьАнкетуToolStripMenuItem;
     }
 }
 

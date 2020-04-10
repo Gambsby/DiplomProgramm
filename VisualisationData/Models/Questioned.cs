@@ -12,7 +12,9 @@ namespace VisualisationData.Models
 
         public int Id { get; set; }
         public string Number { get; set; }
+        public int MainProfileId { get; set; }
 
+        public virtual MainProfile MainProfile { get; set; }
         public virtual ICollection<Result> Result { get; set; }
     }
 }

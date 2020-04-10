@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using VisualisationData.Excel;
 using VisualisationData.Services;
-using VisualisationData.Models;
 using System.IO;
 using MySql.Data.MySqlClient;
 using Z.BulkOperations;
 using System.Windows.Forms.DataVisualization.Charting;
+using VisualisationData.Models;
 
 namespace VisualisationData
 {
@@ -25,276 +25,6 @@ namespace VisualisationData
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void BulkWriteToDB(DataTable dataTable, string tableName)
-        {
-            try
-            {
-                
-                MySqlConnection conn = DBUtils.GetDBConnection();
-                conn.Open();
-                using (var bulk = new BulkOperation(conn))
-                {
-                    bulk.DestinationTableName = tableName;
-
-                    bulk.BulkInsert(dataTable);
-                }
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-
-        private DataTable GetDataTableQuestioned()
-        {
-            /*var questionedsMap = new Dictionary<string, int>();
-            using (profiletransactionContext db = new profiletransactionContext())
-            {
-                var questionedsList = db.Questioned.Select(q => q).ToList();
-                questionedsMap = questionedsList.ToDictionary(q => q.Number, q => q.Id, StringComparer.OrdinalIgnoreCase);
-            }
-
-            DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("id");
-            dataTable.Columns.Add("number");
-
-            foreach (var answerItem in AnswerListContent)
-            {
-                if (!questionedsMap.ContainsKey(answerItem.Id))
-                {
-                    DataRow dataRow = dataTable.NewRow();
-                    dataRow["id"] = null;
-                    dataRow["number"] = answerItem.Id;
-                    dataTable.Rows.Add(dataRow);
-                    questionedsMap.Add(answerItem.Id, 0);
-                }
-            }
-            //dataTable = dataTable.DefaultView.ToTable(true, new string[] { "id", "number" });
-            return dataTable;*/
-            return null;
-        }
-
-        private DataTable GetDataTableResult()//Добавить проверку на наличие такой записи
-        {
-            /*Dictionary<int, int> profilesMap = new Dictionary<int, int>();
-            Dictionary<string, int> questionedsMap = new Dictionary<string, int>();
-            Dictionary<string, int> answersMap = new Dictionary<string, int>();
-            Dictionary<string, int> questionsMap = new Dictionary<string, int>();
-            Dictionary<string, int> questionAnswersMap = new Dictionary<string, int>();
-
-            using (profiletransactionContext db = new profiletransactionContext())
-            {
-                var questionedsList = db.Questioned.Select(q => q).ToList();
-                questionedsMap = questionedsList.ToDictionary(q => q.Number, q => q.Id, StringComparer.OrdinalIgnoreCase);
-
-                var answersList = db.Answer.Select(a => a).ToList();
-                answersMap = answersList.ToDictionary(a => a.ProfileId.ToString() + "-" + a.Content, a => a.Id, StringComparer.OrdinalIgnoreCase);
-
-                var questionsList = db.Question.Select(q => q).ToList();
-                questionsMap = questionsList.ToDictionary(q => q.ProfileId.ToString() + "-" + q.SerialNumber, q => q.Id, StringComparer.OrdinalIgnoreCase);
-
-                var questionAnswersList = db.QuestionAnswer.Select(qa => qa).ToList();
-                questionAnswersMap = questionAnswersList.ToDictionary(qa => qa.AnswerId.ToString() + "-" + qa.QuestionId, qa => qa.Id);
-
-                var profilesList = db.Profile.Select(p => p).ToList();
-                foreach (var infoItem in InfoListContent)
-                {
-                    var profileId = profilesList.SingleOrDefault(p => p.Name == infoItem.ProfileName).Id;
-                    profilesMap.Add(infoItem.Id, profileId);
-                }
-            }
-
-            DataTable resultsTable = new DataTable();
-            resultsTable.Columns.Add("id");
-            resultsTable.Columns.Add("questioned_id");
-            resultsTable.Columns.Add("question_answer_id");
-            resultsTable.Columns.Add("profile_id");
-
-            using (profiletransactionContext db = new profiletransactionContext())
-            {
-                foreach (var answerItem in AnswerListContent)
-                {
-                    var questionedId = questionedsMap[answerItem.Id];
-                    var profileId = profilesMap[answerItem.ProfileNum];
-                    var answerId = answersMap[profileId.ToString() + "-" + answerItem.Answer];
-                    var questionId = questionsMap[profileId.ToString() + "-" + answerItem.QuestionNum];
-                    var questionAnswerId = questionAnswersMap[answerId.ToString() + "-" + questionId.ToString()];
-
-                    DataRow dataRow = resultsTable.NewRow();
-                    dataRow["id"] = null;
-                    dataRow["questioned_id"] = questionedId;
-                    dataRow["question_answer_id"] = questionAnswerId;
-                    dataRow["profile_id"] = profileId;
-                    resultsTable.Rows.Add(dataRow);
-                }
-            }
-
-            return resultsTable;*/
-            return null;
-        }
-
-
-
-
-
-
-        private void downloadDataBtn_Click(object sender, EventArgs e)
-        {
-            /*
-
-            #region Download Data
-            if (openFileDialog.ShowDialog() == DialogResult.Cancel)
-                return;
-            string filePath = openFileDialog.FileName;
-            string fileName = Path.GetFileNameWithoutExtension(openFileDialog.SafeFileName);
-
-            DownloadSettingForm downloadSettingForm = new DownloadSettingForm(filePath);
-            downloadSettingForm.ShowDialog();
-            switch (downloadSettingForm.DialogResult)
-            {
-                case DialogResult.OK:
-                    {
-                        AnswerListContent = downloadSettingForm.answerListContent;
-                        ProfilesListContent = downloadSettingForm.profilesListContent;
-                        break;
-                    }
-                case DialogResult.Cancel:
-                    {
-                        break;
-                    }
-            }
-            #endregion
-
-            #region Add Profile Сделано
-            using (profiletransactionContext db = new profiletransactionContext())
-            {
-                using (var transaction = db.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var mainProfileToDB = db.MainProfile.SingleOrDefault(p => p.Name == fileName);
-                        if (mainProfileToDB == null)
-                        {
-                            mainProfileToDB = new MainProfile { Name = fileName };
-                        }
-                        else
-                        {
-                            throw new Exception("Анкета с таким названием уже существует: " + fileName);
-                        }
-                        
-                        foreach (var profile in ProfilesListContent)
-                        {
-                            Profile profileToDB = null;
-                            Questiontype typeToDB = null;
-                            List<Answer> answersToDB = null;
-                            List<QuestionAnswer> questionAnswersToDB = null;
-
-                            if (db.Profile.SingleOrDefault(p => p.Name == profile.Name) == null)
-                            {
-                                profileToDB = new Profile { Name = profile.Name, MainProfile = mainProfileToDB };
-                            }
-                            else
-                            {
-                                throw new Exception("Часть анкеты с таким названием уже существует: " + profile.Name);
-                            }
-
-                            typeToDB = db.Questiontype.SingleOrDefault(t => t.Type == profile.Type);
-                            if (typeToDB == null)
-                            {
-                                typeToDB = new Questiontype { Type = profile.Type };
-                            }
-
-                            List<string> answers = GetAnswers(InfoListContent, profile);
-                            answers.Add(string.Empty);
-                            answersToDB = new List<Answer>();
-                            foreach (var answerItem in answers)
-                            {
-                                answersToDB.Add(new Answer { Content = answerItem, Profile = profileToDB });
-                            }
-
-                            db.Answer.AddRange(answersToDB.ToArray());
-                            db.SaveChanges();
-
-                            foreach (var questionItem in profile.Questions)
-                            {
-                                Limits limitsToDB = null;
-                                if (typeToDB.Type == "range")
-                                {
-                                    limitsToDB = new Limits { Start = questionItem.leftLimit, End = questionItem.rightLimit, Profile = profileToDB };
-                                }
-
-                                Question questionToDB = new Question 
-                                { 
-                                    Content = questionItem.Content, 
-                                    SerialNumber = questionItem.Id, 
-                                    Profile = profileToDB, 
-                                    Type = typeToDB, 
-                                    Limits = limitsToDB 
-                                };
-
-                                questionAnswersToDB = new List<QuestionAnswer>();
-                                foreach (var answerItem in answersToDB)
-                                {
-                                    questionAnswersToDB.Add(new QuestionAnswer { Question = questionToDB, Answer = answerItem });
-                                }
-                                db.QuestionAnswer.AddRange(questionAnswersToDB.ToArray());
-                            }
-
-                            db.SaveChanges();
-                        }
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        MessageBox.Show(ex.ToString());
-                    }
-                }
-            }
-            #endregion
-
-            #region Add Questioned Сделано
-            DataTable questionedDataTable = GetDataTableQuestioned();
-            Application.DoEvents();
-            BulkWriteToDB(questionedDataTable, "questioned");
-            #endregion
-
-            #region Add Results
-            DataTable resultDataTable = GetDataTableResult();
-            Application.DoEvents();
-            BulkWriteToDB(resultDataTable, "result");
-            #endregion*/
-        }
-
-        private void deleteDataBtn_Click(object sender, EventArgs e)
-        {
-            using (profiletransactionContext db = new profiletransactionContext())
-            {
-                List<MainProfile> deleteProfiles;
-                var mainProfilesInDB = db.MainProfile.Select(p => p).ToList();
-                DeleteSettingForm deleteSettingForm = new DeleteSettingForm(mainProfilesInDB);
-                deleteSettingForm.ShowDialog();
-                switch (deleteSettingForm.DialogResult)
-                {
-                    case DialogResult.OK:
-                        {
-                            deleteProfiles = deleteSettingForm.deleteProfiles;
-                            foreach (var deleteProfilesItem in deleteProfiles)
-                            {
-                                db.MainProfile.Remove(deleteProfilesItem);
-                            }
-                            db.SaveChanges();
-                            break;
-                        }
-                    case DialogResult.Cancel:
-                        {
-                            break;
-                        }
-                }
-            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -312,7 +42,7 @@ namespace VisualisationData
                     profilesCB.SelectedIndex = 0;
                 }
             }*/
-             
+
         }
 
         private void profilesCB_SelectedIndexChanged(object sender, EventArgs e)
@@ -322,7 +52,7 @@ namespace VisualisationData
             infoDG.Columns.Clear();
             infoDG.Rows.Clear();
 
-            infoDG.Columns.Add(CommonService.CreateTextColumn("Номер вопроса", "serielNumber", true));
+            infoDG.Columns.Add(CommonService.CreateTextColumn("Номер вопроса", "serielNumber"));
             infoDG.Columns.Add(CommonService.CreateTextColumn("Вопрос", "question", true));
             if (selectedProfile.Type == "range")
             {
@@ -354,7 +84,7 @@ namespace VisualisationData
                 }
                 infoDG["all", infoDG.RowCount - 1].Value = allSumm;
             }
-           
+
         }
 
         private void loadDataBtn_Click(object sender, EventArgs e)
@@ -392,9 +122,9 @@ namespace VisualisationData
             foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
             {
                 var question = new ExcelQuestion
-                { 
-                    Id = Convert.ToInt32(rowItem.Cells["serielNumber"].Value), 
-                    Content = rowItem.Cells["question"].Value.ToString() 
+                {
+                    Id = Convert.ToInt32(rowItem.Cells["serielNumber"].Value),
+                    Content = rowItem.Cells["question"].Value.ToString()
                 };
                 selectedQuestions.Add(question);
             }
@@ -452,6 +182,206 @@ namespace VisualisationData
 
             VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, SeriesChartType.Pie);
             visualisationForm.Show();
+        }
+
+        private void saveDBBtn_Click(object sender, EventArgs e)
+        {
+            using (profilesContext db = new profilesContext())
+            {
+                using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        SaveProfileToDB(db, tr);
+                        tr.Commit();
+                        SaveResultToDB(db, tr);
+                    }
+                    catch (Exception ex)
+                    {
+                        tr.Rollback();
+                        MessageBox.Show(ex.ToString());
+                    }
+                }
+            }
+        }
+
+        private void SaveProfileToDB(profilesContext db, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr)
+        {
+            Dictionary<string, Profile> profileMap = new Dictionary<string, Profile>();
+
+            Dictionary<string, Questiontype> questionTypeMap = new Dictionary<string, Questiontype>();
+            questionTypeMap = db.Questiontype.Select(q => q).ToDictionary(q => q.Type, q => q);
+
+            Questiontype questionType;
+            MainProfile mainProfile;
+            Profile profile;
+            Question question;
+
+            List<QuestionAnswer> questionAnswers = new List<QuestionAnswer>();
+
+            mainProfile = db.MainProfile.SingleOrDefault(m => m.Name == Document.DocumentName);
+            if (mainProfile == null)
+            {
+                mainProfile = new MainProfile { Name = Document.DocumentName };
+            }
+            else
+            {
+                throw new Exception("Файл с таким именем уже был сохранен!");
+            }
+
+            foreach (var profileItem in Document.ProfilesListContent)
+            {
+                if (questionTypeMap.ContainsKey(profileItem.Type))
+                {
+                    questionType = questionTypeMap[profileItem.Type];
+                }
+                else
+                {
+                    questionType = new Questiontype { Type = profileItem.Type };
+                }
+
+                if (!profileMap.ContainsKey(profileItem.Name))
+                {
+                    profile = new Profile { Name = profileItem.Name, SerialNumber = profileItem.Id, MainProfile = mainProfile };
+                    profileMap.Add(profile.Name, profile);
+                }
+                else
+                {
+                    throw new Exception("В файле не может содержаться несколько анкет с одинаковым именем!");
+                }
+
+                List<Answer> answers = new List<Answer>();
+                foreach (var answerItem in profileItem.Answers)
+                {
+                    answers.Add(new Answer { Content = answerItem, Profile = profile });
+                }
+
+                foreach (var questionItem in profileItem.Questions)
+                {
+                    if (questionType.Type == "range")
+                    {
+                        question = new Question
+                        {
+                            Content = questionItem.Content,
+                            SerialNumber = questionItem.Id,
+                            Profile = profile,
+                            Type = questionType,
+                            Limits = new Limits { 
+                                Start = questionItem.leftLimit, 
+                                End = questionItem.rightLimit, 
+                                Profile = profile 
+                            }
+                        };
+                    }
+                    else
+                    {
+                        question = new Question { 
+                            Content = questionItem.Content, 
+                            SerialNumber = questionItem.Id, 
+                            Profile = profile, 
+                            Type = questionType, 
+                            Limits = null 
+                        };
+                    }
+
+                    foreach (var answerItem in answers)
+                    {
+                        questionAnswers.Add(new QuestionAnswer { Question = question, Answer = answerItem });
+                    }
+                }
+            }
+            db.QuestionAnswer.AddRange(questionAnswers);
+            db.SaveChanges();
+            Application.DoEvents();
+        }
+
+        private void SaveResultToDB(profilesContext db, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr)
+        {
+            MainProfile mainProfile = db.MainProfile.SingleOrDefault(m => m.Name == Document.DocumentName);
+            List<Profile> profiles = db.Profile.Where(p => p.MainProfile == mainProfile).ToList();
+            List<QuestionAnswer> questionAnswers = db.QuestionAnswer.Where(q => profiles.Contains(q.Question.Profile) && profiles.Contains(q.Answer.Profile)).ToList();
+
+            Dictionary<string, Questioned> questionedMap = new Dictionary<string, Questioned>();
+
+            foreach (var answerItem in Document.AnswerListContent)
+            {
+                if (!questionedMap.ContainsKey(answerItem.Id))
+                {
+                    questionedMap.Add(answerItem.Id, new Questioned { Number = answerItem.Id, MainProfile = mainProfile });
+                }
+            }
+
+            DataTable questionedDT = new DataTable();
+            questionedDT.Columns.Add(new DataColumn("id"));
+            questionedDT.Columns.Add(new DataColumn("number"));
+            questionedDT.Columns.Add(new DataColumn("main_profile_id"));
+
+            foreach (var questionedItem in questionedMap.Values)
+            {
+                DataRow row = questionedDT.NewRow();
+                row["id"] = null;
+                row["number"] = questionedItem.Number;
+                row["main_profile_id"] = questionedItem.MainProfile.Id;
+                questionedDT.Rows.Add(row);
+            }
+            BulkWriteToDB(questionedDT, "questioned");
+            Application.DoEvents();
+
+            questionedMap = db.Questioned.Where(q => q.MainProfile == mainProfile).ToDictionary(q => q.Number, q => q);
+
+            DataTable resultDT = new DataTable();
+            resultDT.Columns.Add(new DataColumn("id"));
+            resultDT.Columns.Add(new DataColumn("questioned_id"));
+            resultDT.Columns.Add(new DataColumn("question_answer_id"));
+            resultDT.Columns.Add(new DataColumn("profile_id"));
+            foreach (var answerItem in Document.AnswerListContent)
+            {
+                Profile profile = profiles.SingleOrDefault(p => p.SerialNumber == answerItem.ProfileNum);
+                QuestionAnswer questionAnswer = questionAnswers.SingleOrDefault(q => q.Answer.Profile == profile &&
+                                                                                q.Question.Profile == profile &&
+                                                                                q.Question.SerialNumber == answerItem.QuestionNum &&
+                                                                                q.Answer.Content == answerItem.Answer);
+                Questioned questioned = questionedMap[answerItem.Id];
+
+                DataRow row = resultDT.NewRow();
+                row["id"] = null;
+                row["questioned_id"] = questioned.Id;
+                row["question_answer_id"] = questionAnswer.Id;
+                row["profile_id"] = profile.Id;
+                resultDT.Rows.Add(row);
+
+                if (resultDT.Rows.Count == 30000)
+                {
+                    BulkWriteToDB(resultDT, "result");
+                    resultDT.Rows.Clear();
+                    Application.DoEvents();
+                }
+            }
+            if (resultDT.Rows.Count != 0)
+            {
+                BulkWriteToDB(resultDT, "result");
+            }
+        }
+
+        private void BulkWriteToDB(DataTable dataTable, string tableName)
+        {
+            try
+            {
+
+                MySqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (var bulk = new BulkOperation(conn))
+                {
+                    bulk.DestinationTableName = tableName;
+
+                    bulk.BulkInsert(dataTable);
+                }
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

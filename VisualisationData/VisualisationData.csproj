@@ -312,6 +312,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\Limits.cs" />
+    <Compile Include="Models\MainProfile.cs" />
+    <Compile Include="Models\Profile.cs" />
+    <Compile Include="Models\Question.cs" />
+    <Compile Include="Models\QuestionAnswer.cs" />
+    <Compile Include="Models\Questioned.cs" />
+    <Compile Include="Models\Questiontype.cs" />
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="Models\profilesContext.cs" />
     <Compile Include="SettingsForm\AppearanceSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -344,16 +354,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Answer.cs" />
-    <Compile Include="Models\Limits.cs" />
-    <Compile Include="Models\MainProfile.cs" />
-    <Compile Include="Models\Profile.cs" />
-    <Compile Include="Models\profiletransactionContext.cs" />
-    <Compile Include="Models\Question.cs" />
-    <Compile Include="Models\QuestionAnswer.cs" />
-    <Compile Include="Models\Questioned.cs" />
-    <Compile Include="Models\Questiontype.cs" />
-    <Compile Include="Models\Result.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommonService.cs" />

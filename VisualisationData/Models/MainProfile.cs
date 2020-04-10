@@ -8,16 +8,13 @@ namespace VisualisationData.Models
         public MainProfile()
         {
             Profile = new HashSet<Profile>();
+            Questioned = new HashSet<Questioned>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
         public virtual ICollection<Profile> Profile { get; set; }
-
-        public override string ToString()
-        {
-            return Name;
-        }
+        public virtual ICollection<Questioned> Questioned { get; set; }
     }
 }

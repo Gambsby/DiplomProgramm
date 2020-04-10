@@ -28,12 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savaDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.visualChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.appearanceSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.BGSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.diagramBGSettingRtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +44,7 @@
             this.titleSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.seriesSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pointsSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.visualChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
             this.SuspendLayout();
@@ -72,20 +72,9 @@
             // savaDiagramBtn
             // 
             this.savaDiagramBtn.Name = "savaDiagramBtn";
-            this.savaDiagramBtn.Size = new System.Drawing.Size(196, 22);
+            this.savaDiagramBtn.Size = new System.Drawing.Size(180, 22);
             this.savaDiagramBtn.Text = "Сохранить";
-            // 
-            // visualChart
-            // 
-            chartArea8.Name = "ChartArea1";
-            this.visualChart.ChartAreas.Add(chartArea8);
-            legend8.Name = "Legend1";
-            this.visualChart.Legends.Add(legend8);
-            this.visualChart.Location = new System.Drawing.Point(13, 28);
-            this.visualChart.Name = "visualChart";
-            this.visualChart.Size = new System.Drawing.Size(1024, 477);
-            this.visualChart.TabIndex = 1;
-            this.visualChart.Text = "visualChart";
+            this.savaDiagramBtn.Click += new System.EventHandler(this.savaDiagramBtn_Click);
             // 
             // appearanceSettingBtn
             // 
@@ -100,21 +89,21 @@
             // BGSettingBtn
             // 
             this.BGSettingBtn.Name = "BGSettingBtn";
-            this.BGSettingBtn.Size = new System.Drawing.Size(180, 22);
+            this.BGSettingBtn.Size = new System.Drawing.Size(164, 22);
             this.BGSettingBtn.Text = "Фон ";
             this.BGSettingBtn.Click += new System.EventHandler(this.BGSettingBtn_Click);
             // 
             // diagramBGSettingRtn
             // 
             this.diagramBGSettingRtn.Name = "diagramBGSettingRtn";
-            this.diagramBGSettingRtn.Size = new System.Drawing.Size(180, 22);
+            this.diagramBGSettingRtn.Size = new System.Drawing.Size(164, 22);
             this.diagramBGSettingRtn.Text = "Фон диаграммы";
             this.diagramBGSettingRtn.Click += new System.EventHandler(this.diagramBGSettingRtn_Click);
             // 
             // borderSettingBtn
             // 
             this.borderSettingBtn.Name = "borderSettingBtn";
-            this.borderSettingBtn.Size = new System.Drawing.Size(180, 22);
+            this.borderSettingBtn.Size = new System.Drawing.Size(164, 22);
             this.borderSettingBtn.Text = "Рамка";
             this.borderSettingBtn.Click += new System.EventHandler(this.borderSettingBtn_Click);
             // 
@@ -172,6 +161,18 @@
             this.pointsSettingBtn.Size = new System.Drawing.Size(188, 22);
             this.pointsSettingBtn.Text = "Элементы серии";
             this.pointsSettingBtn.Click += new System.EventHandler(this.pointsSettingBtn_Click);
+            // 
+            // visualChart
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.visualChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.visualChart.Legends.Add(legend1);
+            this.visualChart.Location = new System.Drawing.Point(13, 28);
+            this.visualChart.Name = "visualChart";
+            this.visualChart.Size = new System.Drawing.Size(1024, 477);
+            this.visualChart.TabIndex = 1;
+            this.visualChart.Text = "visualChart";
             // 
             // VisualisationForm
             // 

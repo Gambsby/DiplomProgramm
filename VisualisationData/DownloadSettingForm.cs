@@ -157,6 +157,7 @@ namespace VisualisationData
             {
                 answers[i] = answers[i].ToLower();
             }
+            answers.Add("");
             return answers;
         }
     }

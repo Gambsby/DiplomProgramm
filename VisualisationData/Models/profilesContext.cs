@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace VisualisationData.Models
 {
-    public partial class profiletransactionContext : DbContext
+    public partial class profilesContext : DbContext
     {
-        public profiletransactionContext()
+        public profilesContext()
         {
         }
 
-        public profiletransactionContext(DbContextOptions<profiletransactionContext> options)
+        public profilesContext(DbContextOptions<profilesContext> options)
             : base(options)
         {
         }
@@ -30,7 +30,7 @@ namespace VisualisationData.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=remotemysql.com;port=3306;user=xVpoPVpBoJ;password=e9ji45qzRZ;database=xVpoPVpBoJ", x => x.ServerVersion("5.6.41-mysql"));
+                optionsBuilder.UseMySql("server=remotemysql.com;port=3306;user=xVpoPVpBoJ;password=e9ji45qzRZ;database=xVpoPVpBoJ", x => x.ServerVersion("8.0.13-mysql"));
             }
         }
 
@@ -144,6 +144,10 @@ namespace VisualisationData.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
 
+                entity.Property(e => e.SerialNumber)
+                    .HasColumnName("serial_number")
+                    .HasColumnType("int(11)");
+
                 entity.HasOne(d => d.MainProfile)
                     .WithMany(p => p.Profile)
                     .HasForeignKey(d => d.MainProfileId)
@@ -245,6 +249,9 @@ namespace VisualisationData.Models
             {
                 entity.ToTable("questioned");
 
+                entity.HasIndex(e => e.MainProfileId)
+                    .HasName("questioned_ibfk_1");
+
                 entity.HasIndex(e => e.Number)
                     .HasName("number")
                     .IsUnique();
@@ -253,12 +260,21 @@ namespace VisualisationData.Models
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.MainProfileId)
+                    .HasColumnName("main_profile_id")
+                    .HasColumnType("int(11)");
+
                 entity.Property(e => e.Number)
                     .IsRequired()
                     .HasColumnName("number")
                     .HasColumnType("varchar(128)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_general_ci");
+
+                entity.HasOne(d => d.MainProfile)
+                    .WithMany(p => p.Questioned)
+                    .HasForeignKey(d => d.MainProfileId)
+                    .HasConstraintName("questioned_ibfk_1");
             });
 
             modelBuilder.Entity<Questiontype>(entity =>
@@ -292,7 +308,7 @@ namespace VisualisationData.Models
                     .HasName("result_ibfk_2");
 
                 entity.HasIndex(e => e.QuestionedId)
-                    .HasName("result_ibfk_1");
+                    .HasName("questioned_id");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -323,8 +339,7 @@ namespace VisualisationData.Models
                 entity.HasOne(d => d.Questioned)
                     .WithMany(p => p.Result)
                     .HasForeignKey(d => d.QuestionedId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("result_ibfk_1");
+                    .HasConstraintName("result_ibfk_4");
             });
 
             OnModelCreatingPartial(modelBuilder);

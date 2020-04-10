@@ -6,7 +6,7 @@ namespace VisualisationData.Models
     public partial class Result
     {
         public int Id { get; set; }
-        public int? QuestionedId { get; set; }
+        public int QuestionedId { get; set; }
         public int QuestionAnswerId { get; set; }
         public int ProfileId { get; set; }
 
