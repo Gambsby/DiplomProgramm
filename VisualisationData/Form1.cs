@@ -15,7 +15,6 @@ using MySql.Data.MySqlClient;
 using Z.BulkOperations;
 using System.Windows.Forms.DataVisualization.Charting;
 using VisualisationData.Models;
-using ExcelLibrary.SpreadSheet;
 using OfficeOpenXml;
 using VisualisationData.SettingsForm;
 

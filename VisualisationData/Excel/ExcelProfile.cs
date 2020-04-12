@@ -60,17 +60,20 @@ namespace VisualisationData.Excel
 
         public string GetId()
         {
-            return "\"" + Id + "\"";
+            //return "\"" + Id + "\"";
+            return Id.ToString();
         }
 
         public string GetName()
         {
-            return "\"" + Name + "\"";
+            //return "\"" + Name + "\"";
+            return Name;
         }
 
         public string GetAnswers()
         {
-            return "\"" + Answers + "\"";
+            //return "\"" + Answers + "\"";
+            return Answers;
         }
 
         public override string GetCsvString()

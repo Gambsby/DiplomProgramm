@@ -1,12 +1,16 @@
-﻿using OfficeOpenXml;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VisualisationData.Excel;
@@ -16,6 +20,7 @@ namespace VisualisationData.SettingsForm
 {
     public partial class SaveSettingForm : Form
     {
+        private const int CountThread = 5;
         private ExcelDocument Document { get; set; }
         private string type;
         public SaveSettingForm(ExcelDocument excelDocument, string type)
@@ -147,68 +152,67 @@ namespace VisualisationData.SettingsForm
     
         private void SaveCSV()
         {
-            /*List<string> questionFiles = new List<string>();
-            List<string> questionFilesNames = new List<string>();
 
-            string dirName = Document.DocumentName;
+            string infoFileName = profileInfoTB.Text;
+            string resultFileName = resultInfoTB.Text;
+            List<List<object>> questionFiles = new List<List<object>>();
+            List<string> questionFilesName = new List<string>();
 
-            string infoFile = string.Empty;
+            List<object> infoFile = new List<object>();
             foreach (DataGridViewRow rowItem in chooseDG.Rows)
             {
-                string fileName = rowItem.Cells["sheetName"].Value.ToString();
+                string sheetName = rowItem.Cells["sheetName"].Value.ToString();
                 ExcelProfile profile = rowItem.Cells["profile"].Value as ExcelProfile;
 
-                infoFile += profile.GetCsvString();
+                infoFile.Add(new { ID = profile.GetId(), Name = profile.GetName(), Answers = profile.GetAnswers() });
 
-
-                string questionFile = string.Empty;
+                List<object> questionFile = new List<object>();
                 foreach (var questuionItem in profile.Questions)
                 {
-                    questionFile += questuionItem.GetCsvString();
+                    if (!string.IsNullOrEmpty(questuionItem.LeftLimit) && !string.IsNullOrEmpty(questuionItem.RightLimit))
+                    {
+                        questionFile.Add(new { ID = questuionItem.GetId(), Content = questuionItem.GetContent(), LeftLimit = questuionItem.GetLeftLimit(), RightLimit = questuionItem.GetRightLimit() });
+                    }
+                    else
+                    {
+                        questionFile.Add(new { ID = questuionItem.GetId(), Content = questuionItem.GetContent() });
+                    }
                 }
                 questionFiles.Add(questionFile);
-                questionFilesNames.Add(fileName);
-
+                questionFilesName.Add(sheetName);
             }
-            Application.DoEvents();
-            string resultFile = "\"id\",\"анкета\",\"номер вопроса\",\"ответ\"" + Environment.NewLine;
-            int count = 0;
-            foreach (var answerItem in Document.AnswerListContent)
+
+            List<object> resultFile = new List<object>();
+            resultFile.Add(new { ID = "id", Profile = "анкета", QuestionNum = "номер вопроса", Answer = "ответ" });
+            foreach (var resultItem in Document.AnswerListContent)
             {
-                resultFile += answerItem.GetCsvString();
-                if (count <= 30000)
-                {
-                    count++;
-                }
-                else
-                {
-                    Application.DoEvents();
-                    count = 0;
-                }
+                resultFile.Add(new { ID = resultItem.GetId(), Profile = resultItem.GetProfileNum(), QuestionNum = resultItem.GetQuestionNum(), Answer = resultItem.GetAnswer() });
             }
 
             FolderBrowserDialog FBD = new FolderBrowserDialog();
             if (FBD.ShowDialog() == DialogResult.OK)
             {
-                Directory.CreateDirectory(FBD.SelectedPath + "\\" + dirName);
+                string dirName = FBD.SelectedPath + "\\" + Document.DocumentName;
+                Directory.CreateDirectory(dirName);
+                WriteFile(dirName + "\\" + infoFileName + ".csv", infoFile);
+                WriteFile(dirName + "\\" + resultFileName + ".csv", resultFile);
 
-                WriteFile(FBD.SelectedPath + "\\" + dirName + "\\" + profileInfoTB.Text + ".csv", infoFile);
-                WriteFile(FBD.SelectedPath + "\\" + dirName + "\\" + resultInfoTB.Text + ".csv", resultFile);
-
-                for (int i = 0; i < questionFilesNames.Count; i++)
+                for (int i = 0; i < questionFiles.Count; i++)
                 {
-                    WriteFile(FBD.SelectedPath + "\\" + dirName + "\\" + questionFilesNames[i] + ".csv", questionFiles[i]);
+                    WriteFile(dirName + "\\" + questionFilesName[i] + ".csv", questionFiles[i]);
                 }
-                
-            }*/
+            }
         }
 
-        private void WriteFile(string path, string value)
+        private void WriteFile(string path, List<object> value)
         {
-            using (FileStream fs = File.Create(path))
+            using (var writer = new StreamWriter(path))
             {
-                byte[] info = new UTF8Encoding(true).GetBytes(value);
-                fs.Write(info, 0, info.Length);
+                using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ":", IgnoreReferences = true, HasHeaderRecord = false }))
+                {
+                    
+                    csv.WriteRecords(value);
+                }
             }
         }
     }

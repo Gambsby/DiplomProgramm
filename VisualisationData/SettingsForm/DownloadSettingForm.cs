@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -34,8 +35,16 @@ namespace VisualisationData
 
         private void DownloadSettingForm_Load(object sender, EventArgs e)
         {
-            ConnectionExcel ConxObject = new ConnectionExcel(filePath);
-            worksheetNames = ConxObject.UrlConnexion.GetWorksheetNames().ToList();
+            using (var excelPack = new ExcelPackage())
+            {
+                using (var stream = File.OpenRead(filePath))
+                {
+                    excelPack.Load(stream);
+                }
+                worksheetNames = excelPack.Workbook.Worksheets.Select(w => w.Name).ToList();
+            }
+            //ConnectionExcel ConxObject = new ConnectionExcel(filePath);
+            //worksheetNames = ConxObject.UrlConnexion.GetWorksheetNames().ToList();
             chooseInfoSheetCB.Items.AddRange(worksheetNames.ToArray());
             chooseAnswerSheetDG.Items.AddRange(worksheetNames.ToArray());
         }
@@ -44,11 +53,11 @@ namespace VisualisationData
         {
             infoSheetName = chooseInfoSheetCB.SelectedItem.ToString();
             worksheetNames.Remove(infoSheetName);
-            infoListContent = ExcelService.GetProfileNames(filePath, infoSheetName);
+            infoListContent = ExcelService.GetProfileNamesEP(filePath, infoSheetName);
 
             answerSheetName = chooseAnswerSheetDG.SelectedItem.ToString();
             worksheetNames.Remove(answerSheetName);
-            answerListContent = ExcelService.GetResults(filePath, answerSheetName);
+            answerListContent = ExcelService.GetResultsEP(filePath, answerSheetName);
 
             chooseDG.Columns.Add(CommonService.CreateTextColumn("Идентификатор", "id"));
             chooseDG.Columns.Add(CommonService.CreateTextColumn("Название части анкеты", "profileName", true));
@@ -78,7 +87,7 @@ namespace VisualisationData
                 ExcelQuestionType profileInfo = infoListContent.SingleOrDefault(info => info.ProfileName == profileName);
                 string profileType = profileInfo.GetProfileType();
 
-                List<ExcelQuestion> questions = ExcelService.GetQuestions(filePath, chooseDG["sheetName", i].Value.ToString(), profileType);
+                List<ExcelQuestion> questions = ExcelService.GetQuestionsEP(filePath, chooseDG["sheetName", i].Value.ToString(), profileType);
 
                 ExcelProfile excelProfile = new ExcelProfile { 
                     Id = profileInfo.Id, 

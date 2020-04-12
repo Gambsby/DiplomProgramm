@@ -37,17 +37,20 @@ namespace VisualisationData.Excel
 
         public string GetId()
         {
-            return "\"" + Id + "\"";
+            //return "\"" + Id + "\"";
+            return Id.ToString();
         }
 
         public string GetProfileName()
         {
-            return "\"" + ProfileName + "\"";
+            //return "\"" + ProfileName + "\"";
+            return ProfileName;
         }
 
         public string GetAnswers()
         {
-            return "\"" + Answers + "\"";
+            //return "\"" + Answers + "\"";
+            return Answers;
         }
 
         public override string GetCsvString()

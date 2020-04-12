@@ -15,19 +15,22 @@ namespace VisualisationData.Excel
 
         public string GetId()
         {
-            return "\"" + Id + "\"";
+            //return "\"" + Id + "\"";
+            return Id.ToString();
         }
         
         public string GetContent()
         {
-            return "\"" + Content + "\"";
+            //return "\"" + Content + "\"";
+            return Content;
         }
         
         public string GetLeftLimit()
         {
             if (!string.IsNullOrEmpty(LeftLimit))
             {
-                return "\"" + LeftLimit + "\"";
+                //return "\"" + LeftLimit + "\"";
+                return LeftLimit;
             }
             else
             {
@@ -39,7 +42,8 @@ namespace VisualisationData.Excel
         {
             if (!string.IsNullOrEmpty(RightLimit))
             {
-                return "\"" + RightLimit + "\"";
+                //return "\"" + RightLimit + "\"";
+                return RightLimit;
             }
             else
             {

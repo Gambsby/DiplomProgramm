@@ -328,7 +328,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Excel\ExcelFile.cs" />
+    <Compile Include="Excel\ExcelClass.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Limits.cs" />
     <Compile Include="Models\MainProfile.cs" />

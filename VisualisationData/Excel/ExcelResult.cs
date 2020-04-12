@@ -25,22 +25,26 @@ namespace VisualisationData.Excel
 
         public string GetId()
         {
-            return "\"" + Id + "\"";
+            //return "\"" + Id + "\"";
+            return Id;
         }
 
         public string GetProfileNum()
         {
-            return "\"" + ProfileNum + "\"";
+            //return "\"" + ProfileNum + "\"";
+            return ProfileNum.ToString();
         }
 
         public string GetQuestionNum()
         {
-            return "\"" + QuestionNum + "\"";
+            //return "\"" + QuestionNum + "\"";
+            return QuestionNum.ToString();
         }
 
         public string GetAnswer()
         {
-            return "\"" + Answer + "\"";
+            //return "\"" + Answer + "\"";
+            return Answer;
         }
 
         public override string GetCsvString()
