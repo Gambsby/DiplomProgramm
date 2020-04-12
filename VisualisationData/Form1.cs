@@ -15,6 +15,9 @@ using MySql.Data.MySqlClient;
 using Z.BulkOperations;
 using System.Windows.Forms.DataVisualization.Charting;
 using VisualisationData.Models;
+using ExcelLibrary.SpreadSheet;
+using OfficeOpenXml;
+using VisualisationData.SettingsForm;
 
 namespace VisualisationData
 {
@@ -27,67 +30,14 @@ namespace VisualisationData
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)//1
         {
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             infoDG.MultiSelect = true;
-            /*List<MainProfile> mainProfilesList;
-            using (profiletransactionContext db = new profiletransactionContext())
-            {
-                mainProfilesList = db.MainProfile.OrderBy(p => p.Name).ToList();
-
-                profilesCB.Items.AddRange(mainProfilesList.ToArray());
-                if (profilesCB.Items.Count != 0)
-                {
-                    profilesCB.SelectedIndex = 0;
-                }
-            }*/
-
         }
 
-        private void profilesCB_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
-
-            infoDG.Columns.Clear();
-            infoDG.Rows.Clear();
-
-            infoDG.Columns.Add(CommonService.CreateTextColumn("Номер вопроса", "serielNumber"));
-            infoDG.Columns.Add(CommonService.CreateTextColumn("Вопрос", "question", true));
-            if (selectedProfile.Type == "range")
-            {
-                infoDG.Columns.Add(CommonService.CreateTextColumn("Левая граница", "leftLimit", true));
-                infoDG.Columns.Add(CommonService.CreateTextColumn("Правая граница", "rightLimit", true));
-            }
-            foreach (var answerItem in selectedProfile.Answers)
-            {
-                infoDG.Columns.Add(CommonService.CreateTextColumn(answerItem, answerItem));
-            }
-            infoDG.Columns.Add(CommonService.CreateTextColumn("Всего", "all"));
-            foreach (var questionItem in selectedProfile.Questions)
-            {
-                if (selectedProfile.Type == "range")
-                {
-                    infoDG.Rows.Add(questionItem.Id, questionItem.Content, questionItem.leftLimit, questionItem.rightLimit);
-                }
-                else
-                {
-                    infoDG.Rows.Add(questionItem.Id, questionItem.Content);
-                }
-
-                int allSumm = 0;
-                foreach (var answerItem in selectedProfile.Answers)
-                {
-                    var countCurrentAnswers = Document.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == questionItem.Id && a.Answer == answerItem).Count();
-                    allSumm += countCurrentAnswers;
-                    infoDG[answerItem, infoDG.RowCount - 1].Value = countCurrentAnswers;
-                }
-                infoDG["all", infoDG.RowCount - 1].Value = allSumm;
-            }
-
-        }
-
-        private void loadDataBtn_Click(object sender, EventArgs e)
+        private void loadDataBtn_Click(object sender, EventArgs e)//2
         {
             #region Load Data
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
@@ -114,6 +64,58 @@ namespace VisualisationData
 
             profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
             profilesCB.SelectedIndex = 0;
+        }
+
+        private void profilesCB_SelectedIndexChanged(object sender, EventArgs e)//3
+        {
+            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
+
+            InitDataGrid(selectedProfile.Type, infoDG);
+
+            foreach (var questionItem in selectedProfile.Questions)
+            {
+                switch (selectedProfile.Type)
+                {
+                    case "range":
+                        {
+                            infoDG.Rows.Add(questionItem.Id, questionItem.Content, questionItem.LeftLimit, questionItem.RightLimit, selectedProfile.Answers);
+                            break;
+                        }
+                    case "radio":
+                        {
+                            infoDG.Rows.Add(questionItem.Id, questionItem.Content, selectedProfile.Answers);
+                            break;
+                        }
+                    case "checkbox":
+                        {
+                            infoDG.Rows.Add(questionItem.Id, questionItem.Content, selectedProfile.Answers);
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+        private void InitDataGrid(string type, DataGridView dataGrid)
+        {
+            dataGrid.Columns.Clear();
+            dataGrid.Rows.Clear();
+
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Номер вопроса", "serielNumber"));
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Вопрос", "question", true));
+
+            switch (type)
+            {
+                case "range":
+                    {
+                        dataGrid.Columns.Add(CommonService.CreateTextColumn("Левая граница", "leftLimit", true));
+                        dataGrid.Columns.Add(CommonService.CreateTextColumn("Правая граница", "rightLimit", true));
+                        break;
+                    }
+            }
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Возможные ответы", "answers"));
         }
 
         private void columnDiagramBtn_Click(object sender, EventArgs e)
@@ -184,6 +186,11 @@ namespace VisualisationData
             visualisationForm.Show();
         }
 
+
+
+
+
+
         private void saveDBBtn_Click(object sender, EventArgs e)
         {
             using (profilesContext db = new profilesContext())
@@ -192,9 +199,9 @@ namespace VisualisationData
                 {
                     try
                     {
-                        SaveProfileToDB(db, tr);
+                        //SaveProfileToDB(db, tr);
                         tr.Commit();
-                        SaveResultToDB(db, tr);
+                        //SaveResultToDB(db, tr);
                     }
                     catch (Exception ex)
                     {
@@ -205,7 +212,7 @@ namespace VisualisationData
             }
         }
 
-        private void SaveProfileToDB(profilesContext db, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr)
+        /*private void SaveProfileToDB(profilesContext db, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr)
         {
             Dictionary<string, Profile> profileMap = new Dictionary<string, Profile>();
 
@@ -293,9 +300,9 @@ namespace VisualisationData
             db.QuestionAnswer.AddRange(questionAnswers);
             db.SaveChanges();
             Application.DoEvents();
-        }
+        }*/
 
-        private void SaveResultToDB(profilesContext db, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr)
+        /*private void SaveResultToDB(profilesContext db, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr)
         {
             MainProfile mainProfile = db.MainProfile.SingleOrDefault(m => m.Name == Document.DocumentName);
             List<Profile> profiles = db.Profile.Where(p => p.MainProfile == mainProfile).ToList();
@@ -340,7 +347,7 @@ namespace VisualisationData
                 QuestionAnswer questionAnswer = questionAnswers.SingleOrDefault(q => q.Answer.Profile == profile &&
                                                                                 q.Question.Profile == profile &&
                                                                                 q.Question.SerialNumber == answerItem.QuestionNum &&
-                                                                                q.Answer.Content == answerItem.Answer);
+                                                                                q.Answer.Content == answerItem.Answers[0]);
                 Questioned questioned = questionedMap[answerItem.Id];
 
                 DataRow row = resultDT.NewRow();
@@ -361,7 +368,7 @@ namespace VisualisationData
             {
                 BulkWriteToDB(resultDT, "result");
             }
-        }
+        }*/
 
         private void BulkWriteToDB(DataTable dataTable, string tableName)
         {
@@ -381,6 +388,50 @@ namespace VisualisationData
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        private void closeProfileBtn_Click(object sender, EventArgs e)
+        {
+            profilesCB.Items.Clear();
+            infoDG.Rows.Clear();
+            infoDG.Columns.Clear();
+            Document = null;
+        }
+
+        private void saveExcelBtn_Click(object sender, EventArgs e)
+        {
+            SaveSettingForm saveSettingForm = new SaveSettingForm(Document, "excel");
+            saveSettingForm.ShowDialog();
+            switch (saveSettingForm.DialogResult)
+            {
+                case DialogResult.OK:
+                    {
+                        MessageBox.Show("Данные успешно сохранены");
+                        break;
+                    }
+                case DialogResult.Cancel:
+                    {
+                        break;
+                    }
+            }
+        }
+
+        private void saveCSVBtn_Click(object sender, EventArgs e)
+        {
+            SaveSettingForm saveSettingForm = new SaveSettingForm(Document, "csv");
+            saveSettingForm.ShowDialog();
+            switch (saveSettingForm.DialogResult)
+            {
+                case DialogResult.OK:
+                    {
+                        MessageBox.Show("Данные успешно сохранены");
+                        break;
+                    }
+                case DialogResult.Cancel:
+                    {
+                        break;
+                    }
             }
         }
     }

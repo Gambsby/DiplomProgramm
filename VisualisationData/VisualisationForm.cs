@@ -36,9 +36,9 @@ namespace VisualisationData
                 visualChart.Series.Add(selectedQuestionItem.Content);
                 visualChart.Series[selectedQuestionItem.Content].ChartType = diagramType;
 
-                foreach (var answerItem in selectedProfile.Answers)
+                foreach (var answerItem in selectedProfile.GetProfileAnswers())
                 {
-                    var countCurrentAnswers = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestionItem.Id && a.Answer == answerItem).Count();
+                    var countCurrentAnswers = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestionItem.Id && a.GetAnswers().Contains(answerItem)).Count();
                     visualChart.Series[selectedQuestionItem.Content].Points.AddXY(answerItem, countCurrentAnswers);
 
                     //visualChart.Series[answerItem]["PointWidth"] = "0.1";

@@ -32,11 +32,11 @@
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadDataBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.saveBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.cSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.excelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveCSVBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveExcelBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.saveDBBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteDataBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.закрытьАнкетуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeProfileBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.визуализацияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.columnDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.barDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +66,7 @@
             this.loadDataBtn,
             this.saveBtn,
             this.deleteDataBtn,
-            this.закрытьАнкетуToolStripMenuItem});
+            this.closeProfileBtn});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
             this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.файлToolStripMenuItem.Text = "Файл";
@@ -81,26 +81,26 @@
             // saveBtn
             // 
             this.saveBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cSVToolStripMenuItem,
-            this.excelToolStripMenuItem,
+            this.saveCSVBtn,
+            this.saveExcelBtn,
             this.saveDBBtn});
             this.saveBtn.Name = "saveBtn";
             this.saveBtn.Size = new System.Drawing.Size(180, 22);
             this.saveBtn.Text = "Сохранить анкету";
             // 
-            // cSVToolStripMenuItem
+            // saveCSVBtn
             // 
-            this.cSVToolStripMenuItem.Enabled = false;
-            this.cSVToolStripMenuItem.Name = "cSVToolStripMenuItem";
-            this.cSVToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.cSVToolStripMenuItem.Text = "CSV";
+            this.saveCSVBtn.Name = "saveCSVBtn";
+            this.saveCSVBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveCSVBtn.Text = "CSV";
+            this.saveCSVBtn.Click += new System.EventHandler(this.saveCSVBtn_Click);
             // 
-            // excelToolStripMenuItem
+            // saveExcelBtn
             // 
-            this.excelToolStripMenuItem.Enabled = false;
-            this.excelToolStripMenuItem.Name = "excelToolStripMenuItem";
-            this.excelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.excelToolStripMenuItem.Text = "Excel";
+            this.saveExcelBtn.Name = "saveExcelBtn";
+            this.saveExcelBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveExcelBtn.Text = "Excel";
+            this.saveExcelBtn.Click += new System.EventHandler(this.saveExcelBtn_Click);
             // 
             // saveDBBtn
             // 
@@ -116,12 +116,12 @@
             this.deleteDataBtn.Size = new System.Drawing.Size(180, 22);
             this.deleteDataBtn.Text = "Удалить анкету";
             // 
-            // закрытьАнкетуToolStripMenuItem
+            // closeProfileBtn
             // 
-            this.закрытьАнкетуToolStripMenuItem.Enabled = false;
-            this.закрытьАнкетуToolStripMenuItem.Name = "закрытьАнкетуToolStripMenuItem";
-            this.закрытьАнкетуToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.закрытьАнкетуToolStripMenuItem.Text = "Закрыть анкету";
+            this.closeProfileBtn.Name = "closeProfileBtn";
+            this.closeProfileBtn.Size = new System.Drawing.Size(180, 22);
+            this.closeProfileBtn.Text = "Закрыть анкету";
+            this.closeProfileBtn.Click += new System.EventHandler(this.closeProfileBtn_Click);
             // 
             // визуализацияToolStripMenuItem
             // 
@@ -228,10 +228,10 @@
         private System.Windows.Forms.ToolStripMenuItem columnDiagramBtn;
         private System.Windows.Forms.ToolStripMenuItem barDiagramBtn;
         private System.Windows.Forms.ToolStripMenuItem pieDiagramBtn;
-        private System.Windows.Forms.ToolStripMenuItem cSVToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem excelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveCSVBtn;
+        private System.Windows.Forms.ToolStripMenuItem saveExcelBtn;
         private System.Windows.Forms.ToolStripMenuItem saveDBBtn;
-        private System.Windows.Forms.ToolStripMenuItem закрытьАнкетуToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeProfileBtn;
     }
 }
 

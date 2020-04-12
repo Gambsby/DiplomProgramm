@@ -18,7 +18,7 @@ namespace VisualisationData
     {
         public ExcelDocument Document { get; set; }
 
-        private List<ExcelAnswer> answerListContent;
+        private List<ExcelResult> answerListContent;
         private List<ExcelProfile> profilesListContent;
         private List<ExcelQuestionType> infoListContent;
         private string filePath;
@@ -48,7 +48,7 @@ namespace VisualisationData
 
             answerSheetName = chooseAnswerSheetDG.SelectedItem.ToString();
             worksheetNames.Remove(answerSheetName);
-            answerListContent = ExcelService.GetAnswers(filePath, answerSheetName);
+            answerListContent = ExcelService.GetResults(filePath, answerSheetName);
 
             chooseDG.Columns.Add(CommonService.CreateTextColumn("Идентификатор", "id"));
             chooseDG.Columns.Add(CommonService.CreateTextColumn("Название части анкеты", "profileName", true));
@@ -76,8 +76,7 @@ namespace VisualisationData
             {
                 string profileName = chooseDG["profileName", i].Value.ToString();
                 ExcelQuestionType profileInfo = infoListContent.SingleOrDefault(info => info.ProfileName == profileName);
-                string profileType = GetProfileType(profileInfo.Answers);
-                List<string> profileAnswers = GetProfileAnswers(profileInfo.Answers, profileType);
+                string profileType = profileInfo.GetProfileType();
 
                 List<ExcelQuestion> questions = ExcelService.GetQuestions(filePath, chooseDG["sheetName", i].Value.ToString(), profileType);
 
@@ -85,7 +84,7 @@ namespace VisualisationData
                     Id = profileInfo.Id, 
                     Name = profileInfo.ProfileName, 
                     Type = profileType, 
-                    Answers = profileAnswers, 
+                    Answers = profileInfo.Answers, 
                     Questions = questions 
                 };
                 profilesListContent.Add(excelProfile);
@@ -99,66 +98,6 @@ namespace VisualisationData
             }; 
 
             this.Close();
-        }
-
-        private static string GetProfileType(string answers)
-        {
-            string type;
-            if (Regex.IsMatch(answers, "^от.+до.+$"))
-            {
-                type = "range";
-            }
-            else if (Regex.IsMatch(answers, ";"))
-            {
-                type = "checkbox";
-            }
-            else if (Regex.IsMatch(answers, "/"))
-            {
-                type = "radio";
-            }
-            else
-            {
-                type = null;
-            }
-            return type;
-        }
-
-        private static List<string> GetProfileAnswers(string answer, string type)
-        {
-            List<string> answers = new List<string>();
-            switch (type)
-            {
-                case "range":
-                    {
-                        var matches = Regex.Match(answer, "^от(-?\\d+) *до *(-?\\d+)$");
-                        var a = matches.Groups[1].Value;
-                        int start = Convert.ToInt32(matches.Groups[1].Value);
-                        int end = Convert.ToInt32(matches.Groups[2].Value);
-                        answers = new List<string>();
-                        for (int i = start; i <= end; i++)
-                        {
-                            answers.Add(i.ToString());
-                        }
-                        break;
-                    }
-                case "radio":
-                    {
-                        answers = answer.Split('/').ToList();
-                        break;
-                    }
-                case "checbox":
-                    {
-                        answers = answer.Split(';').ToList();
-                        break;
-                    }
-            }
-
-            for (int i = 0; i < answers.Count; i++)
-            {
-                answers[i] = answers[i].ToLower();
-            }
-            answers.Add("");
-            return answers;
         }
     }
 }

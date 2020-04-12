@@ -9,7 +9,7 @@ namespace VisualisationData.Excel
     public class ExcelDocument
     {
         public string DocumentName { get; set; }
-        public List<ExcelAnswer> AnswerListContent { get; set; } = new List<ExcelAnswer>();
+        public List<ExcelResult> AnswerListContent { get; set; } = new List<ExcelResult>();
         public List<ExcelProfile> ProfilesListContent { get; set; } = new List<ExcelProfile>();
     }
 }

@@ -89,8 +89,8 @@ namespace VisualisationData.Services
                         {
                             Id = id,
                             Content = GetClearString(question[i].ToString()),
-                            leftLimit = null,
-                            rightLimit = null
+                            LeftLimit = null,
+                            RightLimit = null
                         };
                     }
                     else
@@ -99,8 +99,8 @@ namespace VisualisationData.Services
                         {
                             Id = id,
                             Content = GetClearString(question[i].ToString()),
-                            leftLimit = GetClearString(leftLimits[i].ToString()),
-                            rightLimit = GetClearString(rightLimits[i].ToString())
+                            LeftLimit = GetClearString(leftLimits[i].ToString()),
+                            RightLimit = GetClearString(rightLimits[i].ToString())
                         };
                     }
 
@@ -115,9 +115,9 @@ namespace VisualisationData.Services
             return excelProfile;
         }
 
-        public static List<ExcelAnswer> GetAnswers(string pathToExcelFile, string sheetName)
+        public static List<ExcelResult> GetResults(string pathToExcelFile, string sheetName)
         {
-            List<ExcelAnswer> excelAnswer = new List<ExcelAnswer>();
+            List<ExcelResult> excelAnswer = new List<ExcelResult>();
 
             ConnectionExcel ConxObject = new ConnectionExcel(pathToExcelFile);
             var ids = (from e in ConxObject.UrlConnexion.WorksheetNoHeader(sheetName) select e[0].Value).ToList();
@@ -147,7 +147,7 @@ namespace VisualisationData.Services
                         throw new Exception("Id is not int");
                     }
 
-                    ExcelAnswer answer = new ExcelAnswer()
+                    ExcelResult answer = new ExcelResult()
                     {
                         Id = ids[i].ToString(),
                         ProfileNum = profileNum,
