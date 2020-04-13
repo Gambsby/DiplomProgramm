@@ -328,35 +328,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Excel\ExcelClass.cs" />
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\Limits.cs" />
     <Compile Include="Models\MainProfile.cs" />
     <Compile Include="Models\Profile.cs" />
+    <Compile Include="Models\QType.cs" />
     <Compile Include="Models\Question.cs" />
-    <Compile Include="Models\QuestionAnswer.cs" />
     <Compile Include="Models\Questioned.cs" />
-    <Compile Include="Models\Questiontype.cs" />
     <Compile Include="Models\Result.cs" />
-    <Compile Include="Models\profilesContext.cs" />
-    <Compile Include="SettingsForm\AppearanceSettingForm.cs">
+    <Compile Include="Models\Type.cs" />
+    <Compile Include="Models\profileContext.cs" />
+    <Compile Include="Services\MainService.cs" />
+    <Compile Include="VisualSettingForms\AppearanceSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm\AppearanceSettingForm.Designer.cs">
+    <Compile Include="VisualSettingForms\AppearanceSettingForm.Designer.cs">
       <DependentUpon>AppearanceSettingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DBMySQLUtils.cs" />
     <Compile Include="DBUtils.cs" />
-    <Compile Include="SettingsForm\DeleteSettingForm.cs">
+    <Compile Include="DataSettingForms\ChooseMainProfileForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm\DeleteSettingForm.Designer.cs">
-      <DependentUpon>DeleteSettingForm.cs</DependentUpon>
+    <Compile Include="DataSettingForms\ChooseMainProfileForm.Designer.cs">
+      <DependentUpon>ChooseMainProfileForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsForm\DownloadSettingForm.cs">
+    <Compile Include="DataSettingForms\DownloadSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm\DownloadSettingForm.Designer.cs">
+    <Compile Include="DataSettingForms\DownloadSettingForm.Designer.cs">
       <DependentUpon>DownloadSettingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Excel\ConnectionExcel .cs" />
@@ -375,37 +375,37 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommonService.cs" />
     <Compile Include="Services\ExcelService.cs" />
-    <Compile Include="SettingsForm\DataSettingForm.cs">
+    <Compile Include="VisualSettingForms\DataSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm\DataSettingForm.Designer.cs">
+    <Compile Include="VisualSettingForms\DataSettingForm.Designer.cs">
       <DependentUpon>DataSettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsForm\SaveSettingForm.cs">
+    <Compile Include="DataSettingForms\SaveSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm\SaveSettingForm.Designer.cs">
+    <Compile Include="DataSettingForms\SaveSettingForm.Designer.cs">
       <DependentUpon>SaveSettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsForm\TextDialog.cs">
+    <Compile Include="VisualSettingForms\TextDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm\TextDialog.Designer.cs">
+    <Compile Include="VisualSettingForms\TextDialog.Designer.cs">
       <DependentUpon>TextDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="VisualisationForm.cs">
+    <Compile Include="VisualSettingForms\VisualisationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="VisualisationForm.Designer.cs">
+    <Compile Include="VisualSettingForms\VisualisationForm.Designer.cs">
       <DependentUpon>VisualisationForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="SettingsForm\AppearanceSettingForm.resx">
+    <EmbeddedResource Include="VisualSettingForms\AppearanceSettingForm.resx">
       <DependentUpon>AppearanceSettingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsForm\DeleteSettingForm.resx">
-      <DependentUpon>DeleteSettingForm.cs</DependentUpon>
+    <EmbeddedResource Include="DataSettingForms\ChooseMainProfileForm.resx">
+      <DependentUpon>ChooseMainProfileForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsForm\DownloadSettingForm.resx">
+    <EmbeddedResource Include="DataSettingForms\DownloadSettingForm.resx">
       <DependentUpon>DownloadSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
@@ -420,16 +420,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="SettingsForm\DataSettingForm.resx">
+    <EmbeddedResource Include="VisualSettingForms\DataSettingForm.resx">
       <DependentUpon>DataSettingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsForm\SaveSettingForm.resx">
+    <EmbeddedResource Include="DataSettingForms\SaveSettingForm.resx">
       <DependentUpon>SaveSettingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsForm\TextDialog.resx">
+    <EmbeddedResource Include="VisualSettingForms\TextDialog.resx">
       <DependentUpon>TextDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="VisualisationForm.resx">
+    <EmbeddedResource Include="VisualSettingForms\VisualisationForm.resx">
       <DependentUpon>VisualisationForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />

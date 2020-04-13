@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using VisualisationData.Excel;
 using VisualisationData.Services;
 
-namespace VisualisationData
+namespace VisualisationData.DataSettingForms
 {
     public partial class DownloadSettingForm : Form
     {
@@ -43,8 +43,6 @@ namespace VisualisationData
                 }
                 worksheetNames = excelPack.Workbook.Worksheets.Select(w => w.Name).ToList();
             }
-            //ConnectionExcel ConxObject = new ConnectionExcel(filePath);
-            //worksheetNames = ConxObject.UrlConnexion.GetWorksheetNames().ToList();
             chooseInfoSheetCB.Items.AddRange(worksheetNames.ToArray());
             chooseAnswerSheetDG.Items.AddRange(worksheetNames.ToArray());
         }

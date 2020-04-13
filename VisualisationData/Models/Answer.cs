@@ -7,14 +7,14 @@ namespace VisualisationData.Models
     {
         public Answer()
         {
-            QuestionAnswer = new HashSet<QuestionAnswer>();
+            Result = new HashSet<Result>();
         }
 
         public int Id { get; set; }
         public string Content { get; set; }
-        public int ProfileId { get; set; }
+        public int PeopleId { get; set; }
 
-        public virtual Profile Profile { get; set; }
-        public virtual ICollection<QuestionAnswer> QuestionAnswer { get; set; }
+        public virtual Profile People { get; set; }
+        public virtual ICollection<Result> Result { get; set; }
     }
 }

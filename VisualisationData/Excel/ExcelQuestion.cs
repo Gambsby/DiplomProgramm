@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VisualisationData.Excel
 {
-    public class ExcelQuestion : ExcelClass
+    public class ExcelQuestion
     {
         public int Id { get; set; }
         public string Content { get; set; }
@@ -48,18 +48,6 @@ namespace VisualisationData.Excel
             else
             {
                 return string.Empty;
-            }
-        }
-
-        public override string GetCsvString()
-        {
-            if (!string.IsNullOrEmpty(GetLeftLimit()) && !string.IsNullOrEmpty(GetRightLimit()))
-            {
-                return GetId() + "," + GetContent() + "," + GetLeftLimit() + "," + GetRightLimit() + "\r\n";
-            }
-            else
-            {
-                return GetId() + "," + GetContent() + "\r\n";
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace VisualisationData
+﻿namespace VisualisationData.DataSettingForms
 {
     partial class DownloadSettingForm
     {

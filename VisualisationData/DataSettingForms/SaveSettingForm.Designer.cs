@@ -1,4 +1,4 @@
-﻿namespace VisualisationData.SettingsForm
+﻿namespace VisualisationData.DataSettingForms
 {
     partial class SaveSettingForm
     {

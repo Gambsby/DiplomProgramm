@@ -31,6 +31,8 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadDataBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadDataExcelBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadDataDBBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.saveBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCSVBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.saveExcelBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,10 +75,26 @@
             // 
             // loadDataBtn
             // 
+            this.loadDataBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadDataExcelBtn,
+            this.loadDataDBBtn});
             this.loadDataBtn.Name = "loadDataBtn";
             this.loadDataBtn.Size = new System.Drawing.Size(180, 22);
             this.loadDataBtn.Text = "Загрузить анкету";
-            this.loadDataBtn.Click += new System.EventHandler(this.loadDataBtn_Click);
+            // 
+            // loadDataExcelBtn
+            // 
+            this.loadDataExcelBtn.Name = "loadDataExcelBtn";
+            this.loadDataExcelBtn.Size = new System.Drawing.Size(180, 22);
+            this.loadDataExcelBtn.Text = "Excel";
+            this.loadDataExcelBtn.Click += new System.EventHandler(this.loadDataExcelBtn_Click);
+            // 
+            // loadDataDBBtn
+            // 
+            this.loadDataDBBtn.Name = "loadDataDBBtn";
+            this.loadDataDBBtn.Size = new System.Drawing.Size(180, 22);
+            this.loadDataDBBtn.Text = "База данных";
+            this.loadDataDBBtn.Click += new System.EventHandler(this.loadDataDBBtn_Click);
             // 
             // saveBtn
             // 
@@ -111,10 +129,10 @@
             // 
             // deleteDataBtn
             // 
-            this.deleteDataBtn.Enabled = false;
             this.deleteDataBtn.Name = "deleteDataBtn";
             this.deleteDataBtn.Size = new System.Drawing.Size(180, 22);
             this.deleteDataBtn.Text = "Удалить анкету";
+            this.deleteDataBtn.Click += new System.EventHandler(this.deleteDataBtn_Click);
             // 
             // closeProfileBtn
             // 
@@ -232,6 +250,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveExcelBtn;
         private System.Windows.Forms.ToolStripMenuItem saveDBBtn;
         private System.Windows.Forms.ToolStripMenuItem closeProfileBtn;
+        private System.Windows.Forms.ToolStripMenuItem loadDataExcelBtn;
+        private System.Windows.Forms.ToolStripMenuItem loadDataDBBtn;
     }
 }
 

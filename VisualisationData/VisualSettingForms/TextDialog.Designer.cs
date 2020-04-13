@@ -1,4 +1,4 @@
-﻿namespace VisualisationData.SettingsForm
+﻿namespace VisualisationData.VisualSettingForms
 {
     partial class TextDialog
     {

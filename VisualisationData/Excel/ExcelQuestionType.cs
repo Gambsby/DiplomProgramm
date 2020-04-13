@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VisualisationData.Excel
 {
-    public class ExcelQuestionType : ExcelClass
+    public class ExcelQuestionType
     {
         public int Id { get; set; }
         public string ProfileName { get; set; }
@@ -51,11 +51,6 @@ namespace VisualisationData.Excel
         {
             //return "\"" + Answers + "\"";
             return Answers;
-        }
-
-        public override string GetCsvString()
-        {
-            return GetId() + "," + GetProfileName() + "," + GetAnswers() + "\r\n";
         }
     }
 }

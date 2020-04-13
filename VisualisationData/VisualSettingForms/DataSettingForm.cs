@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using VisualisationData.Services;
 
-namespace VisualisationData.SettingsForm
+namespace VisualisationData.VisualSettingForms
 {
     public partial class DataSettingForm : Form
     {

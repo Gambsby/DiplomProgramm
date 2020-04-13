@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace VisualisationData.Models
 {
-    public partial class profilesContext : DbContext
+    public partial class profileContext : DbContext
     {
-        public profilesContext()
+        public profileContext()
         {
         }
 
-        public profilesContext(DbContextOptions<profilesContext> options)
+        public profileContext(DbContextOptions<profileContext> options)
             : base(options)
         {
         }
@@ -19,10 +19,9 @@ namespace VisualisationData.Models
         public virtual DbSet<Limits> Limits { get; set; }
         public virtual DbSet<MainProfile> MainProfile { get; set; }
         public virtual DbSet<Profile> Profile { get; set; }
+        public virtual DbSet<QType> QType { get; set; }
         public virtual DbSet<Question> Question { get; set; }
-        public virtual DbSet<QuestionAnswer> QuestionAnswer { get; set; }
         public virtual DbSet<Questioned> Questioned { get; set; }
-        public virtual DbSet<Questiontype> Questiontype { get; set; }
         public virtual DbSet<Result> Result { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -40,8 +39,8 @@ namespace VisualisationData.Models
             {
                 entity.ToTable("answer");
 
-                entity.HasIndex(e => e.ProfileId)
-                    .HasName("profile_id");
+                entity.HasIndex(e => e.PeopleId)
+                    .HasName("people_id");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -49,17 +48,18 @@ namespace VisualisationData.Models
 
                 entity.Property(e => e.Content)
                     .IsRequired()
-                    .HasColumnType("varchar(128)")
+                    .HasColumnName("content")
+                    .HasColumnType("text")
                     .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                    .HasCollation("utf8_unicode_ci");
 
-                entity.Property(e => e.ProfileId)
-                    .HasColumnName("profile_id")
+                entity.Property(e => e.PeopleId)
+                    .HasColumnName("people_id")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.Profile)
+                entity.HasOne(d => d.People)
                     .WithMany(p => p.Answer)
-                    .HasForeignKey(d => d.ProfileId)
+                    .HasForeignKey(d => d.PeopleId)
                     .HasConstraintName("answer_ibfk_1");
             });
 
@@ -74,23 +74,23 @@ namespace VisualisationData.Models
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.End)
+                entity.Property(e => e.LeftLimit)
                     .IsRequired()
-                    .HasColumnName("end")
+                    .HasColumnName("left_limit")
                     .HasColumnType("text")
                     .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                    .HasCollation("utf8_unicode_ci");
 
                 entity.Property(e => e.ProfileId)
                     .HasColumnName("profile_id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Start)
+                entity.Property(e => e.RightLimit)
                     .IsRequired()
-                    .HasColumnName("start")
+                    .HasColumnName("right_limit")
                     .HasColumnType("text")
                     .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                    .HasCollation("utf8_unicode_ci");
 
                 entity.HasOne(d => d.Profile)
                     .WithMany(p => p.Limits)
@@ -115,7 +115,7 @@ namespace VisualisationData.Models
                     .HasColumnName("name")
                     .HasColumnType("varchar(128)")
                     .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                    .HasCollation("utf8_unicode_ci");
             });
 
             modelBuilder.Entity<Profile>(entity =>
@@ -125,9 +125,8 @@ namespace VisualisationData.Models
                 entity.HasIndex(e => e.MainProfileId)
                     .HasName("main_profile_id");
 
-                entity.HasIndex(e => e.Name)
-                    .HasName("name")
-                    .IsUnique();
+                entity.HasIndex(e => e.TypeId)
+                    .HasName("type_id");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -140,18 +139,43 @@ namespace VisualisationData.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
-                    .HasColumnType("varchar(64)")
+                    .HasColumnType("varchar(128)")
                     .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                    .HasCollation("utf8_unicode_ci");
 
                 entity.Property(e => e.SerialNumber)
                     .HasColumnName("serial_number")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.TypeId)
+                    .HasColumnName("type_id")
                     .HasColumnType("int(11)");
 
                 entity.HasOne(d => d.MainProfile)
                     .WithMany(p => p.Profile)
                     .HasForeignKey(d => d.MainProfileId)
                     .HasConstraintName("profile_ibfk_1");
+
+                entity.HasOne(d => d.Type)
+                    .WithMany(p => p.Profile)
+                    .HasForeignKey(d => d.TypeId)
+                    .HasConstraintName("profile_ibfk_2");
+            });
+
+            modelBuilder.Entity<QType>(entity =>
+            {
+                entity.ToTable("q_type");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasColumnType("varchar(128)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_unicode_ci");
             });
 
             modelBuilder.Entity<Question>(entity =>
@@ -159,13 +183,10 @@ namespace VisualisationData.Models
                 entity.ToTable("question");
 
                 entity.HasIndex(e => e.LimitsId)
-                    .HasName("question_ibfk_3");
+                    .HasName("limits_id");
 
                 entity.HasIndex(e => e.ProfileId)
-                    .HasName("question_ibfk_1");
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("type_id");
+                    .HasName("profile_id");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
@@ -176,7 +197,7 @@ namespace VisualisationData.Models
                     .HasColumnName("content")
                     .HasColumnType("text")
                     .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                    .HasCollation("utf8_unicode_ci");
 
                 entity.Property(e => e.LimitsId)
                     .HasColumnName("limits_id")
@@ -190,59 +211,16 @@ namespace VisualisationData.Models
                     .HasColumnName("serial_number")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.TypeId)
-                    .HasColumnName("type_id")
-                    .HasColumnType("int(11)");
-
                 entity.HasOne(d => d.Limits)
                     .WithMany(p => p.Question)
                     .HasForeignKey(d => d.LimitsId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("question_ibfk_3");
+                    .HasConstraintName("question_ibfk_1");
 
                 entity.HasOne(d => d.Profile)
                     .WithMany(p => p.Question)
                     .HasForeignKey(d => d.ProfileId)
-                    .HasConstraintName("question_ibfk_1");
-
-                entity.HasOne(d => d.Type)
-                    .WithMany(p => p.Question)
-                    .HasForeignKey(d => d.TypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("question_ibfk_2");
-            });
-
-            modelBuilder.Entity<QuestionAnswer>(entity =>
-            {
-                entity.ToTable("question_answer");
-
-                entity.HasIndex(e => e.AnswerId)
-                    .HasName("answer_id");
-
-                entity.HasIndex(e => e.QuestionId)
-                    .HasName("question_answer_ibfk_2");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.AnswerId)
-                    .HasColumnName("answer_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.QuestionId)
-                    .HasColumnName("question_id")
-                    .HasColumnType("int(11)");
-
-                entity.HasOne(d => d.Answer)
-                    .WithMany(p => p.QuestionAnswer)
-                    .HasForeignKey(d => d.AnswerId)
-                    .HasConstraintName("question_answer_ibfk_1");
-
-                entity.HasOne(d => d.Question)
-                    .WithMany(p => p.QuestionAnswer)
-                    .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("question_answer_ibfk_2");
             });
 
             modelBuilder.Entity<Questioned>(entity =>
@@ -250,7 +228,7 @@ namespace VisualisationData.Models
                 entity.ToTable("questioned");
 
                 entity.HasIndex(e => e.MainProfileId)
-                    .HasName("questioned_ibfk_1");
+                    .HasName("main_profile_id");
 
                 entity.HasIndex(e => e.Number)
                     .HasName("number")
@@ -269,7 +247,7 @@ namespace VisualisationData.Models
                     .HasColumnName("number")
                     .HasColumnType("varchar(128)")
                     .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
+                    .HasCollation("utf8_unicode_ci");
 
                 entity.HasOne(d => d.MainProfile)
                     .WithMany(p => p.Questioned)
@@ -277,35 +255,18 @@ namespace VisualisationData.Models
                     .HasConstraintName("questioned_ibfk_1");
             });
 
-            modelBuilder.Entity<Questiontype>(entity =>
-            {
-                entity.ToTable("questiontype");
-
-                entity.HasIndex(e => e.Type)
-                    .HasName("type")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Type)
-                    .IsRequired()
-                    .HasColumnName("type")
-                    .HasColumnType("varchar(16)")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_general_ci");
-            });
-
             modelBuilder.Entity<Result>(entity =>
             {
                 entity.ToTable("result");
 
+                entity.HasIndex(e => e.AnswerId)
+                    .HasName("answer_id");
+
                 entity.HasIndex(e => e.ProfileId)
                     .HasName("profile_id");
 
-                entity.HasIndex(e => e.QuestionAnswerId)
-                    .HasName("result_ibfk_2");
+                entity.HasIndex(e => e.QuestionId)
+                    .HasName("question_id");
 
                 entity.HasIndex(e => e.QuestionedId)
                     .HasName("questioned_id");
@@ -314,26 +275,42 @@ namespace VisualisationData.Models
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.AnswerId)
+                    .HasColumnName("answer_id")
+                    .HasColumnType("int(11)");
+
+                entity.Property(e => e.OpenAnswer)
+                    .HasColumnName("open_answer")
+                    .HasColumnType("text")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_unicode_ci");
+
                 entity.Property(e => e.ProfileId)
                     .HasColumnName("profile_id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.QuestionAnswerId)
-                    .HasColumnName("question_answer_id")
+                entity.Property(e => e.QuestionId)
+                    .HasColumnName("question_id")
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.QuestionedId)
                     .HasColumnName("questioned_id")
                     .HasColumnType("int(11)");
 
+                entity.HasOne(d => d.Answer)
+                    .WithMany(p => p.Result)
+                    .HasForeignKey(d => d.AnswerId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("result_ibfk_3");
+
                 entity.HasOne(d => d.Profile)
                     .WithMany(p => p.Result)
                     .HasForeignKey(d => d.ProfileId)
-                    .HasConstraintName("result_ibfk_3");
+                    .HasConstraintName("result_ibfk_1");
 
-                entity.HasOne(d => d.QuestionAnswer)
+                entity.HasOne(d => d.Question)
                     .WithMany(p => p.Result)
-                    .HasForeignKey(d => d.QuestionAnswerId)
+                    .HasForeignKey(d => d.QuestionId)
                     .HasConstraintName("result_ibfk_2");
 
                 entity.HasOne(d => d.Questioned)

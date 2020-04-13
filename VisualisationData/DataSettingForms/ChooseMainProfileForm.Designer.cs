@@ -1,6 +1,6 @@
-﻿namespace VisualisationData
+﻿namespace VisualisationData.DataSettingForms
 {
-    partial class DeleteSettingForm
+    partial class ChooseMainProfileForm
     {
         /// <summary>
         /// Required designer variable.

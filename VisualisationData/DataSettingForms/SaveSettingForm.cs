@@ -16,11 +16,10 @@ using System.Windows.Forms;
 using VisualisationData.Excel;
 using VisualisationData.Services;
 
-namespace VisualisationData.SettingsForm
+namespace VisualisationData.DataSettingForms
 {
     public partial class SaveSettingForm : Form
     {
-        private const int CountThread = 5;
         private ExcelDocument Document { get; set; }
         private string type;
         public SaveSettingForm(ExcelDocument excelDocument, string type)

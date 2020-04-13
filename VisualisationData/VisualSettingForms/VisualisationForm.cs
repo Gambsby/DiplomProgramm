@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using VisualisationData.Excel;
-using VisualisationData.SettingsForm;
 
-namespace VisualisationData
+namespace VisualisationData.VisualSettingForms
 {
     public partial class VisualisationForm : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace VisualisationData
+﻿namespace VisualisationData.VisualSettingForms
 {
     partial class VisualisationForm
     {
