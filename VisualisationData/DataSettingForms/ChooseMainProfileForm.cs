@@ -15,6 +15,9 @@ namespace VisualisationData.DataSettingForms
 {
     public partial class ChooseMainProfileForm : Form
     {
+        public ExcelDocument Document { get; set; }
+        public bool Status { get; set; }
+
         private string type;
         public ChooseMainProfileForm(string type)
         {
@@ -48,20 +51,34 @@ namespace VisualisationData.DataSettingForms
 
         private void acceptBtn_Click(object sender, EventArgs e)
         {
-            switch (type)
+            try
             {
-                case "delete":
-                    {
-                        DeleteMainProfile();
+                switch (type)
+                {
+                    case "delete":
+                        {
+                            DeleteMainProfile();
+                            Status = true;
+                            this.Close();
+                            break;
+                        }
+                    case "load":
+                        {
+                            LoadMainProfile();
+                            Status = true;
+                            this.Close();
+                            break;
+                        }
+                    default:
                         break;
-                    }
-                case "load":
-                    {
-                        LoadMainProfile();
-                        break;
-                    }
-                default:
-                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Document = null;
+                Status = false;
+                MessageBox.Show(ex.Message);
+                return;
             }
         }
 
@@ -70,11 +87,23 @@ namespace VisualisationData.DataSettingForms
             var deletedMainProfiles = deleteLB.SelectedItems.Cast<MainProfile>().ToList();
             using (profileContext db = new profileContext())
             {
-                foreach (var mainProfileItem in deletedMainProfiles)
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    db.MainProfile.Remove(mainProfileItem);
+                    try
+                    {
+                        foreach (var mainProfileItem in deletedMainProfiles)
+                        {
+                            db.MainProfile.Remove(mainProfileItem);
+                        }
+                        db.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw new Exception("При удалении произошла ошибка. Попытайтесь снова.");
+                    }
                 }
-                db.SaveChanges();
             }
         }
     
@@ -88,53 +117,46 @@ namespace VisualisationData.DataSettingForms
             {
                 mainProfile = db.MainProfile.SingleOrDefault(p => p == mainProfile);
                 db.Entry(mainProfile).Collection(t => t.Profile).Load();
+                db.Entry(mainProfile).Collection(t => t.Questioned).Load();
                 foreach (var profileItem in mainProfile.Profile)
                 {
-                    db.Entry(profileItem).Collection(t => t.Answer).Load();
                     db.Entry(profileItem).Collection(t => t.Question).Load();
                     db.Entry(profileItem).Collection(t => t.Result).Load();
                     db.Entry(profileItem).Reference(t => t.Type).Load();
                     List<ExcelQuestion> questions = new List<ExcelQuestion>();
                     foreach (var questionItem in profileItem.Question)
                     {
-                        db.Entry(questionItem).Reference(t => t.Limits).Load();
-                        if (questionItem.Limits == null)
+                        if (questionItem.LeftLimit == null && questionItem.RightLimit == null)
                         {
                             questions.Add(new ExcelQuestion { Id = questionItem.SerialNumber, Content = questionItem.Content, LeftLimit = "", RightLimit = "" });
                         }
                         else
                         {
-                            questions.Add(new ExcelQuestion { Id = questionItem.SerialNumber, Content = questionItem.Content, LeftLimit = questionItem.Limits.LeftLimit, RightLimit = questionItem.Limits.RightLimit });
+                            questions.Add(new ExcelQuestion { Id = questionItem.SerialNumber, Content = questionItem.Content, LeftLimit = questionItem.LeftLimit, RightLimit = questionItem.RightLimit });
                         }
                     }
-                    ExcelProfile excelProfile = new ExcelProfile { Id = profileItem.SerialNumber, Answers = profileItem.GetAnswersStr(), Name = profileItem.Name, Type = profileItem.Type.Name, Questions = questions };
+                    ExcelProfile excelProfile = new ExcelProfile { Id = profileItem.SerialNumber, Answers = profileItem.Answer, Name = profileItem.Name, Type = profileItem.Type.Type, Questions = questions };
                     profilesListContent.Add(excelProfile);
 
-                    var a = profileItem.Result.GroupBy(x => new { x.QuestionedId, x.ProfileId, x.QuestionId });
                     foreach (var resultItem in profileItem.Result)
                     {
-
-                        ExcelResult excelResult = new ExcelResult { Id = resultItem.Questioned.Number, 
+                        string questionedId = mainProfile.Questioned.SingleOrDefault(q => q.Id == resultItem.QuestionedId).Number;
+                        ExcelResult excelResult = new ExcelResult { Id = questionedId, 
                             ProfileNum = resultItem.Profile.SerialNumber, 
                             QuestionNum = resultItem.Question.SerialNumber, 
-                            Answer = resultItem.Answer.Content 
+                            Answer = resultItem.Answer 
                         };
-                    }
-                }
-
-                
-
-                foreach (var questionedItem in mainProfile.Questioned)
-                {
-                    db.Entry(questionedItem).Collection(t => t.Result).Load();
-                    foreach (var resultItem in questionedItem.Result)
-                    {
-                        ExcelResult excelResult = new ExcelResult { Id = resultItem.Questioned.Number, ProfileNum = resultItem.Profile.SerialNumber, QuestionNum = resultItem.Question.SerialNumber, Answer = resultItem.Answer.Content };
                         answerListContent.Add(excelResult);
                     }
                 }
-                ExcelDocument excelDocument = new ExcelDocument { DocumentName = mainProfile.Name, AnswerListContent = answerListContent, ProfilesListContent = profilesListContent };
+                Document = new ExcelDocument { DocumentName = mainProfile.Name, AnswerListContent = answerListContent, ProfilesListContent = profilesListContent };
             }
+        }
+
+        private void cancelBtn_Click(object sender, EventArgs e)
+        {
+            Status = false;
+            this.Close();
         }
     }
 }

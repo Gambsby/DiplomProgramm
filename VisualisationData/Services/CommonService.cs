@@ -56,13 +56,25 @@ namespace VisualisationData.Services
 
         public static Color ChooseColor(ColorDialog colorDialog, Color oldColor)
         {
-            colorDialog.FullOpen = true;
+            colorDialog.FullOpen = false;
+            colorDialog.CustomColors = GetIntColors(Form1.CompanyColor);
             colorDialog.Color = oldColor;
 
             if (colorDialog.ShowDialog() == DialogResult.Cancel)
                 return oldColor;
+            else
+                return colorDialog.Color;
+        }
 
-            return colorDialog.Color;
+        private static int[] GetIntColors(Dictionary<string, Color> colors)
+        {
+            List<int> intColors = new List<int>();
+            foreach (var colorItem in colors.Values)
+            {
+                intColors.Add(ColorTranslator.ToOle(colorItem));
+            }
+
+            return intColors.ToArray();
         }
     }
 }

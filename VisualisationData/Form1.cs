@@ -24,8 +24,25 @@ namespace VisualisationData
 {
     public partial class Form1 : Form
     {
-        public enum FileFormats { Excel, CSV};
-
+        public enum FileFormats { Excel, CSV };
+        public static Dictionary<string, Color> CompanyColor = new Dictionary<string, Color>
+        {
+            { "Бордовый", Color.FromArgb(120, 28, 51) },
+            { "Рубиновый", Color.FromArgb(189, 0, 64) },
+            { "Красный", Color.FromArgb(242, 15, 56) },
+            { "Коралловый", Color.FromArgb(255, 77, 89) },
+            { "Желтый", Color.FromArgb(255, 171, 0) },
+            { "Малахит", Color.FromArgb(15, 71, 54) },
+            { "Изумрудный", Color.FromArgb(15, 130, 89) },
+            { "Зеленый", Color.FromArgb(0, 204, 115) },
+            { "Аврора", Color.FromArgb(66, 227, 163) },
+            { "Песочный", Color.FromArgb(242, 204, 161) },
+            { "Асфальт", Color.FromArgb(28, 59, 66) },
+            { "Синий", Color.FromArgb(3, 74, 125) },
+            { "Голубой", Color.FromArgb(5, 150, 214) },
+            { "Лазурь", Color.FromArgb(158, 235, 252) },
+            { "Темное золото", Color.FromArgb(140, 102, 77) }
+        };
 
         private ExcelDocument Document { get; set; }
 
@@ -34,16 +51,17 @@ namespace VisualisationData
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)//1
+        private void Form1_Load(object sender, EventArgs e)
         {
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             infoDG.MultiSelect = true;
         }
 
-        private void loadDataExcelBtn_Click(object sender, EventArgs e)
+        private void loadDataExcelBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
             string filePath;
+            string fileName;
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Title = "Открыть файл ...";
@@ -52,85 +70,99 @@ namespace VisualisationData
                 ofd.FileName = "физвоспитание анкета";
                 if (ofd.ShowDialog() == DialogResult.Cancel)
                     return;
-                filePath = ofd.FileName;
+                else
+                {
+                    filePath = ofd.FileName;
+                    fileName = Path.GetFileNameWithoutExtension(filePath);
+                }
             }
-            string fileName = Path.GetFileNameWithoutExtension(filePath);
 
-            DownloadSettingForm downloadSettingForm = new DownloadSettingForm(filePath);
-            downloadSettingForm.ShowDialog();
-            switch (downloadSettingForm.DialogResult)
+            try
             {
-                case DialogResult.OK:
-                    {
-                        Document = downloadSettingForm.Document;
-                        MessageBox.Show("Данные успешно загруженны");
-                        break;
-                    }
-                case DialogResult.Cancel:
-                    {
-                        break;
-                    }
+                LoadSettingForm loadSettingForm = new LoadSettingForm(filePath);
+                loadSettingForm.ShowDialog();
+                switch (loadSettingForm.DialogResult)
+                {
+                    case DialogResult.OK:
+                        {
+                            Document = SortDocument(loadSettingForm.Document);
+                            profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
+                            profilesCB.SelectedIndex = 0;
+                            break;
+                        }
+                    case DialogResult.Cancel:
+                        {
+                            break;
+                        }
+                }
             }
-
-            profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
-            profilesCB.SelectedIndex = 0;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + " Исправте ошибки и попытайтесь снова!");
+                return;
+            }
         }
 
-        private void loadDataDBBtn_Click(object sender, EventArgs e)
+        private void loadDataDBBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
-            ChooseMainProfileForm deleteSettingForm = new ChooseMainProfileForm("load");
-            deleteSettingForm.ShowDialog();
-            switch (deleteSettingForm.DialogResult)
+            try
             {
-                case DialogResult.OK:
-                    {
-                        MessageBox.Show("Данные успешно удалены");
-                        break;
-                    }
-                case DialogResult.Cancel:
-                    {
-                        break;
-                    }
+                ChooseMainProfileForm chooseMainProfileForm = new ChooseMainProfileForm("load");
+                chooseMainProfileForm.ShowDialog();
+                if (chooseMainProfileForm.Status)
+                {
+                    Document = SortDocument(chooseMainProfileForm.Document);
+                    profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
+                    profilesCB.SelectedIndex = 0;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + " Исправте ошибки и попытайтесь снова!");
+                return;
             }
         }
 
-        private void saveCSVBtn_Click(object sender, EventArgs e)
+        private void saveCSVBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
-            SaveSettingForm saveSettingForm = new SaveSettingForm(Document, "csv");
-            saveSettingForm.ShowDialog();
-            switch (saveSettingForm.DialogResult)
+            try
             {
-                case DialogResult.OK:
-                    {
-                        MessageBox.Show("Данные успешно сохранены");
-                        break;
-                    }
-                case DialogResult.Cancel:
-                    {
-                        break;
-                    }
+                SaveSettingForm saveSettingForm = new SaveSettingForm(Document, "csv");
+                saveSettingForm.ShowDialog();
+                if (saveSettingForm.Status)
+                {
+                    MessageBox.Show("Данные успешно сохранены");
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
-        private void saveExcelBtn_Click(object sender, EventArgs e)
+        private void saveExcelBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
-            SaveSettingForm saveSettingForm = new SaveSettingForm(Document, "excel");
-            saveSettingForm.ShowDialog();
-            switch (saveSettingForm.DialogResult)
+            try
             {
-                case DialogResult.OK:
-                    {
-                        MessageBox.Show("Данные успешно сохранены");
-                        break;
-                    }
-                case DialogResult.Cancel:
-                    {
-                        break;
-                    }
+                SaveSettingForm saveSettingForm = new SaveSettingForm(Document, "excel");
+                saveSettingForm.ShowDialog();
+                if (saveSettingForm.Status)
+                {
+                    MessageBox.Show("Данные успешно сохранены");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
             }
         }
 
-        private void saveDBBtn_Click(object sender, EventArgs e)
+        private void saveDBBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
             using (profileContext db = new profileContext())
             {
@@ -140,7 +172,7 @@ namespace VisualisationData
                     {
                         try
                         {
-                            MainService.SaveProfileToDB(db, tr, Document);
+                            SaveService.SaveProfileToDB(db, tr, Document);
                             tr.Commit();
                         }
                         catch (Exception ex)
@@ -148,7 +180,7 @@ namespace VisualisationData
                             tr.Rollback();
                             throw ex;
                         }
-                        MainService.SaveResultToDB(db, tr, Document);
+                        SaveService.SaveResultToDB(db, tr, Document);
                     }
                     catch (Exception ex)
                     {
@@ -158,21 +190,24 @@ namespace VisualisationData
             }
         }
 
-        private void deleteDataBtn_Click(object sender, EventArgs e)
+        private void deleteDataBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
-            ChooseMainProfileForm deleteSettingForm = new ChooseMainProfileForm("delete");
-            deleteSettingForm.ShowDialog();
-            switch (deleteSettingForm.DialogResult)
+            try
             {
-                case DialogResult.OK:
-                    {
-                        MessageBox.Show("Данные успешно удалены");
-                        break;
-                    }
-                case DialogResult.Cancel:
-                    {
-                        break;
-                    }
+                ChooseMainProfileForm deleteSettingForm = new ChooseMainProfileForm("delete");
+                deleteSettingForm.ShowDialog();
+                if (deleteSettingForm.Status)
+                {
+                    MessageBox.Show("Данные успешно удалены");
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -184,79 +219,47 @@ namespace VisualisationData
             Document = null;
         }
 
-        private void columnDiagramBtn_Click(object sender, EventArgs e)
+        private void columnDiagramBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
-            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
-            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
+            try
             {
-                var question = new ExcelQuestion
-                {
-                    Id = Convert.ToInt32(rowItem.Cells["serielNumber"].Value),
-                    Content = rowItem.Cells["question"].Value.ToString()
-                };
-                selectedQuestions.Add(question);
+                DiagramStart(SeriesChartType.Column);
             }
-            //var selectedQuestion = new ExcelQuestion { 
-            //    Id = Convert.ToInt32(infoDG.SelectedRows[0].Cells["serielNumber"].Value), 
-            //    Content = infoDG.SelectedRows[0].Cells["question"].Value.ToString() 
-            //};
-            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
-
-            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, SeriesChartType.Column);
-            visualisationForm.Show();
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка при создании диаграммы.");
+            }
         }
 
-        private void barDiagramBtn_Click(object sender, EventArgs e)
+        private void barDiagramBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
-            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
-            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
+            try
             {
-                var question = new ExcelQuestion
-                {
-                    Id = Convert.ToInt32(rowItem.Cells["serielNumber"].Value),
-                    Content = rowItem.Cells["question"].Value.ToString()
-                };
-                selectedQuestions.Add(question);
+                DiagramStart(SeriesChartType.Bar);
             }
-            //var selectedQuestion = new ExcelQuestion
-            //{
-            //    Id = Convert.ToInt32(infoDG.SelectedRows[0].Cells["serielNumber"].Value),
-            //    Content = infoDG.SelectedRows[0].Cells["question"].Value.ToString()
-            //};
-            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
-
-            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, SeriesChartType.Bar);
-            visualisationForm.Show();
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка при создании диаграммы.");
+            }
         }
 
-        private void pieDiagramBtn_Click(object sender, EventArgs e)
+        private void pieDiagramBtn_Click(object sender, EventArgs e)//Обработка ошибок
         {
-            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
-            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
+            try
             {
-                var question = new ExcelQuestion
-                {
-                    Id = Convert.ToInt32(rowItem.Cells["serielNumber"].Value),
-                    Content = rowItem.Cells["question"].Value.ToString()
-                };
-                selectedQuestions.Add(question);
+                DiagramStart(SeriesChartType.Pie);
             }
-            //var selectedQuestion = new ExcelQuestion
-            //{
-            //    Id = Convert.ToInt32(infoDG.SelectedRows[0].Cells["serielNumber"].Value),
-            //    Content = infoDG.SelectedRows[0].Cells["question"].Value.ToString()
-            //};
-            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
-
-            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, SeriesChartType.Pie);
-            visualisationForm.Show();
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка при создании диаграммы.");
+            }
         }
 
-        private void profilesCB_SelectedIndexChanged(object sender, EventArgs e)//3
+        private void profilesCB_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
 
-            MainService.InitDataGrid(selectedProfile.Type, infoDG);
+            InitDataGrid(selectedProfile.Type, infoDG);
 
             foreach (var questionItem in selectedProfile.Questions)
             {
@@ -264,17 +267,17 @@ namespace VisualisationData
                 {
                     case "range":
                         {
-                            infoDG.Rows.Add(questionItem.Id, questionItem.Content, questionItem.LeftLimit, questionItem.RightLimit, selectedProfile.Answers);
+                            infoDG.Rows.Add(questionItem.Id, questionItem, questionItem.LeftLimit, questionItem.RightLimit, selectedProfile.Answers);
                             break;
                         }
                     case "radio":
                         {
-                            infoDG.Rows.Add(questionItem.Id, questionItem.Content, selectedProfile.Answers);
+                            infoDG.Rows.Add(questionItem.Id, questionItem, selectedProfile.Answers);
                             break;
                         }
                     case "checkbox":
                         {
-                            infoDG.Rows.Add(questionItem.Id, questionItem.Content, selectedProfile.Answers);
+                            infoDG.Rows.Add(questionItem.Id, questionItem, selectedProfile.Answers);
                             break;
                         }
                     default:
@@ -283,5 +286,51 @@ namespace VisualisationData
             }
 
         }
+
+        private void InitDataGrid(string type, DataGridView dataGrid)
+        {
+            dataGrid.Columns.Clear();
+            dataGrid.Rows.Clear();
+
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Номер вопроса", "serielNumber"));
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Вопрос", "question", true));
+
+            switch (type)
+            {
+                case "range":
+                    {
+                        dataGrid.Columns.Add(CommonService.CreateTextColumn("Левая граница", "leftLimit", true));
+                        dataGrid.Columns.Add(CommonService.CreateTextColumn("Правая граница", "rightLimit", true));
+                        break;
+                    }
+            }
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Возможные ответы", "answers"));
+        }
+
+        private void DiagramStart(SeriesChartType type)
+        {  
+            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
+            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
+            {
+                var question = rowItem.Cells["question"].Value as ExcelQuestion;
+                selectedQuestions.Add(question);
+            }
+            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
+
+            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, type);
+            visualisationForm.Show();
+        }
+        
+        private ExcelDocument SortDocument(ExcelDocument document)
+        {
+            document.ProfilesListContent = document.ProfilesListContent.OrderBy(x => x.Id).ToList();
+            foreach (var profileItem in document.ProfilesListContent)
+            {
+                profileItem.Questions = profileItem.Questions.OrderBy(x => x.Id).ToList();
+            }
+
+            return document;
+        }
+
     }
 }

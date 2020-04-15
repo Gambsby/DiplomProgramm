@@ -79,20 +79,20 @@
             this.loadDataExcelBtn,
             this.loadDataDBBtn});
             this.loadDataBtn.Name = "loadDataBtn";
-            this.loadDataBtn.Size = new System.Drawing.Size(180, 22);
+            this.loadDataBtn.Size = new System.Drawing.Size(171, 22);
             this.loadDataBtn.Text = "Загрузить анкету";
             // 
             // loadDataExcelBtn
             // 
             this.loadDataExcelBtn.Name = "loadDataExcelBtn";
-            this.loadDataExcelBtn.Size = new System.Drawing.Size(180, 22);
+            this.loadDataExcelBtn.Size = new System.Drawing.Size(141, 22);
             this.loadDataExcelBtn.Text = "Excel";
             this.loadDataExcelBtn.Click += new System.EventHandler(this.loadDataExcelBtn_Click);
             // 
             // loadDataDBBtn
             // 
             this.loadDataDBBtn.Name = "loadDataDBBtn";
-            this.loadDataDBBtn.Size = new System.Drawing.Size(180, 22);
+            this.loadDataDBBtn.Size = new System.Drawing.Size(141, 22);
             this.loadDataDBBtn.Text = "База данных";
             this.loadDataDBBtn.Click += new System.EventHandler(this.loadDataDBBtn_Click);
             // 
@@ -103,41 +103,41 @@
             this.saveExcelBtn,
             this.saveDBBtn});
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveBtn.Size = new System.Drawing.Size(171, 22);
             this.saveBtn.Text = "Сохранить анкету";
             // 
             // saveCSVBtn
             // 
             this.saveCSVBtn.Name = "saveCSVBtn";
-            this.saveCSVBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveCSVBtn.Size = new System.Drawing.Size(141, 22);
             this.saveCSVBtn.Text = "CSV";
             this.saveCSVBtn.Click += new System.EventHandler(this.saveCSVBtn_Click);
             // 
             // saveExcelBtn
             // 
             this.saveExcelBtn.Name = "saveExcelBtn";
-            this.saveExcelBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveExcelBtn.Size = new System.Drawing.Size(141, 22);
             this.saveExcelBtn.Text = "Excel";
             this.saveExcelBtn.Click += new System.EventHandler(this.saveExcelBtn_Click);
             // 
             // saveDBBtn
             // 
             this.saveDBBtn.Name = "saveDBBtn";
-            this.saveDBBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveDBBtn.Size = new System.Drawing.Size(141, 22);
             this.saveDBBtn.Text = "База данных";
             this.saveDBBtn.Click += new System.EventHandler(this.saveDBBtn_Click);
             // 
             // deleteDataBtn
             // 
             this.deleteDataBtn.Name = "deleteDataBtn";
-            this.deleteDataBtn.Size = new System.Drawing.Size(180, 22);
+            this.deleteDataBtn.Size = new System.Drawing.Size(171, 22);
             this.deleteDataBtn.Text = "Удалить анкету";
             this.deleteDataBtn.Click += new System.EventHandler(this.deleteDataBtn_Click);
             // 
             // closeProfileBtn
             // 
             this.closeProfileBtn.Name = "closeProfileBtn";
-            this.closeProfileBtn.Size = new System.Drawing.Size(180, 22);
+            this.closeProfileBtn.Size = new System.Drawing.Size(171, 22);
             this.closeProfileBtn.Text = "Закрыть анкету";
             this.closeProfileBtn.Click += new System.EventHandler(this.closeProfileBtn_Click);
             // 

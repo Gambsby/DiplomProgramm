@@ -40,13 +40,13 @@
             // 
             // cancelBtn
             // 
-            this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelBtn.Location = new System.Drawing.Point(12, 260);
             this.cancelBtn.Name = "cancelBtn";
             this.cancelBtn.Size = new System.Drawing.Size(75, 23);
             this.cancelBtn.TabIndex = 15;
             this.cancelBtn.Text = "Отменить";
             this.cancelBtn.UseVisualStyleBackColor = true;
+            this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
             // 
             // resultLbl
             // 
@@ -59,7 +59,6 @@
             // 
             // acceptBtn
             // 
-            this.acceptBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.acceptBtn.Location = new System.Drawing.Point(657, 261);
             this.acceptBtn.Name = "acceptBtn";
             this.acceptBtn.Size = new System.Drawing.Size(75, 23);

@@ -54,7 +54,6 @@
             // 
             // acceptBtn
             // 
-            this.acceptBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.acceptBtn.Location = new System.Drawing.Point(252, 209);
             this.acceptBtn.Name = "acceptBtn";
             this.acceptBtn.Size = new System.Drawing.Size(75, 23);
@@ -65,15 +64,15 @@
             // 
             // cancelBtn
             // 
-            this.cancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelBtn.Location = new System.Drawing.Point(12, 209);
             this.cancelBtn.Name = "cancelBtn";
             this.cancelBtn.Size = new System.Drawing.Size(75, 23);
             this.cancelBtn.TabIndex = 3;
             this.cancelBtn.Text = "Отмена";
             this.cancelBtn.UseVisualStyleBackColor = true;
+            this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
             // 
-            // DeleteSettingForm
+            // ChooseMainProfileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -82,7 +81,7 @@
             this.Controls.Add(this.acceptBtn);
             this.Controls.Add(this.deleteLB);
             this.Controls.Add(this.label1);
-            this.Name = "DeleteSettingForm";
+            this.Name = "ChooseMainProfileForm";
             this.Text = "DeleteSettingForm";
             this.Load += new System.EventHandler(this.DeleteSettingForm_Load);
             this.ResumeLayout(false);

@@ -328,17 +328,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Answer.cs" />
-    <Compile Include="Models\Limits.cs" />
     <Compile Include="Models\MainProfile.cs" />
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\QType.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\Questioned.cs" />
     <Compile Include="Models\Result.cs" />
-    <Compile Include="Models\Type.cs" />
     <Compile Include="Models\profileContext.cs" />
-    <Compile Include="Services\MainService.cs" />
+    <Compile Include="Services\SaveService.cs" />
     <Compile Include="VisualSettingForms\AppearanceSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -353,11 +350,11 @@
     <Compile Include="DataSettingForms\ChooseMainProfileForm.Designer.cs">
       <DependentUpon>ChooseMainProfileForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataSettingForms\DownloadSettingForm.cs">
+    <Compile Include="DataSettingForms\LoadSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DataSettingForms\DownloadSettingForm.Designer.cs">
-      <DependentUpon>DownloadSettingForm.cs</DependentUpon>
+    <Compile Include="DataSettingForms\LoadSettingForm.Designer.cs">
+      <DependentUpon>LoadSettingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Excel\ConnectionExcel .cs" />
     <Compile Include="Excel\ExcelResult.cs" />
@@ -405,8 +402,8 @@
     <EmbeddedResource Include="DataSettingForms\ChooseMainProfileForm.resx">
       <DependentUpon>ChooseMainProfileForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DataSettingForms\DownloadSettingForm.resx">
-      <DependentUpon>DownloadSettingForm.cs</DependentUpon>
+    <EmbeddedResource Include="DataSettingForms\LoadSettingForm.resx">
+      <DependentUpon>LoadSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

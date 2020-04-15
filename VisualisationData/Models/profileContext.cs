@@ -15,8 +15,6 @@ namespace VisualisationData.Models
         {
         }
 
-        public virtual DbSet<Answer> Answer { get; set; }
-        public virtual DbSet<Limits> Limits { get; set; }
         public virtual DbSet<MainProfile> MainProfile { get; set; }
         public virtual DbSet<Profile> Profile { get; set; }
         public virtual DbSet<QType> QType { get; set; }
@@ -35,69 +33,6 @@ namespace VisualisationData.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Answer>(entity =>
-            {
-                entity.ToTable("answer");
-
-                entity.HasIndex(e => e.PeopleId)
-                    .HasName("people_id");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.Content)
-                    .IsRequired()
-                    .HasColumnName("content")
-                    .HasColumnType("text")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_unicode_ci");
-
-                entity.Property(e => e.PeopleId)
-                    .HasColumnName("people_id")
-                    .HasColumnType("int(11)");
-
-                entity.HasOne(d => d.People)
-                    .WithMany(p => p.Answer)
-                    .HasForeignKey(d => d.PeopleId)
-                    .HasConstraintName("answer_ibfk_1");
-            });
-
-            modelBuilder.Entity<Limits>(entity =>
-            {
-                entity.ToTable("limits");
-
-                entity.HasIndex(e => e.ProfileId)
-                    .HasName("profile_id");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.LeftLimit)
-                    .IsRequired()
-                    .HasColumnName("left_limit")
-                    .HasColumnType("text")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_unicode_ci");
-
-                entity.Property(e => e.ProfileId)
-                    .HasColumnName("profile_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.RightLimit)
-                    .IsRequired()
-                    .HasColumnName("right_limit")
-                    .HasColumnType("text")
-                    .HasCharSet("utf8")
-                    .HasCollation("utf8_unicode_ci");
-
-                entity.HasOne(d => d.Profile)
-                    .WithMany(p => p.Limits)
-                    .HasForeignKey(d => d.ProfileId)
-                    .HasConstraintName("limits_ibfk_1");
-            });
-
             modelBuilder.Entity<MainProfile>(entity =>
             {
                 entity.ToTable("main_profile");
@@ -132,6 +67,13 @@ namespace VisualisationData.Models
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.Answer)
+                    .IsRequired()
+                    .HasColumnName("answer")
+                    .HasColumnType("text")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_unicode_ci");
+
                 entity.Property(e => e.MainProfileId)
                     .HasColumnName("main_profile_id")
                     .HasColumnType("int(11)");
@@ -154,25 +96,29 @@ namespace VisualisationData.Models
                 entity.HasOne(d => d.MainProfile)
                     .WithMany(p => p.Profile)
                     .HasForeignKey(d => d.MainProfileId)
-                    .HasConstraintName("profile_ibfk_1");
+                    .HasConstraintName("profile_ibfk_2");
 
                 entity.HasOne(d => d.Type)
                     .WithMany(p => p.Profile)
                     .HasForeignKey(d => d.TypeId)
-                    .HasConstraintName("profile_ibfk_2");
+                    .HasConstraintName("profile_ibfk_1");
             });
 
             modelBuilder.Entity<QType>(entity =>
             {
                 entity.ToTable("q_type");
 
+                entity.HasIndex(e => e.Type)
+                    .HasName("type")
+                    .IsUnique();
+
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.Type)
                     .IsRequired()
-                    .HasColumnName("name")
+                    .HasColumnName("type")
                     .HasColumnType("varchar(128)")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
@@ -181,9 +127,6 @@ namespace VisualisationData.Models
             modelBuilder.Entity<Question>(entity =>
             {
                 entity.ToTable("question");
-
-                entity.HasIndex(e => e.LimitsId)
-                    .HasName("limits_id");
 
                 entity.HasIndex(e => e.ProfileId)
                     .HasName("profile_id");
@@ -199,28 +142,30 @@ namespace VisualisationData.Models
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
 
-                entity.Property(e => e.LimitsId)
-                    .HasColumnName("limits_id")
-                    .HasColumnType("int(11)");
+                entity.Property(e => e.LeftLimit)
+                    .HasColumnName("left_limit")
+                    .HasColumnType("text")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_unicode_ci");
 
                 entity.Property(e => e.ProfileId)
                     .HasColumnName("profile_id")
                     .HasColumnType("int(11)");
 
+                entity.Property(e => e.RightLimit)
+                    .HasColumnName("right_limit")
+                    .HasColumnType("text")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_unicode_ci");
+
                 entity.Property(e => e.SerialNumber)
                     .HasColumnName("serial_number")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.Limits)
-                    .WithMany(p => p.Question)
-                    .HasForeignKey(d => d.LimitsId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("question_ibfk_1");
-
                 entity.HasOne(d => d.Profile)
                     .WithMany(p => p.Question)
                     .HasForeignKey(d => d.ProfileId)
-                    .HasConstraintName("question_ibfk_2");
+                    .HasConstraintName("question_ibfk_1");
             });
 
             modelBuilder.Entity<Questioned>(entity =>
@@ -259,9 +204,6 @@ namespace VisualisationData.Models
             {
                 entity.ToTable("result");
 
-                entity.HasIndex(e => e.AnswerId)
-                    .HasName("answer_id");
-
                 entity.HasIndex(e => e.ProfileId)
                     .HasName("profile_id");
 
@@ -275,12 +217,9 @@ namespace VisualisationData.Models
                     .HasColumnName("id")
                     .HasColumnType("int(11)");
 
-                entity.Property(e => e.AnswerId)
-                    .HasColumnName("answer_id")
-                    .HasColumnType("int(11)");
-
-                entity.Property(e => e.OpenAnswer)
-                    .HasColumnName("open_answer")
+                entity.Property(e => e.Answer)
+                    .IsRequired()
+                    .HasColumnName("answer")
                     .HasColumnType("text")
                     .HasCharSet("utf8")
                     .HasCollation("utf8_unicode_ci");
@@ -297,12 +236,6 @@ namespace VisualisationData.Models
                     .HasColumnName("questioned_id")
                     .HasColumnType("int(11)");
 
-                entity.HasOne(d => d.Answer)
-                    .WithMany(p => p.Result)
-                    .HasForeignKey(d => d.AnswerId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("result_ibfk_3");
-
                 entity.HasOne(d => d.Profile)
                     .WithMany(p => p.Result)
                     .HasForeignKey(d => d.ProfileId)
@@ -316,7 +249,7 @@ namespace VisualisationData.Models
                 entity.HasOne(d => d.Questioned)
                     .WithMany(p => p.Result)
                     .HasForeignKey(d => d.QuestionedId)
-                    .HasConstraintName("result_ibfk_4");
+                    .HasConstraintName("result_ibfk_3");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -20,6 +20,7 @@ namespace VisualisationData.DataSettingForms
 {
     public partial class SaveSettingForm : Form
     {
+        public bool Status { get; set; }
         private ExcelDocument Document { get; set; }
         private string type;
         public SaveSettingForm(ExcelDocument excelDocument, string type)
@@ -60,159 +61,79 @@ namespace VisualisationData.DataSettingForms
 
         private void acceptBtn_Click(object sender, EventArgs e)
         {
-            switch (type)
-            {
-                case "excel":
-                    {
-                        SaveExcel();
-                        break;
-                    }
-                case "csv":
-                    {
-                        SaveCSV();
-                        break;
-                    }
-                default:
-                    break;
-            }
-        }
+            Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+            string infoFileName = null;
+            string resultFileName = null;
 
-        private void SaveExcel()
-        {
-            using (ExcelPackage excelPackage = new ExcelPackage())
+            try
             {
-                excelPackage.Workbook.Properties.Author = "User";
-                excelPackage.Workbook.Properties.Title = Document.DocumentName;
-                excelPackage.Workbook.Properties.Created = DateTime.Now;
-
-                ExcelWorksheet infoSheet = excelPackage.Workbook.Worksheets.Add(profileInfoTB.Text);
-                int rowInfoNumber = 2;
+                infoFileName = profileInfoTB.Text;
+                if (string.IsNullOrEmpty(infoFileName))
+                {
+                    throw new Exception("Пропущено поле с названием файла с информацией об анкетах.");
+                }
+                resultFileName = resultInfoTB.Text;
+                if (string.IsNullOrEmpty(resultFileName))
+                {
+                    throw new Exception("Пропущено поле с названием файла с результатами анкетирования.");
+                }
                 foreach (DataGridViewRow rowItem in chooseDG.Rows)
                 {
-                    string sheetName = rowItem.Cells["sheetName"].Value.ToString();
                     ExcelProfile profile = rowItem.Cells["profile"].Value as ExcelProfile;
-
-                    infoSheet.Cells["A" + rowInfoNumber].Value = profile.Id;
-                    infoSheet.Cells["B" + rowInfoNumber].Value = profile.Name;
-                    infoSheet.Cells["F" + rowInfoNumber].Value = profile.Answers;
-
-
-                    ExcelWorksheet questionSheet = excelPackage.Workbook.Worksheets.Add(sheetName);
-                    int rowQuestionIndex = 1;
-                    foreach (var questuionItem in profile.Questions)
+                    if (rowItem.Cells["sheetName"].Value == null)
                     {
-                        questionSheet.Cells["A" + rowQuestionIndex].Value = questuionItem.Id;
-                        questionSheet.Cells["B" + rowQuestionIndex].Value = questuionItem.Content;
-
-                        if (!string.IsNullOrEmpty(questuionItem.LeftLimit) && !string.IsNullOrEmpty(questuionItem.RightLimit))
-                        {
-                            questionSheet.Cells["C" + rowQuestionIndex].Value = questuionItem.LeftLimit;
-                            questionSheet.Cells["D" + rowQuestionIndex].Value = questuionItem.RightLimit;
-                        }
-
-                        rowQuestionIndex++;
+                        throw new Exception("Пропущено поле с названием файла с вопросами для анкеты \"" + profile.Name + "\".");
                     }
-
-                    rowInfoNumber++;
-                }
-
-                ExcelWorksheet resultSheet = excelPackage.Workbook.Worksheets.Add(resultInfoTB.Text);
-                resultSheet.Cells["A1"].Value = "id";
-                resultSheet.Cells["B1"].Value = "анкета";
-                resultSheet.Cells["C1"].Value = "номер вопроса";
-                resultSheet.Cells["D1"].Value = "ответ";
-
-                int rowResultNumber = 2;
-                foreach (var answerItem in Document.AnswerListContent)
-                {
-                    resultSheet.Cells["A" + rowResultNumber].Value = answerItem.Id;
-                    resultSheet.Cells["B" + rowResultNumber].Value = answerItem.ProfileNum;
-                    resultSheet.Cells["C" + rowResultNumber].Value = answerItem.QuestionNum;
-                    resultSheet.Cells["D" + rowResultNumber].Value = answerItem.Answer;
-
-                    rowResultNumber++;
-                }
-
-                FileInfo fi = null;
-                using (SaveFileDialog sfd = new SaveFileDialog())
-                {
-                    sfd.Title = "Сохранить файл как ...";
-                    sfd.Filter = "*.xlsx|*.xlsx";
-                    sfd.AddExtension = true;
-                    sfd.FileName = Document.DocumentName;
-                    if (sfd.ShowDialog() == DialogResult.OK)
+                    string sheetName = rowItem.Cells["sheetName"].Value.ToString();
+                    if (string.IsNullOrEmpty(sheetName))
                     {
-                        fi = new FileInfo(sfd.FileName);
-                    }
-                }
-                excelPackage.SaveAs(fi);
-            }
-        }
-    
-        private void SaveCSV()
-        {
-
-            string infoFileName = profileInfoTB.Text;
-            string resultFileName = resultInfoTB.Text;
-            List<List<object>> questionFiles = new List<List<object>>();
-            List<string> questionFilesName = new List<string>();
-
-            List<object> infoFile = new List<object>();
-            foreach (DataGridViewRow rowItem in chooseDG.Rows)
-            {
-                string sheetName = rowItem.Cells["sheetName"].Value.ToString();
-                ExcelProfile profile = rowItem.Cells["profile"].Value as ExcelProfile;
-
-                infoFile.Add(new { ID = profile.GetId(), Name = profile.GetName(), Answers = profile.GetAnswers() });
-
-                List<object> questionFile = new List<object>();
-                foreach (var questuionItem in profile.Questions)
-                {
-                    if (!string.IsNullOrEmpty(questuionItem.LeftLimit) && !string.IsNullOrEmpty(questuionItem.RightLimit))
-                    {
-                        questionFile.Add(new { ID = questuionItem.GetId(), Content = questuionItem.GetContent(), LeftLimit = questuionItem.GetLeftLimit(), RightLimit = questuionItem.GetRightLimit() });
+                        throw new Exception("Пропущено поле с названием файла с вопросами для анкеты \"" + profile.Name + "\".");
                     }
                     else
                     {
-                        questionFile.Add(new { ID = questuionItem.GetId(), Content = questuionItem.GetContent() });
+                        excelProfileMap.Add(sheetName, profile);
                     }
                 }
-                questionFiles.Add(questionFile);
-                questionFilesName.Add(sheetName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
             }
 
-            List<object> resultFile = new List<object>();
-            resultFile.Add(new { ID = "id", Profile = "анкета", QuestionNum = "номер вопроса", Answer = "ответ" });
-            foreach (var resultItem in Document.AnswerListContent)
-            {
-                resultFile.Add(new { ID = resultItem.GetId(), Profile = resultItem.GetProfileNum(), QuestionNum = resultItem.GetQuestionNum(), Answer = resultItem.GetAnswer() });
-            }
 
-            FolderBrowserDialog FBD = new FolderBrowserDialog();
-            if (FBD.ShowDialog() == DialogResult.OK)
+            try
             {
-                string dirName = FBD.SelectedPath + "\\" + Document.DocumentName;
-                Directory.CreateDirectory(dirName);
-                WriteFile(dirName + "\\" + infoFileName + ".csv", infoFile);
-                WriteFile(dirName + "\\" + resultFileName + ".csv", resultFile);
-
-                for (int i = 0; i < questionFiles.Count; i++)
+                switch (type)
                 {
-                    WriteFile(dirName + "\\" + questionFilesName[i] + ".csv", questionFiles[i]);
+                    case "excel":
+                        {
+                            SaveService.SaveExcel(infoFileName, resultFileName, excelProfileMap, Document);
+                            break;
+                        }
+                    case "csv":
+                        {
+                            SaveService.SaveCSV(infoFileName, resultFileName, excelProfileMap, Document);
+                            break;
+                        }
+                    default:
+                        break;
                 }
             }
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка при сохранении.");
+                return;
+            }
+
+            Status = true;
+            this.Close();
         }
 
-        private void WriteFile(string path, List<object> value)
+        private void cancelBtn_Click(object sender, EventArgs e)
         {
-            using (var writer = new StreamWriter(path))
-            {
-                using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ":", IgnoreReferences = true, HasHeaderRecord = false }))
-                {
-                    
-                    csv.WriteRecords(value);
-                }
-            }
+            Status = false;
+            this.Close();
         }
     }
 }

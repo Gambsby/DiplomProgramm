@@ -1,6 +1,6 @@
 ﻿namespace VisualisationData.DataSettingForms
 {
-    partial class DownloadSettingForm
+    partial class LoadSettingForm
     {
         /// <summary>
         /// Required designer variable.
@@ -113,9 +113,9 @@
             this.cancelBtn.TabIndex = 7;
             this.cancelBtn.Text = "Отменить";
             this.cancelBtn.UseVisualStyleBackColor = true;
-            this.cancelBtn.Visible = false;
+            this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
             // 
-            // DownloadSettingForm
+            // LoadSettingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -128,7 +128,7 @@
             this.Controls.Add(this.nextBtn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.chooseInfoSheetCB);
-            this.Name = "DownloadSettingForm";
+            this.Name = "LoadSettingForm";
             this.Text = "DownloadSettingForm";
             this.Load += new System.EventHandler(this.DownloadSettingForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chooseDG)).EndInit();
