@@ -43,10 +43,15 @@
             this.columnDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.barDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pieDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupVisBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.profilesCB = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.infoDG = new System.Windows.Forms.DataGridView();
+            this.allColumnDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.allPieDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.allDoughnoutDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.allBarDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.infoDG)).BeginInit();
             this.SuspendLayout();
@@ -146,7 +151,8 @@
             this.визуализацияToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.columnDiagramBtn,
             this.barDiagramBtn,
-            this.pieDiagramBtn});
+            this.pieDiagramBtn,
+            this.groupVisBtn});
             this.визуализацияToolStripMenuItem.Name = "визуализацияToolStripMenuItem";
             this.визуализацияToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
             this.визуализацияToolStripMenuItem.Text = "Визуализация";
@@ -171,6 +177,17 @@
             this.pieDiagramBtn.Size = new System.Drawing.Size(229, 22);
             this.pieDiagramBtn.Text = "Круговая диаграмма";
             this.pieDiagramBtn.Click += new System.EventHandler(this.pieDiagramBtn_Click);
+            // 
+            // groupVisBtn
+            // 
+            this.groupVisBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.allColumnDiagramBtn,
+            this.allPieDiagramBtn,
+            this.allDoughnoutDiagramBtn,
+            this.allBarDiagramBtn});
+            this.groupVisBtn.Name = "groupVisBtn";
+            this.groupVisBtn.Size = new System.Drawing.Size(229, 22);
+            this.groupVisBtn.Text = "Создать для всех";
             // 
             // openFileDialog
             // 
@@ -209,6 +226,34 @@
             this.infoDG.Name = "infoDG";
             this.infoDG.Size = new System.Drawing.Size(866, 519);
             this.infoDG.TabIndex = 4;
+            // 
+            // allColumnDiagramBtn
+            // 
+            this.allColumnDiagramBtn.Name = "allColumnDiagramBtn";
+            this.allColumnDiagramBtn.Size = new System.Drawing.Size(222, 22);
+            this.allColumnDiagramBtn.Text = "Столбчатая диаграмма";
+            this.allColumnDiagramBtn.Click += new System.EventHandler(this.allColumnDiagramBtn_Click);
+            // 
+            // allPieDiagramBtn
+            // 
+            this.allPieDiagramBtn.Name = "allPieDiagramBtn";
+            this.allPieDiagramBtn.Size = new System.Drawing.Size(222, 22);
+            this.allPieDiagramBtn.Text = "Груговая диаграмма";
+            this.allPieDiagramBtn.Click += new System.EventHandler(this.allPieDiagramBtn_Click);
+            // 
+            // allDoughnoutDiagramBtn
+            // 
+            this.allDoughnoutDiagramBtn.Name = "allDoughnoutDiagramBtn";
+            this.allDoughnoutDiagramBtn.Size = new System.Drawing.Size(222, 22);
+            this.allDoughnoutDiagramBtn.Text = "Пончик диаграмма";
+            this.allDoughnoutDiagramBtn.Click += new System.EventHandler(this.allDoughnoutDiagramBtn_Click);
+            // 
+            // allBarDiagramBtn
+            // 
+            this.allBarDiagramBtn.Name = "allBarDiagramBtn";
+            this.allBarDiagramBtn.Size = new System.Drawing.Size(222, 22);
+            this.allBarDiagramBtn.Text = "Горионтальная диаграмма";
+            this.allBarDiagramBtn.Click += new System.EventHandler(this.allBarDiagramBtn_Click);
             // 
             // Form1
             // 
@@ -252,6 +297,11 @@
         private System.Windows.Forms.ToolStripMenuItem closeProfileBtn;
         private System.Windows.Forms.ToolStripMenuItem loadDataExcelBtn;
         private System.Windows.Forms.ToolStripMenuItem loadDataDBBtn;
+        private System.Windows.Forms.ToolStripMenuItem groupVisBtn;
+        private System.Windows.Forms.ToolStripMenuItem allColumnDiagramBtn;
+        private System.Windows.Forms.ToolStripMenuItem allPieDiagramBtn;
+        private System.Windows.Forms.ToolStripMenuItem allDoughnoutDiagramBtn;
+        private System.Windows.Forms.ToolStripMenuItem allBarDiagramBtn;
     }
 }
 

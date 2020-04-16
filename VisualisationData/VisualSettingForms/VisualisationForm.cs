@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using VisualisationData.Excel;
+using VisualisationData.Services;
 
 namespace VisualisationData.VisualSettingForms
 {
@@ -18,7 +19,6 @@ namespace VisualisationData.VisualSettingForms
         private ExcelProfile selectedProfile;
         private ExcelDocument selectedDocument;
         private SeriesChartType diagramType;
-        private int colorIndex;
 
         public VisualisationForm(List<ExcelQuestion> selectedQuestions, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
         {
@@ -31,42 +31,26 @@ namespace VisualisationData.VisualSettingForms
 
         private void VisualisationForm_Load(object sender, EventArgs e)
         {
+            int colorIndex = 0;
             showGridBtn.Checked = visualChart.ChartAreas[0].AxisX.MajorGrid.Enabled;
             showAxisXBtn.Checked = true;
             showAxisYBtn.Checked = true;
-            foreach (var selectedQuestionItem in selectedQuestions)
+
+            var visualData = VisualisationService.GetVisualData(selectedQuestions, selectedProfile, selectedDocument);
+
+            foreach (var seriesItem in visualData)
             {
-                visualChart.Series.Add(selectedQuestionItem.Content);
-                visualChart.Series[selectedQuestionItem.Content].ChartType = diagramType;
+                visualChart.Series.Add(seriesItem.Key);
+                visualChart.Series[seriesItem.Key].ChartType = diagramType;
                 if (Form1.CompanyColor.Count > colorIndex)
                 {
-                    visualChart.Series[selectedQuestionItem.Content].Color = Form1.CompanyColor.Values.ToList()[colorIndex];
+                    visualChart.Series[seriesItem.Key].Color = Form1.CompanyColor.Values.ToList()[colorIndex];
                     colorIndex++;
                 }
-                var answersList = selectedProfile.GetProfileAnswers();
-                int openAnswer = 0;
-                foreach (var answerItem in answersList)
-                {
-                    if (answerItem == "другое")
-                    {
-                        var currentResults = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestionItem.Id).ToList();
-                        foreach (var resultItem in currentResults)
-                        {
-                            var a = resultItem.GetAnswers(selectedProfile.Type).Except(answersList).ToList();
-                            if (a.Count != 0)
-                            {
-                                openAnswer++;
-                            }
-                        }
-                        visualChart.Series[selectedQuestionItem.Content].Points.AddXY(answerItem, openAnswer);
-                    }
-                    else
-                    {
-                        var countCurrentAnswers = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestionItem.Id && a.GetAnswers(selectedProfile.Type).Contains(answerItem)).Count();
-                        visualChart.Series[selectedQuestionItem.Content].Points.AddXY(answerItem, countCurrentAnswers);
-                    }
 
-                    //visualChart.Series[answerItem]["PointWidth"] = "0.1";
+                foreach (var item in seriesItem.Value)
+                {
+                    visualChart.Series[seriesItem.Key].Points.AddXY(item.Key, item.Value);
                 }
             }
         }
@@ -186,7 +170,6 @@ namespace VisualisationData.VisualSettingForms
             visualChart.ChartAreas[0].AxisX.MajorGrid.Enabled = showGridBtn.Checked;
             visualChart.ChartAreas[0].AxisY.MajorGrid.Enabled = showGridBtn.Checked;
         }
-
 
         private void showAxisXBtn_Click(object sender, EventArgs e)
         {

@@ -18,6 +18,7 @@ namespace VisualisationData.DataSettingForms
     public partial class LoadSettingForm : Form
     {
         public ExcelDocument Document { get; set; }
+        public bool Status { get; set; } = false;
 
         private List<ExcelResult> answerListContent;
         private List<ExcelProfile> profilesListContent;
@@ -130,6 +131,7 @@ namespace VisualisationData.DataSettingForms
                     ProfilesListContent = profilesListContent
                 };
 
+                Status = true;
                 this.Close();
             }
             catch (Exception ex)

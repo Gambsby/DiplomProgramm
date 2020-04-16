@@ -56,12 +56,17 @@ namespace VisualisationData.Services
                     {
                         throw new Exception("Первый столбец в листе \"" + sheetName + "\" должен содержать только цифры.");
                     }
+                    string sheet = "";
+                    if (i < sheets.Count)
+                    {
+                        sheet = sheets[i].ToString();
+                    }
                     ExcelQuestionType type = new ExcelQuestionType()
                     {
                         Id = id,
                         ProfileName = profileNames[i].ToString(),
                         Answers = answers[i].ToString(),
-                        Sheet = sheets[i].ToString()
+                        Sheet = sheet
                     };
                     excelQuestionTypes.Add(type);
                 }

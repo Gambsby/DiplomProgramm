@@ -1,24 +1,17 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
-using MySql.Data.MySqlClient;
-using Z.BulkOperations;
+using System.Linq;
+using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using OfficeOpenXml;
-using VisualisationData.Models;
+using VisualisationData.DataSettingForms;
 using VisualisationData.Excel;
+using VisualisationData.Models;
 using VisualisationData.Services;
 using VisualisationData.VisualSettingForms;
-using VisualisationData.DataSettingForms;
-using System.Data.Common;
 
 namespace VisualisationData
 {
@@ -27,18 +20,18 @@ namespace VisualisationData
         public static Dictionary<string, Color> CompanyColor = new Dictionary<string, Color>
         {
             { "Бордовый", Color.FromArgb(120, 28, 51) },
-            { "Рубиновый", Color.FromArgb(189, 0, 64) },
-            { "Красный", Color.FromArgb(242, 15, 56) },
-            { "Коралловый", Color.FromArgb(255, 77, 89) },
-            { "Желтый", Color.FromArgb(255, 171, 0) },
             { "Малахит", Color.FromArgb(15, 71, 54) },
+            { "Рубиновый", Color.FromArgb(189, 0, 64) },
             { "Изумрудный", Color.FromArgb(15, 130, 89) },
-            { "Зеленый", Color.FromArgb(0, 204, 115) },
-            { "Аврора", Color.FromArgb(66, 227, 163) },
+            { "Красный", Color.FromArgb(242, 15, 56) },
+             { "Зеленый", Color.FromArgb(0, 204, 115) },
+            { "Коралловый", Color.FromArgb(255, 77, 89) },
+             { "Аврора", Color.FromArgb(66, 227, 163) },
+            { "Желтый", Color.FromArgb(255, 171, 0) },
+            { "Голубой", Color.FromArgb(5, 150, 214) },
             { "Песочный", Color.FromArgb(242, 204, 161) },
             { "Асфальт", Color.FromArgb(28, 59, 66) },
             { "Синий", Color.FromArgb(3, 74, 125) },
-            { "Голубой", Color.FromArgb(5, 150, 214) },
             { "Лазурь", Color.FromArgb(158, 235, 252) },
             { "Темное золото", Color.FromArgb(140, 102, 77) }
         };
@@ -52,47 +45,29 @@ namespace VisualisationData
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             infoDG.MultiSelect = true;
         }
 
-        private void loadDataExcelBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void loadDataExcelBtn_Click(object sender, EventArgs e)//+
         {
-            string filePath;
-            string fileName;
-            using (OpenFileDialog ofd = new OpenFileDialog())
-            {
-                ofd.Title = "Открыть файл ...";
-                ofd.Filter = "*.xlsx|*.xlsx";
-                ofd.AddExtension = true;
-                ofd.FileName = "физвоспитание анкета";
-                if (ofd.ShowDialog() == DialogResult.Cancel)
-                    return;
-                else
-                {
-                    filePath = ofd.FileName;
-                    fileName = Path.GetFileNameWithoutExtension(filePath);
-                }
-            }
+            string filePath = CommonService.OpenFilePath("*.xlsx|*.xlsx", "физвоспитание анкета");
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             try
             {
                 LoadSettingForm loadSettingForm = new LoadSettingForm(filePath);
                 loadSettingForm.ShowDialog();
-                switch (loadSettingForm.DialogResult)
+                if (loadSettingForm.Status)
                 {
-                    case DialogResult.OK:
-                        {
-                            Document = SortDocument(loadSettingForm.Document);
-                            profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
-                            profilesCB.SelectedIndex = 0;
-                            break;
-                        }
-                    case DialogResult.Cancel:
-                        {
-                            break;
-                        }
+                    Document = SortDocument(loadSettingForm.Document);
+                    profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
+                    profilesCB.SelectedIndex = 0;
+                }
+                else
+                {
+                    return;
                 }
             }
             catch (Exception ex)
@@ -102,7 +77,7 @@ namespace VisualisationData
             }
         }
 
-        private void loadDataDBBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void loadDataDBBtn_Click(object sender, EventArgs e)//+
         {
             try
             {
@@ -126,7 +101,7 @@ namespace VisualisationData
             }
         }
 
-        private void saveCSVBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void saveCSVBtn_Click(object sender, EventArgs e)//+
         {
             try
             {
@@ -136,6 +111,10 @@ namespace VisualisationData
                 {
                     MessageBox.Show("Данные успешно сохранены");
                 }
+                else
+                {
+                    MessageBox.Show("Произошла ошибка.");
+                }
             }
             catch(Exception ex)
             {
@@ -143,7 +122,7 @@ namespace VisualisationData
             }
         }
 
-        private void saveExcelBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void saveExcelBtn_Click(object sender, EventArgs e)//+
         {
             try
             {
@@ -153,6 +132,10 @@ namespace VisualisationData
                 {
                     MessageBox.Show("Данные успешно сохранены");
                 }
+                else
+                {
+                    MessageBox.Show("Произошла ошибка.");
+                }
             }
             catch (Exception ex)
             {
@@ -161,7 +144,7 @@ namespace VisualisationData
             }
         }
 
-        private void saveDBBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void saveDBBtn_Click(object sender, EventArgs e)//+
         {
             using (profileContext db = new profileContext())
             {
@@ -183,13 +166,19 @@ namespace VisualisationData
                     }
                     catch (Exception ex)
                     {
+                        MainProfile mainProfile = db.MainProfile.SingleOrDefault(p => p.Name == Document.DocumentName);
+                        if (mainProfile != null)
+                        {
+                            db.MainProfile.Remove(mainProfile);
+                            db.SaveChanges();
+                        }
                         MessageBox.Show(ex.ToString());
                     }
                 }
             }
         }
 
-        private void deleteDataBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void deleteDataBtn_Click(object sender, EventArgs e)//+
         {
             try
             {
@@ -197,11 +186,11 @@ namespace VisualisationData
                 deleteSettingForm.ShowDialog();
                 if (deleteSettingForm.Status)
                 {
-                    MessageBox.Show("Данные успешно удалены");
+                    MessageBox.Show("Данные успешно удалены.");
                 }
                 else
                 {
-                    return;
+                    MessageBox.Show("При удалении произошла ошибка.");
                 }
             }
             catch (Exception ex)
@@ -210,7 +199,7 @@ namespace VisualisationData
             }
         }
 
-        private void closeProfileBtn_Click(object sender, EventArgs e)
+        private void closeProfileBtn_Click(object sender, EventArgs e)//+
         {
             profilesCB.Items.Clear();
             infoDG.Rows.Clear();
@@ -218,7 +207,7 @@ namespace VisualisationData
             Document = null;
         }
 
-        private void columnDiagramBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void columnDiagramBtn_Click(object sender, EventArgs e)//+
         {
             try
             {
@@ -230,7 +219,7 @@ namespace VisualisationData
             }
         }
 
-        private void barDiagramBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void barDiagramBtn_Click(object sender, EventArgs e)//+
         {
             try
             {
@@ -242,7 +231,7 @@ namespace VisualisationData
             }
         }
 
-        private void pieDiagramBtn_Click(object sender, EventArgs e)//Обработка ошибок
+        private void pieDiagramBtn_Click(object sender, EventArgs e)//+
         {
             try
             {
@@ -286,6 +275,42 @@ namespace VisualisationData
 
         }
 
+        private void allColumnDiagramBtn_Click(object sender, EventArgs e)//+
+        {
+            string dirPath = CommonService.GetFolderPath();
+            if (dirPath != null)
+            {
+                VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Column);
+            }
+        }
+
+        private void allPieDiagramBtn_Click(object sender, EventArgs e)//+
+        {
+            string dirPath = CommonService.GetFolderPath();
+            if (dirPath != null)
+            {
+                VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Pie);
+            }
+        }
+
+        private void allDoughnoutDiagramBtn_Click(object sender, EventArgs e)//+
+        {
+            string dirPath = CommonService.GetFolderPath();
+            if (dirPath != null)
+            {
+                VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Doughnut);
+            }
+        }
+
+        private void allBarDiagramBtn_Click(object sender, EventArgs e)//+
+        {
+            string dirPath = CommonService.GetFolderPath();
+            if (dirPath != null)
+            {
+                VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Bar);
+            }
+        }
+
         private void InitDataGrid(string type, DataGridView dataGrid)
         {
             dataGrid.Columns.Clear();
@@ -307,7 +332,7 @@ namespace VisualisationData
         }
 
         private void DiagramStart(SeriesChartType type)
-        {  
+        {
             List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
             foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
             {
@@ -319,7 +344,7 @@ namespace VisualisationData
             VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, type);
             visualisationForm.Show();
         }
-        
+
         private ExcelDocument SortDocument(ExcelDocument document)
         {
             document.ProfilesListContent = document.ProfilesListContent.OrderBy(x => x.Id).ToList();

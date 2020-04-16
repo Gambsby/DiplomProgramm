@@ -16,7 +16,7 @@ namespace VisualisationData.DataSettingForms
     public partial class ChooseMainProfileForm : Form
     {
         public ExcelDocument Document { get; set; }
-        public bool Status { get; set; }
+        public bool Status { get; set; } = false;
 
         private string type;
         public ChooseMainProfileForm(string type)
@@ -76,7 +76,6 @@ namespace VisualisationData.DataSettingForms
             catch (Exception ex)
             {
                 Document = null;
-                Status = false;
                 MessageBox.Show(ex.Message);
                 return;
             }

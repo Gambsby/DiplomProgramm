@@ -76,5 +76,36 @@ namespace VisualisationData.Services
 
             return intColors.ToArray();
         }
+    
+        public static string GetFolderPath()
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                var res = fbd.ShowDialog();
+                if (res == DialogResult.OK)
+                    return fbd.SelectedPath;
+                else 
+                {
+                    return null;
+                }
+            }
+        }
+        
+        public static string OpenFilePath(string filter, string fileName = "")
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Открыть файл ...";
+                ofd.Filter = filter;
+                ofd.AddExtension = true;
+                ofd.FileName = fileName;
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    return ofd.FileName; 
+                else
+                {
+                    return null;
+                }
+            }
+        }
     }
 }

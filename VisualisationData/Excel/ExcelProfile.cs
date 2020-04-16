@@ -22,7 +22,7 @@ namespace VisualisationData.Excel
             {
                 case "range":
                     {
-                        var matches = Regex.Match(Answers, "^от(-?\\d+) *до *(-?\\d+)$");
+                        var matches = Regex.Match(Answers, "^от *(-?\\d+) *до *(-?\\d+)$");
                         var a = matches.Groups[1].Value;
                         int start = Convert.ToInt32(matches.Groups[1].Value);
                         int end = Convert.ToInt32(matches.Groups[2].Value);

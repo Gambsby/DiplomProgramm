@@ -20,7 +20,7 @@ namespace VisualisationData.DataSettingForms
 {
     public partial class SaveSettingForm : Form
     {
-        public bool Status { get; set; }
+        public bool Status { get; set; } = false;
         private ExcelDocument Document { get; set; }
         private string type;
         public SaveSettingForm(ExcelDocument excelDocument, string type)
