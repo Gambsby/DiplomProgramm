@@ -13,14 +13,22 @@ namespace VisualisationData.Excel
         public int QuestionNum { get; set; }
         public string Answer { get; set; }
 
-        public List<string> GetAnswers()
+        public List<string> GetAnswers(string type)
         {
-            string[] answers = Answer.Split(';');
-            for (int i = 0; i < answers.Length; i++)
+            if (type == "checkbox")
             {
-                answers[i] = answers[i].Trim();
+                string[] answers = Answer.Split(',');
+                for (int i = 0; i < answers.Length; i++)
+                {
+                    answers[i] = answers[i].Trim();
+                }
+                return answers.ToList();
             }
-            return answers.ToList();
+            else
+            {
+                return new List<string>() { Answer };
+            }
+            
         }
 
         public string GetId()

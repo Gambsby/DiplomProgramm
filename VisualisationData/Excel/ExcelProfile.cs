@@ -38,7 +38,7 @@ namespace VisualisationData.Excel
                         answers = Answers.Split('/').ToList();
                         break;
                     }
-                case "checbox":
+                case "checkbox":
                     {
                         answers = Answers.Split(';').ToList();
                         break;

@@ -18,6 +18,7 @@ namespace VisualisationData.VisualSettingForms
         private ExcelProfile selectedProfile;
         private ExcelDocument selectedDocument;
         private SeriesChartType diagramType;
+        private int colorIndex;
 
         public VisualisationForm(List<ExcelQuestion> selectedQuestions, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
         {
@@ -30,15 +31,40 @@ namespace VisualisationData.VisualSettingForms
 
         private void VisualisationForm_Load(object sender, EventArgs e)
         {
+            showGridBtn.Checked = visualChart.ChartAreas[0].AxisX.MajorGrid.Enabled;
+            showAxisXBtn.Checked = true;
+            showAxisYBtn.Checked = true;
             foreach (var selectedQuestionItem in selectedQuestions)
             {
                 visualChart.Series.Add(selectedQuestionItem.Content);
                 visualChart.Series[selectedQuestionItem.Content].ChartType = diagramType;
-
-                foreach (var answerItem in selectedProfile.GetProfileAnswers())
+                if (Form1.CompanyColor.Count > colorIndex)
                 {
-                    var countCurrentAnswers = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestionItem.Id && a.GetAnswers().Contains(answerItem)).Count();
-                    visualChart.Series[selectedQuestionItem.Content].Points.AddXY(answerItem, countCurrentAnswers);
+                    visualChart.Series[selectedQuestionItem.Content].Color = Form1.CompanyColor.Values.ToList()[colorIndex];
+                    colorIndex++;
+                }
+                var answersList = selectedProfile.GetProfileAnswers();
+                int openAnswer = 0;
+                foreach (var answerItem in answersList)
+                {
+                    if (answerItem == "другое")
+                    {
+                        var currentResults = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestionItem.Id).ToList();
+                        foreach (var resultItem in currentResults)
+                        {
+                            var a = resultItem.GetAnswers(selectedProfile.Type).Except(answersList).ToList();
+                            if (a.Count != 0)
+                            {
+                                openAnswer++;
+                            }
+                        }
+                        visualChart.Series[selectedQuestionItem.Content].Points.AddXY(answerItem, openAnswer);
+                    }
+                    else
+                    {
+                        var countCurrentAnswers = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestionItem.Id && a.GetAnswers(selectedProfile.Type).Contains(answerItem)).Count();
+                        visualChart.Series[selectedQuestionItem.Content].Points.AddXY(answerItem, countCurrentAnswers);
+                    }
 
                     //visualChart.Series[answerItem]["PointWidth"] = "0.1";
                 }
@@ -144,6 +170,49 @@ namespace VisualisationData.VisualSettingForms
                         case 3: visualChart.SaveImage(sfd.FileName, ChartImageFormat.Jpeg); break;
                     }
                 }
+            }
+        }
+
+        private void showGridBtn_Click(object sender, EventArgs e)
+        {
+            if (showGridBtn.Checked)
+            {
+                showGridBtn.Checked = false;
+            }
+            else
+            {
+                showGridBtn.Checked = true;
+            }
+            visualChart.ChartAreas[0].AxisX.MajorGrid.Enabled = showGridBtn.Checked;
+            visualChart.ChartAreas[0].AxisY.MajorGrid.Enabled = showGridBtn.Checked;
+        }
+
+
+        private void showAxisXBtn_Click(object sender, EventArgs e)
+        {
+            if (showAxisXBtn.Checked)
+            {
+                showAxisXBtn.Checked = false;
+                visualChart.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
+            }
+            else
+            {
+                showAxisXBtn.Checked = true;
+                visualChart.ChartAreas[0].AxisX.Enabled = AxisEnabled.True;
+            }
+        }
+
+        private void showAxisYBtn_Click(object sender, EventArgs e)
+        {
+            if (showAxisYBtn.Checked)
+            {
+                showAxisYBtn.Checked = false;
+                visualChart.ChartAreas[0].AxisY.Enabled = AxisEnabled.False;
+            }
+            else
+            {
+                showAxisYBtn.Checked = true;
+                visualChart.ChartAreas[0].AxisY.Enabled = AxisEnabled.True;
             }
         }
     }

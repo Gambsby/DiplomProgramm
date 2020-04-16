@@ -74,7 +74,16 @@ namespace VisualisationData.DataSettingForms
                 {
                     chooseDG.Rows.Add(item.Id, item.ProfileName, item.Answers);
                     (chooseDG["sheetName", chooseDG.RowCount - 1] as DataGridViewComboBoxCell).Items.AddRange(profileSheets.ToArray());
-                    chooseDG["sheetName", chooseDG.RowCount - 1].Value = (chooseDG["sheetName", chooseDG.RowCount - 1] as DataGridViewComboBoxCell).Items[0];
+                    int index = 0;
+                    for (int i = 0; i < (chooseDG["sheetName", chooseDG.RowCount - 1] as DataGridViewComboBoxCell).Items.Count; i++)
+                    {
+                        if ((chooseDG["sheetName", chooseDG.RowCount - 1] as DataGridViewComboBoxCell).Items[i].ToString() == item.Sheet)
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+                    chooseDG["sheetName", chooseDG.RowCount - 1].Value = (chooseDG["sheetName", chooseDG.RowCount - 1] as DataGridViewComboBoxCell).Items[index];
                 }
 
                 chooseInfoSheetCB.Enabled = false;

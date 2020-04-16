@@ -356,7 +356,6 @@
     <Compile Include="DataSettingForms\LoadSettingForm.Designer.cs">
       <DependentUpon>LoadSettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Excel\ConnectionExcel .cs" />
     <Compile Include="Excel\ExcelResult.cs" />
     <Compile Include="Excel\ExcelDocument.cs" />
     <Compile Include="Excel\ExcelProfile.cs" />

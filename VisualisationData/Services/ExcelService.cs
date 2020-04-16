@@ -38,11 +38,10 @@ namespace VisualisationData.Services
         public static List<ExcelQuestionType> GetProfileNamesEP(string pathToExcelFile, string sheetName)
         {
             List<ExcelQuestionType> excelQuestionTypes = new List<ExcelQuestionType>();
-
-            ConnectionExcel ConxObject = new ConnectionExcel(pathToExcelFile);
             var ids = GetColumn(2, 1, pathToExcelFile, sheetName);
             var profileNames = GetColumn(2, 2, pathToExcelFile, sheetName);
             var answers = GetColumn(2, 6, pathToExcelFile, sheetName);
+            var sheets = GetColumn(2, 7, pathToExcelFile, sheetName);
 
             if (ids.Count == profileNames.Count && profileNames.Count == answers.Count)
             {
@@ -61,7 +60,8 @@ namespace VisualisationData.Services
                     {
                         Id = id,
                         ProfileName = profileNames[i].ToString(),
-                        Answers = answers[i].ToString()
+                        Answers = answers[i].ToString(),
+                        Sheet = sheets[i].ToString()
                     };
                     excelQuestionTypes.Add(type);
                 }
@@ -78,7 +78,6 @@ namespace VisualisationData.Services
         {
             List<ExcelQuestion> excelProfile = new List<ExcelQuestion>();
 
-            ConnectionExcel ConxObject = new ConnectionExcel(pathToExcelFile);
             var ids = GetColumn(1, 1, pathToExcelFile, sheetName);
             var question = GetColumn(1, 2, pathToExcelFile, sheetName);
             var leftLimits = GetColumn(1, 3, pathToExcelFile, sheetName);
@@ -144,7 +143,6 @@ namespace VisualisationData.Services
         {
             List<ExcelResult> excelAnswer = new List<ExcelResult>();
 
-            ConnectionExcel ConxObject = new ConnectionExcel(pathToExcelFile);
             var ids = GetColumn(2, 1, pathToExcelFile, sheetName);
             var profileNums = GetColumn(2, 2, pathToExcelFile, sheetName);
             var questionNums = GetColumn(2, 3, pathToExcelFile, sheetName);

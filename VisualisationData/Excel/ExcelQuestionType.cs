@@ -12,6 +12,7 @@ namespace VisualisationData.Excel
         public int Id { get; set; }
         public string ProfileName { get; set; }
         public string Answers { get; set; }
+        public string Sheet { get; set; }
 
         public string GetProfileType()
         {

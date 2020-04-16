@@ -24,7 +24,6 @@ namespace VisualisationData
 {
     public partial class Form1 : Form
     {
-        public enum FileFormats { Excel, CSV };
         public static Dictionary<string, Color> CompanyColor = new Dictionary<string, Color>
         {
             { "Бордовый", Color.FromArgb(120, 28, 51) },
@@ -304,7 +303,7 @@ namespace VisualisationData
                         break;
                     }
             }
-            dataGrid.Columns.Add(CommonService.CreateTextColumn("Возможные ответы", "answers"));
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Возможные ответы", "answers", true));
         }
 
         private void DiagramStart(SeriesChartType type)
