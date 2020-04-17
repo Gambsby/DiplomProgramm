@@ -85,6 +85,8 @@ namespace VisualisationData.Services
                     currentChart.Series[chartItem.Key].Font = new Font("Arial", 20f);
                     if (type == SeriesChartType.Pie || type == SeriesChartType.Doughnut)
                     {
+                        currentChart.Titles.Add(chartItem.Key);
+                        currentChart.Titles[0].Font = new Font("Arial", 14f);
                         currentChart.Series[chartItem.Key].LabelForeColor = Color.White;
                     }
                     else

@@ -342,5 +342,76 @@ namespace VisualisationData.Services
                 throw new Exception("Ошибка при записи в файл!");
             }
         }
+
+        public static void DeleteMainProfile(List<MainProfile> deletedMainProfiles)
+        {
+            using (profileContext db = new profileContext())
+            {
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var mainProfileItem in deletedMainProfiles)
+                        {
+                            db.MainProfile.Remove(mainProfileItem);
+                        }
+                        db.SaveChanges();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw new Exception("При удалении произошла ошибка. Попытайтесь снова.");
+                    }
+                }
+            }
+        }
+
+        public static ExcelDocument LoadMainProfile(MainProfile mainProfile)
+        {
+            List<ExcelResult> answerListContent = new List<ExcelResult>();
+            List<ExcelProfile> profilesListContent = new List<ExcelProfile>();
+
+            using (profileContext db = new profileContext())
+            {
+                mainProfile = db.MainProfile.SingleOrDefault(p => p == mainProfile);
+                db.Entry(mainProfile).Collection(t => t.Profile).Load();
+                db.Entry(mainProfile).Collection(t => t.Questioned).Load();
+                foreach (var profileItem in mainProfile.Profile)
+                {
+                    db.Entry(profileItem).Collection(t => t.Question).Load();
+                    db.Entry(profileItem).Collection(t => t.Result).Load();
+                    db.Entry(profileItem).Reference(t => t.Type).Load();
+                    List<ExcelQuestion> questions = new List<ExcelQuestion>();
+                    foreach (var questionItem in profileItem.Question)
+                    {
+                        if (questionItem.LeftLimit == null && questionItem.RightLimit == null)
+                        {
+                            questions.Add(new ExcelQuestion { Id = questionItem.SerialNumber, Content = questionItem.Content, LeftLimit = "", RightLimit = "" });
+                        }
+                        else
+                        {
+                            questions.Add(new ExcelQuestion { Id = questionItem.SerialNumber, Content = questionItem.Content, LeftLimit = questionItem.LeftLimit, RightLimit = questionItem.RightLimit });
+                        }
+                    }
+                    ExcelProfile excelProfile = new ExcelProfile { Id = profileItem.SerialNumber, Answers = profileItem.Answer, Name = profileItem.Name, Type = profileItem.Type.Type, Questions = questions };
+                    profilesListContent.Add(excelProfile);
+
+                    foreach (var resultItem in profileItem.Result)
+                    {
+                        string questionedId = mainProfile.Questioned.SingleOrDefault(q => q.Id == resultItem.QuestionedId).Number;
+                        ExcelResult excelResult = new ExcelResult
+                        {
+                            Id = questionedId,
+                            ProfileNum = resultItem.Profile.SerialNumber,
+                            QuestionNum = resultItem.Question.SerialNumber,
+                            Answer = resultItem.Answer
+                        };
+                        answerListContent.Add(excelResult);
+                    }
+                }
+                return new ExcelDocument { DocumentName = mainProfile.Name, AnswerListContent = answerListContent, ProfilesListContent = profilesListContent };
+            }
+        }
     }
 }
