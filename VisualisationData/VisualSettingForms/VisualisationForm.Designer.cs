@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savaDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,6 +37,10 @@
             this.BGSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.diagramBGSettingRtn = new System.Windows.Forms.ToolStripMenuItem();
             this.borderSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showGridBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAxisBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAxisXBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAxisYBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.dataSettingsBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.signatureSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.mode3DSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,10 +49,9 @@
             this.seriesSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pointsSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.visualChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.showGridBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.showAxisBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.showAxisXBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.showAxisYBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.markerFontBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.legendFontBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.titleFontBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
             this.SuspendLayout();
@@ -76,7 +79,7 @@
             // savaDiagramBtn
             // 
             this.savaDiagramBtn.Name = "savaDiagramBtn";
-            this.savaDiagramBtn.Size = new System.Drawing.Size(180, 22);
+            this.savaDiagramBtn.Size = new System.Drawing.Size(132, 22);
             this.savaDiagramBtn.Text = "Сохранить";
             this.savaDiagramBtn.Click += new System.EventHandler(this.savaDiagramBtn_Click);
             // 
@@ -87,7 +90,10 @@
             this.diagramBGSettingRtn,
             this.borderSettingBtn,
             this.showGridBtn,
-            this.showAxisBtn});
+            this.showAxisBtn,
+            this.markerFontBtn,
+            this.legendFontBtn,
+            this.titleFontBtn});
             this.appearanceSettingBtn.Name = "appearanceSettingBtn";
             this.appearanceSettingBtn.Size = new System.Drawing.Size(164, 20);
             this.appearanceSettingBtn.Text = "Настройка внешнего вида";
@@ -112,6 +118,36 @@
             this.borderSettingBtn.Size = new System.Drawing.Size(183, 22);
             this.borderSettingBtn.Text = "Рамка";
             this.borderSettingBtn.Click += new System.EventHandler(this.borderSettingBtn_Click);
+            // 
+            // showGridBtn
+            // 
+            this.showGridBtn.Name = "showGridBtn";
+            this.showGridBtn.Size = new System.Drawing.Size(183, 22);
+            this.showGridBtn.Text = "Отображение сетки";
+            this.showGridBtn.Click += new System.EventHandler(this.showGridBtn_Click);
+            // 
+            // showAxisBtn
+            // 
+            this.showAxisBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showAxisXBtn,
+            this.showAxisYBtn});
+            this.showAxisBtn.Name = "showAxisBtn";
+            this.showAxisBtn.Size = new System.Drawing.Size(183, 22);
+            this.showAxisBtn.Text = "Отображение осей";
+            // 
+            // showAxisXBtn
+            // 
+            this.showAxisXBtn.Name = "showAxisXBtn";
+            this.showAxisXBtn.Size = new System.Drawing.Size(105, 22);
+            this.showAxisXBtn.Text = "Ось X";
+            this.showAxisXBtn.Click += new System.EventHandler(this.showAxisXBtn_Click);
+            // 
+            // showAxisYBtn
+            // 
+            this.showAxisYBtn.Name = "showAxisYBtn";
+            this.showAxisYBtn.Size = new System.Drawing.Size(105, 22);
+            this.showAxisYBtn.Text = "Ось Y";
+            this.showAxisYBtn.Click += new System.EventHandler(this.showAxisYBtn_Click);
             // 
             // dataSettingsBtn
             // 
@@ -173,45 +209,36 @@
             this.visualChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.visualChart.ChartAreas.Add(chartArea4);
-            legend4.Name = "Legend1";
-            this.visualChart.Legends.Add(legend4);
+            chartArea1.Name = "ChartArea1";
+            this.visualChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.visualChart.Legends.Add(legend1);
             this.visualChart.Location = new System.Drawing.Point(13, 28);
             this.visualChart.Name = "visualChart";
             this.visualChart.Size = new System.Drawing.Size(1024, 477);
             this.visualChart.TabIndex = 1;
             this.visualChart.Text = "visualChart";
             // 
-            // showGridBtn
+            // markerFontBtn
             // 
-            this.showGridBtn.Name = "showGridBtn";
-            this.showGridBtn.Size = new System.Drawing.Size(183, 22);
-            this.showGridBtn.Text = "Отображение сетки";
-            this.showGridBtn.Click += new System.EventHandler(this.showGridBtn_Click);
+            this.markerFontBtn.Name = "markerFontBtn";
+            this.markerFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.markerFontBtn.Text = "Шрифт маркеров";
+            this.markerFontBtn.Click += new System.EventHandler(this.markerFontBtn_Click);
             // 
-            // showAxisBtn
+            // legendFontBtn
             // 
-            this.showAxisBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showAxisXBtn,
-            this.showAxisYBtn});
-            this.showAxisBtn.Name = "showAxisBtn";
-            this.showAxisBtn.Size = new System.Drawing.Size(183, 22);
-            this.showAxisBtn.Text = "Отображение осей";
+            this.legendFontBtn.Name = "legendFontBtn";
+            this.legendFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.legendFontBtn.Text = "Шрифт легенды";
+            this.legendFontBtn.Click += new System.EventHandler(this.legendFontBtn_Click);
             // 
-            // showAxisXBtn
+            // titleFontBtn
             // 
-            this.showAxisXBtn.Name = "showAxisXBtn";
-            this.showAxisXBtn.Size = new System.Drawing.Size(180, 22);
-            this.showAxisXBtn.Text = "Ось X";
-            this.showAxisXBtn.Click += new System.EventHandler(this.showAxisXBtn_Click);
-            // 
-            // showAxisYBtn
-            // 
-            this.showAxisYBtn.Name = "showAxisYBtn";
-            this.showAxisYBtn.Size = new System.Drawing.Size(180, 22);
-            this.showAxisYBtn.Text = "Ось Y";
-            this.showAxisYBtn.Click += new System.EventHandler(this.showAxisYBtn_Click);
+            this.titleFontBtn.Name = "titleFontBtn";
+            this.titleFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.titleFontBtn.Text = "Шрифт заголовка";
+            this.titleFontBtn.Click += new System.EventHandler(this.titleFontBtn_Click);
             // 
             // VisualisationForm
             // 
@@ -253,5 +280,8 @@
         private System.Windows.Forms.ToolStripMenuItem showAxisBtn;
         private System.Windows.Forms.ToolStripMenuItem showAxisXBtn;
         private System.Windows.Forms.ToolStripMenuItem showAxisYBtn;
+        private System.Windows.Forms.ToolStripMenuItem markerFontBtn;
+        private System.Windows.Forms.ToolStripMenuItem legendFontBtn;
+        private System.Windows.Forms.ToolStripMenuItem titleFontBtn;
     }
 }

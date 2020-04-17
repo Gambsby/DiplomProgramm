@@ -198,5 +198,72 @@ namespace VisualisationData.VisualSettingForms
                 visualChart.ChartAreas[0].AxisY.Enabled = AxisEnabled.True;
             }
         }
+
+        private void legendFontBtn_Click(object sender, EventArgs e)
+        {
+            using (FontDialog fd = new FontDialog())
+            {
+                fd.ShowColor = true;
+                fd.Font = visualChart.Legends[0].Font;
+                fd.Color = visualChart.Legends[0].ForeColor;
+                if (fd.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+                else
+                {
+                    visualChart.Legends[0].Font = fd.Font;
+                    visualChart.Legends[0].ForeColor = fd.Color;
+                }
+            }
+        }
+
+        private void titleFontBtn_Click(object sender, EventArgs e)
+        {
+            if (visualChart.Titles.Count != 0)
+            {
+                using (FontDialog fd = new FontDialog())
+                {
+                    fd.ShowColor = true;
+                    fd.Font = visualChart.Titles[0].Font;
+                    fd.Color = visualChart.Titles[0].ForeColor;
+                    if (fd.ShowDialog() == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        visualChart.Titles[0].Font = fd.Font;
+                        visualChart.Titles[0].ForeColor = fd.Color;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Нет заголовка чтобы задать им шрифт.");
+            }
+        }
+
+        private void markerFontBtn_Click(object sender, EventArgs e)
+        {
+            using (FontDialog fd = new FontDialog())
+            {
+                fd.ShowColor = true;
+                fd.Font = visualChart.Series[0].Font;
+                fd.Color = visualChart.Series[0].LabelForeColor;
+                if (fd.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+                else
+                {
+                    foreach (var seriesItem in visualChart.Series)
+                    {
+                        seriesItem.Font = fd.Font;
+                        seriesItem.LabelForeColor = fd.Color;
+                    }
+                }
+            }
+        }
     }
 }

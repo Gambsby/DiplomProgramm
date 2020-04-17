@@ -53,6 +53,10 @@ namespace VisualisationData
         private void loadDataExcelBtn_Click(object sender, EventArgs e)//+
         {
             string filePath = CommonService.OpenFilePath("*.xlsx|*.xlsx", "физвоспитание анкета");
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             try
@@ -62,6 +66,7 @@ namespace VisualisationData
                 if (loadSettingForm.Status)
                 {
                     Document = SortDocument(loadSettingForm.Document);
+                    profilesCB.Items.Clear();
                     profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
                     profilesCB.SelectedIndex = 0;
                 }
@@ -86,6 +91,7 @@ namespace VisualisationData
                 if (chooseMainProfileForm.Status)
                 {
                     Document = SortDocument(chooseMainProfileForm.Document);
+                    profilesCB.Items.Clear();
                     profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
                     profilesCB.SelectedIndex = 0;
                 }
@@ -187,10 +193,6 @@ namespace VisualisationData
                 if (deleteSettingForm.Status)
                 {
                     MessageBox.Show("Данные успешно удалены.");
-                }
-                else
-                {
-                    MessageBox.Show("При удалении произошла ошибка.");
                 }
             }
             catch (Exception ex)

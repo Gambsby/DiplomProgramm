@@ -20,6 +20,7 @@ namespace VisualisationData.VisualSettingForms
         public TextDialog(string contentLabel, string contentTextBox)
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.contentLabel = contentLabel;
             this.contentTextBox = contentTextBox;
         }

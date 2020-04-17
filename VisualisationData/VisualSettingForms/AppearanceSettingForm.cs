@@ -50,6 +50,7 @@ namespace VisualisationData.VisualSettingForms
         public AppearanceSettingForm(Chart visualChart, string nameGroupBox, string typeSettings)
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.nameGroupBox = nameGroupBox;
             this.typeSettings = typeSettings;
             this.visualChart = visualChart;

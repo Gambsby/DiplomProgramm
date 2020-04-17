@@ -44,7 +44,7 @@
             this.chooseInfoSheetCB.FormattingEnabled = true;
             this.chooseInfoSheetCB.Location = new System.Drawing.Point(302, 12);
             this.chooseInfoSheetCB.Name = "chooseInfoSheetCB";
-            this.chooseInfoSheetCB.Size = new System.Drawing.Size(121, 21);
+            this.chooseInfoSheetCB.Size = new System.Drawing.Size(281, 21);
             this.chooseInfoSheetCB.TabIndex = 0;
             // 
             // label1
@@ -58,6 +58,7 @@
             // 
             // nextBtn
             // 
+            this.nextBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.nextBtn.Location = new System.Drawing.Point(657, 262);
             this.nextBtn.Name = "nextBtn";
             this.nextBtn.Size = new System.Drawing.Size(75, 23);
@@ -69,6 +70,9 @@
             // chooseDG
             // 
             this.chooseDG.AllowUserToAddRows = false;
+            this.chooseDG.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chooseDG.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.chooseDG.Location = new System.Drawing.Point(12, 66);
             this.chooseDG.Name = "chooseDG";
@@ -77,6 +81,7 @@
             // 
             // acceptBtn
             // 
+            this.acceptBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.acceptBtn.Location = new System.Drawing.Point(657, 262);
             this.acceptBtn.Name = "acceptBtn";
             this.acceptBtn.Size = new System.Drawing.Size(75, 23);
@@ -100,11 +105,12 @@
             this.chooseAnswerSheetDG.FormattingEnabled = true;
             this.chooseAnswerSheetDG.Location = new System.Drawing.Point(302, 39);
             this.chooseAnswerSheetDG.Name = "chooseAnswerSheetDG";
-            this.chooseAnswerSheetDG.Size = new System.Drawing.Size(121, 21);
+            this.chooseAnswerSheetDG.Size = new System.Drawing.Size(281, 21);
             this.chooseAnswerSheetDG.TabIndex = 5;
             // 
             // cancelBtn
             // 
+            this.cancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cancelBtn.Location = new System.Drawing.Point(12, 262);
             this.cancelBtn.Name = "cancelBtn";
             this.cancelBtn.Size = new System.Drawing.Size(75, 23);
