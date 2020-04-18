@@ -52,13 +52,13 @@
             this.deleteLB.Location = new System.Drawing.Point(12, 30);
             this.deleteLB.Name = "deleteLB";
             this.deleteLB.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.deleteLB.Size = new System.Drawing.Size(315, 173);
+            this.deleteLB.Size = new System.Drawing.Size(310, 160);
             this.deleteLB.TabIndex = 1;
             // 
             // acceptBtn
             // 
             this.acceptBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.acceptBtn.Location = new System.Drawing.Point(252, 209);
+            this.acceptBtn.Location = new System.Drawing.Point(247, 205);
             this.acceptBtn.Name = "acceptBtn";
             this.acceptBtn.Size = new System.Drawing.Size(75, 23);
             this.acceptBtn.TabIndex = 2;
@@ -69,7 +69,7 @@
             // cancelBtn
             // 
             this.cancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cancelBtn.Location = new System.Drawing.Point(12, 209);
+            this.cancelBtn.Location = new System.Drawing.Point(12, 205);
             this.cancelBtn.Name = "cancelBtn";
             this.cancelBtn.Size = new System.Drawing.Size(75, 23);
             this.cancelBtn.TabIndex = 3;
@@ -81,13 +81,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(339, 245);
+            this.ClientSize = new System.Drawing.Size(334, 241);
             this.Controls.Add(this.cancelBtn);
             this.Controls.Add(this.acceptBtn);
             this.Controls.Add(this.deleteLB);
             this.Controls.Add(this.label1);
+            this.MinimumSize = new System.Drawing.Size(350, 280);
             this.Name = "ChooseMainProfileForm";
-            this.Text = "DeleteSettingForm";
+            this.Text = "Выбор анкеты";
             this.Load += new System.EventHandler(this.DeleteSettingForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
