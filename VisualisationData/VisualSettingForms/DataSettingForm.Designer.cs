@@ -53,7 +53,7 @@
             this.settingGB.Controls.Add(this.firstLbl);
             this.settingGB.Location = new System.Drawing.Point(10, 12);
             this.settingGB.Name = "settingGB";
-            this.settingGB.Size = new System.Drawing.Size(661, 61);
+            this.settingGB.Size = new System.Drawing.Size(661, 68);
             this.settingGB.TabIndex = 12;
             this.settingGB.TabStop = false;
             this.settingGB.Text = "Настройка фона";
@@ -63,7 +63,7 @@
             this.secondCB.FormattingEnabled = true;
             this.secondCB.Location = new System.Drawing.Point(6, 78);
             this.secondCB.Name = "secondCB";
-            this.secondCB.Size = new System.Drawing.Size(450, 21);
+            this.secondCB.Size = new System.Drawing.Size(649, 21);
             this.secondCB.TabIndex = 20;
             this.secondCB.Visible = false;
             this.secondCB.SelectedIndexChanged += new System.EventHandler(this.secondCB_SelectedIndexChanged);
@@ -81,7 +81,7 @@
             // colorBtn
             // 
             this.colorBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.colorBtn.Location = new System.Drawing.Point(77, 26);
+            this.colorBtn.Location = new System.Drawing.Point(77, 33);
             this.colorBtn.Name = "colorBtn";
             this.colorBtn.Size = new System.Drawing.Size(20, 20);
             this.colorBtn.TabIndex = 18;
@@ -93,7 +93,7 @@
             // 
             this.colorLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.colorLbl.AutoSize = true;
-            this.colorLbl.Location = new System.Drawing.Point(6, 30);
+            this.colorLbl.Location = new System.Drawing.Point(6, 37);
             this.colorLbl.Name = "colorLbl";
             this.colorLbl.Size = new System.Drawing.Size(65, 13);
             this.colorLbl.TabIndex = 17;
@@ -122,7 +122,7 @@
             // 
             this.closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.closeBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeBtn.Location = new System.Drawing.Point(12, 82);
+            this.closeBtn.Location = new System.Drawing.Point(12, 93);
             this.closeBtn.Name = "closeBtn";
             this.closeBtn.Size = new System.Drawing.Size(81, 23);
             this.closeBtn.TabIndex = 18;
@@ -134,7 +134,7 @@
             // 
             this.acceptBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.acceptBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.acceptBtn.Location = new System.Drawing.Point(590, 82);
+            this.acceptBtn.Location = new System.Drawing.Point(590, 93);
             this.acceptBtn.Name = "acceptBtn";
             this.acceptBtn.Size = new System.Drawing.Size(81, 23);
             this.acceptBtn.TabIndex = 19;
@@ -146,12 +146,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(683, 117);
+            this.ClientSize = new System.Drawing.Size(683, 128);
             this.Controls.Add(this.acceptBtn);
             this.Controls.Add(this.closeBtn);
             this.Controls.Add(this.settingGB);
             this.Name = "DataSettingForm";
-            this.Text = "DataSettingForm";
+            this.Text = "Настройка данных";
             this.Load += new System.EventHandler(this.DataSettingForm_Load);
             this.settingGB.ResumeLayout(false);
             this.settingGB.PerformLayout();

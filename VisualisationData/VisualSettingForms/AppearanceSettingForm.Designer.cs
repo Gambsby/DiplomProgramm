@@ -167,7 +167,7 @@
             this.Controls.Add(this.acceptBtn);
             this.Controls.Add(this.settingGB);
             this.Name = "AppearanceSettingForm";
-            this.Text = "AppearanceSettingForm";
+            this.Text = "Настройки внешнего вида";
             this.Load += new System.EventHandler(this.AppearanceSettingForm_Load);
             this.settingGB.ResumeLayout(false);
             this.settingGB.PerformLayout();

@@ -81,7 +81,7 @@
             this.Controls.Add(this.infoLbl);
             this.Controls.Add(this.inputTB);
             this.Name = "TextDialog";
-            this.Text = "TextDialog";
+            this.Text = "Настройка текста";
             this.Load += new System.EventHandler(this.TextDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

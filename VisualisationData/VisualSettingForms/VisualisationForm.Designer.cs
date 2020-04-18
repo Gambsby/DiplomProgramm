@@ -41,6 +41,9 @@
             this.showAxisBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.showAxisXBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.showAxisYBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.markerFontBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.legendFontBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.titleFontBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.dataSettingsBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.signatureSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.mode3DSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,9 +52,6 @@
             this.seriesSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pointsSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.visualChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.markerFontBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.legendFontBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.titleFontBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
             this.SuspendLayout();
@@ -64,7 +64,7 @@
             this.dataSettingsBtn});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1049, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(984, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -149,6 +149,27 @@
             this.showAxisYBtn.Text = "Ось Y";
             this.showAxisYBtn.Click += new System.EventHandler(this.showAxisYBtn_Click);
             // 
+            // markerFontBtn
+            // 
+            this.markerFontBtn.Name = "markerFontBtn";
+            this.markerFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.markerFontBtn.Text = "Шрифт маркеров";
+            this.markerFontBtn.Click += new System.EventHandler(this.markerFontBtn_Click);
+            // 
+            // legendFontBtn
+            // 
+            this.legendFontBtn.Name = "legendFontBtn";
+            this.legendFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.legendFontBtn.Text = "Шрифт легенды";
+            this.legendFontBtn.Click += new System.EventHandler(this.legendFontBtn_Click);
+            // 
+            // titleFontBtn
+            // 
+            this.titleFontBtn.Name = "titleFontBtn";
+            this.titleFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.titleFontBtn.Text = "Шрифт заголовка";
+            this.titleFontBtn.Click += new System.EventHandler(this.titleFontBtn_Click);
+            // 
             // dataSettingsBtn
             // 
             this.dataSettingsBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -215,41 +236,21 @@
             this.visualChart.Legends.Add(legend1);
             this.visualChart.Location = new System.Drawing.Point(13, 28);
             this.visualChart.Name = "visualChart";
-            this.visualChart.Size = new System.Drawing.Size(1024, 477);
+            this.visualChart.Size = new System.Drawing.Size(959, 521);
             this.visualChart.TabIndex = 1;
             this.visualChart.Text = "visualChart";
-            // 
-            // markerFontBtn
-            // 
-            this.markerFontBtn.Name = "markerFontBtn";
-            this.markerFontBtn.Size = new System.Drawing.Size(183, 22);
-            this.markerFontBtn.Text = "Шрифт маркеров";
-            this.markerFontBtn.Click += new System.EventHandler(this.markerFontBtn_Click);
-            // 
-            // legendFontBtn
-            // 
-            this.legendFontBtn.Name = "legendFontBtn";
-            this.legendFontBtn.Size = new System.Drawing.Size(183, 22);
-            this.legendFontBtn.Text = "Шрифт легенды";
-            this.legendFontBtn.Click += new System.EventHandler(this.legendFontBtn_Click);
-            // 
-            // titleFontBtn
-            // 
-            this.titleFontBtn.Name = "titleFontBtn";
-            this.titleFontBtn.Size = new System.Drawing.Size(183, 22);
-            this.titleFontBtn.Text = "Шрифт заголовка";
-            this.titleFontBtn.Click += new System.EventHandler(this.titleFontBtn_Click);
             // 
             // VisualisationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1049, 517);
+            this.ClientSize = new System.Drawing.Size(984, 561);
             this.Controls.Add(this.visualChart);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "VisualisationForm";
-            this.Text = "VisualisationFormcs";
+            this.Text = "Настройка диаграмм";
             this.Load += new System.EventHandler(this.VisualisationForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

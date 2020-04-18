@@ -55,25 +55,37 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void BGSettingBtn_Click(object sender, EventArgs e)
+        private void BGSettingBtn_Click(object sender, EventArgs e)//+
         {
-            AppearanceSettingForm appearanceSettingForm = new AppearanceSettingForm(visualChart, "Настройка фона", "background");
-            appearanceSettingForm.Show();
+            using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
+            {
+                asf.NameGroupBox = "Настройка фона";
+                asf.TypeSettings = "background";
+                asf.ShowDialog();
+            }
         }
 
-        private void diagramBGSettingRtn_Click(object sender, EventArgs e)
+        private void diagramBGSettingRtn_Click(object sender, EventArgs e)//+
         {
-            AppearanceSettingForm appearanceSettingForm = new AppearanceSettingForm(visualChart, "Настройка фона", "diagram");
-            appearanceSettingForm.Show();
+            using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
+            {
+                asf.NameGroupBox = "Настройка фона";
+                asf.TypeSettings = "diagram";
+                asf.ShowDialog();
+            }
         }
 
-        private void borderSettingBtn_Click(object sender, EventArgs e)
+        private void borderSettingBtn_Click(object sender, EventArgs e)//+
         {
-            AppearanceSettingForm appearanceSettingForm = new AppearanceSettingForm(visualChart, "Настройка рамки", "border");
-            appearanceSettingForm.Show();
+            using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
+            {
+                asf.NameGroupBox = "Настройка рамки";
+                asf.TypeSettings = "border";
+                asf.ShowDialog();
+            }
         }
 
-        private void signatureSettingBtn_Click(object sender, EventArgs e)
+        private void signatureSettingBtn_Click(object sender, EventArgs e)//+
         {
             if (signatureSettingBtn.Checked)
             {
@@ -89,7 +101,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void mode3DSettingBtn_Click(object sender, EventArgs e)
+        private void mode3DSettingBtn_Click(object sender, EventArgs e)//+
         {
             if (mode3DSettingBtn.Checked)
             {
@@ -102,13 +114,17 @@ namespace VisualisationData.VisualSettingForms
             visualChart.ChartAreas[0].Area3DStyle.Enable3D = mode3DSettingBtn.Checked;
         }
 
-        private void diagramTypeSettingBtn_Click(object sender, EventArgs e)
+        private void diagramTypeSettingBtn_Click(object sender, EventArgs e)//+
         {
-            DataSettingForm dataSettingForm = new DataSettingForm(visualChart, "Настройка типа диаграммы", "diagramType");
-            dataSettingForm.Show();
+            using (DataSettingForm dsf = new DataSettingForm(visualChart))
+            {
+                dsf.NameGroupBox = "Настройка типа диаграммы";
+                dsf.TypeSettings = "diagramType";
+                dsf.ShowDialog();
+            }
         }
 
-        private void titleSettingBtn_Click(object sender, EventArgs e)
+        private void titleSettingBtn_Click(object sender, EventArgs e)//+
         {
             string title = string.Empty;
             if (visualChart.Titles.Count > 0)
@@ -125,19 +141,27 @@ namespace VisualisationData.VisualSettingForms
             
         }
 
-        private void seriesSettingBtn_Click(object sender, EventArgs e)
+        private void seriesSettingBtn_Click(object sender, EventArgs e)//+
         {
-            DataSettingForm dataSettingForm = new DataSettingForm(visualChart, "Настройка цвета серии данных", "seriesColor");
-            dataSettingForm.Show();
+            using (DataSettingForm dsf = new DataSettingForm(visualChart))
+            {
+                dsf.NameGroupBox = "Настройка цвета серии данных";
+                dsf.TypeSettings = "seriesColor";
+                dsf.ShowDialog();
+            }
         }
 
-        private void pointsSettingBtn_Click(object sender, EventArgs e)
+        private void pointsSettingBtn_Click(object sender, EventArgs e)//+
         {
-            DataSettingForm dataSettingForm = new DataSettingForm(visualChart, "Настройка цвета элементов серии", "pointColor");
-            dataSettingForm.Show();
+            using (DataSettingForm dsf = new DataSettingForm(visualChart))
+            {
+                dsf.NameGroupBox = "Настройка цвета элементов серии";
+                dsf.TypeSettings = "pointColor";
+                dsf.ShowDialog();
+            }
         }
 
-        private void savaDiagramBtn_Click(object sender, EventArgs e)
+        private void savaDiagramBtn_Click(object sender, EventArgs e)//+
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
@@ -157,7 +181,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void showGridBtn_Click(object sender, EventArgs e)
+        private void showGridBtn_Click(object sender, EventArgs e)//+
         {
             if (showGridBtn.Checked)
             {
@@ -171,7 +195,7 @@ namespace VisualisationData.VisualSettingForms
             visualChart.ChartAreas[0].AxisY.MajorGrid.Enabled = showGridBtn.Checked;
         }
 
-        private void showAxisXBtn_Click(object sender, EventArgs e)
+        private void showAxisXBtn_Click(object sender, EventArgs e)//+
         {
             if (showAxisXBtn.Checked)
             {
@@ -185,7 +209,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void showAxisYBtn_Click(object sender, EventArgs e)
+        private void showAxisYBtn_Click(object sender, EventArgs e)//+
         {
             if (showAxisYBtn.Checked)
             {
@@ -199,7 +223,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void legendFontBtn_Click(object sender, EventArgs e)
+        private void legendFontBtn_Click(object sender, EventArgs e)//+
         {
             using (FontDialog fd = new FontDialog())
             {
@@ -218,7 +242,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void titleFontBtn_Click(object sender, EventArgs e)
+        private void titleFontBtn_Click(object sender, EventArgs e)//+
         {
             if (visualChart.Titles.Count != 0)
             {
@@ -244,7 +268,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void markerFontBtn_Click(object sender, EventArgs e)
+        private void markerFontBtn_Click(object sender, EventArgs e)//+
         {
             using (FontDialog fd = new FontDialog())
             {

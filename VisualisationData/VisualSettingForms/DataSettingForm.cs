@@ -27,22 +27,20 @@ namespace VisualisationData.VisualSettingForms
 
         };
 
-        private string nameGroupBox;
-        private string typeSettings;
+        public string NameGroupBox { get; set; }
+        public string TypeSettings { get; set; }
         private Chart visualChart;
 
-        public DataSettingForm(Chart visualChart, string nameGroupBox, string typeSettings)
+        public DataSettingForm(Chart visualChart)
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.nameGroupBox = nameGroupBox;
-            this.typeSettings = typeSettings;
             this.visualChart = visualChart;
         }
 
         private void acceptBtn_Click(object sender, EventArgs e)
         {
-            switch (typeSettings)
+            switch (TypeSettings)
             {
                 case "diagramType":
                     {
@@ -98,8 +96,8 @@ namespace VisualisationData.VisualSettingForms
 
         private void DataSettingForm_Load(object sender, EventArgs e)
         {
-            settingGB.Text = nameGroupBox;
-            switch (typeSettings)
+            settingGB.Text = NameGroupBox;
+            switch (TypeSettings)
             {
                 case "diagramType":
                     {
@@ -151,7 +149,7 @@ namespace VisualisationData.VisualSettingForms
 
         private void firstCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (typeSettings)
+            switch (TypeSettings)
             {
                 case "seriesColor":
                     {
@@ -181,7 +179,7 @@ namespace VisualisationData.VisualSettingForms
 
         private void secondCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (typeSettings)
+            switch (TypeSettings)
             {
                 case "pointColor":
                     {

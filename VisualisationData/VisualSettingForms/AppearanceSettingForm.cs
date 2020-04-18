@@ -16,7 +16,7 @@ namespace VisualisationData.VisualSettingForms
     {
         private Dictionary<string, GradientStyle> gradientStyleMap = new Dictionary<string, GradientStyle>
         {
-            { "Отсутсвие градиента", GradientStyle.None },
+            { "Отсутствие градиента", GradientStyle.None },
             { "Градиент слева на право", GradientStyle.LeftRight },
             { "Градиент сверху в низ", GradientStyle.TopBottom },
             { "Градиент от центра к краям", GradientStyle.Center },
@@ -43,23 +43,21 @@ namespace VisualisationData.VisualSettingForms
         };
 
 
-        private string nameGroupBox;
-        private string typeSettings;
+        public string NameGroupBox { get; set; }
+        public string TypeSettings { get; set; }
         private Chart visualChart;
 
-        public AppearanceSettingForm(Chart visualChart, string nameGroupBox, string typeSettings)
+        public AppearanceSettingForm(Chart visualChart)
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.nameGroupBox = nameGroupBox;
-            this.typeSettings = typeSettings;
             this.visualChart = visualChart;
         }
 
         private void AppearanceSettingForm_Load(object sender, EventArgs e)
         {
-            settingGB.Text = nameGroupBox;
-            switch (typeSettings)
+            settingGB.Text = NameGroupBox;
+            switch (TypeSettings)
             {
                 case "background":
                     {
@@ -101,7 +99,7 @@ namespace VisualisationData.VisualSettingForms
 
         private void acceptBtn_Click(object sender, EventArgs e)
         {
-            switch (typeSettings)
+            switch (TypeSettings)
             {
                 case "background":
                     {
