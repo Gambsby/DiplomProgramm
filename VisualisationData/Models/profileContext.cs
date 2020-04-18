@@ -26,9 +26,16 @@ namespace VisualisationData.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                Props props = new Props();
-                props.ReadXml();
-                string connString = DBUtils.GetDBConnectionString(props.Fields.Host, props.Fields.Port, props.Fields.Database, props.Fields.Username, props.Fields.Password);
+                string connString = string.Empty;
+                try
+                {
+                    connString = DBUtils.GetDBConnectionString();
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
                 optionsBuilder.UseMySql(connString, x => x.ServerVersion("8.0.13-mysql"));
             }
         }

@@ -196,35 +196,44 @@ namespace VisualisationData
 
         private void saveDBBtn_Click(object sender, EventArgs e)//+
         {
-            using (profileContext db = new profileContext())
+            try
             {
-                using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr = db.Database.BeginTransaction())
+                using (profileContext db = new profileContext())
                 {
-                    try
+                    using (Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr = db.Database.BeginTransaction())
                     {
                         try
                         {
-                            SaveService.SaveProfileToDB(db, tr, Document);
-                            tr.Commit();
+                            try
+                            {
+                                SaveService.SaveProfileToDB(db, tr, Document);
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                tr.Rollback();
+                                MessageBox.Show(ex.Message);
+                                return;
+                            }
+                            SaveService.SaveResultToDB(db, tr, Document);
                         }
                         catch (Exception ex)
                         {
-                            tr.Rollback();
-                            throw ex;
+                            MainProfile mainProfile = db.MainProfile.SingleOrDefault(p => p.Name == Document.DocumentName);
+                            if (mainProfile != null)
+                            {
+                                db.MainProfile.Remove(mainProfile);
+                                db.SaveChanges();
+                            }
+                            MessageBox.Show(ex.Message);
+                            return;
                         }
-                        SaveService.SaveResultToDB(db, tr, Document);
-                    }
-                    catch (Exception ex)
-                    {
-                        MainProfile mainProfile = db.MainProfile.SingleOrDefault(p => p.Name == Document.DocumentName);
-                        if (mainProfile != null)
-                        {
-                            db.MainProfile.Remove(mainProfile);
-                            db.SaveChanges();
-                        }
-                        MessageBox.Show(ex.ToString());
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -232,11 +241,13 @@ namespace VisualisationData
         {
             try
             {
-                ChooseMainProfileForm deleteSettingForm = new ChooseMainProfileForm("delete");
-                deleteSettingForm.ShowDialog();
-                if (deleteSettingForm.Status)
+                using (ChooseMainProfileForm deleteSettingForm = new ChooseMainProfileForm("delete"))
                 {
-                    MessageBox.Show("Данные успешно удалены.");
+                    deleteSettingForm.ShowDialog();
+                    if (deleteSettingForm.Status)
+                    {
+                        MessageBox.Show("Данные успешно удалены.");
+                    }
                 }
             }
             catch (Exception ex)

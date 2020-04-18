@@ -27,11 +27,20 @@ namespace VisualisationData.DataSettingForms
 
         private void DeleteSettingForm_Load(object sender, EventArgs e)
         {
-            using (profileContext db = new profileContext())
+            try
             {
-                var mainProfiles = db.MainProfile.Select(x => x).ToArray();
-                deleteLB.Items.AddRange(mainProfiles);
+                using (profileContext db = new profileContext())
+                {
+                    var mainProfiles = db.MainProfile.Select(x => x).ToArray();
+                    deleteLB.Items.AddRange(mainProfiles);
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                this.Close();
+            }
+
             switch (type)
             {
                 case "delete":
