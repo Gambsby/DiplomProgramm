@@ -328,6 +328,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataSettingForms\SheetsSettigsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataSettingForms\SheetsSettigsForm.Designer.cs">
+      <DependentUpon>SheetsSettigsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\MainProfile.cs" />
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\QType.cs" />
@@ -351,12 +357,6 @@
     <Compile Include="DataSettingForms\ChooseMainProfileForm.Designer.cs">
       <DependentUpon>ChooseMainProfileForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataSettingForms\LoadSettingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DataSettingForms\LoadSettingForm.Designer.cs">
-      <DependentUpon>LoadSettingForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Excel\ExcelResult.cs" />
     <Compile Include="Excel\ExcelDocument.cs" />
     <Compile Include="Excel\ExcelProfile.cs" />
@@ -378,12 +378,6 @@
     <Compile Include="VisualSettingForms\DataSettingForm.Designer.cs">
       <DependentUpon>DataSettingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataSettingForms\SaveSettingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DataSettingForms\SaveSettingForm.Designer.cs">
-      <DependentUpon>SaveSettingForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="VisualSettingForms\TextDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -396,14 +390,14 @@
     <Compile Include="VisualSettingForms\VisualisationForm.Designer.cs">
       <DependentUpon>VisualisationForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DataSettingForms\SheetsSettigsForm.resx">
+      <DependentUpon>SheetsSettigsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VisualSettingForms\AppearanceSettingForm.resx">
       <DependentUpon>AppearanceSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DataSettingForms\ChooseMainProfileForm.resx">
       <DependentUpon>ChooseMainProfileForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DataSettingForms\LoadSettingForm.resx">
-      <DependentUpon>LoadSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -419,9 +413,6 @@
     </Compile>
     <EmbeddedResource Include="VisualSettingForms\DataSettingForm.resx">
       <DependentUpon>DataSettingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DataSettingForms\SaveSettingForm.resx">
-      <DependentUpon>SaveSettingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VisualSettingForms\TextDialog.resx">
       <DependentUpon>TextDialog.cs</DependentUpon>

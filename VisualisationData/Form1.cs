@@ -52,33 +52,44 @@ namespace VisualisationData
 
         private void loadDataExcelBtn_Click(object sender, EventArgs e)//+
         {
-            string filePath = CommonService.OpenFilePath("*.xlsx|*.xlsx", "физвоспитание анкета");
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return;
-            }
-            string fileName = Path.GetFileNameWithoutExtension(filePath);
-
             try
             {
-                LoadSettingForm loadSettingForm = new LoadSettingForm(filePath);
-                loadSettingForm.ShowDialog();
-                if (loadSettingForm.Status)
+                string filePath = CommonService.OpenFilePath("*.xlsx|*.xlsx", "физвоспитание анкета");
+                if (string.IsNullOrEmpty(filePath))
                 {
-                    Document = SortDocument(loadSettingForm.Document);
+                    return;
+                }
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+
+                string infoFileName = string.Empty;
+                string resultFileName = string.Empty;
+                Dictionary<string, string> excelProfileMap = null;
+
+                using (SheetsSettigsForm ssf = new SheetsSettigsForm())
+                {
+                    ssf.Type = "load";
+                    ssf.FilePath = filePath;
+                    ssf.ShowDialog();
+                    if (ssf.Status)
+                    {
+                        infoFileName = ssf.InfoFileName;
+                        resultFileName = ssf.ResultFileName;
+                        excelProfileMap = ssf.ExcelSheetMap;
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                    Document = SortDocument(SaveService.LoadMainProfileExcel(filePath, infoFileName, resultFileName, excelProfileMap));
                     profilesCB.Items.Clear();
                     profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
                     profilesCB.SelectedIndex = 0;
                 }
-                else
-                {
-                    return;
-                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + " Исправте ошибки и попытайтесь снова!");
-                return;
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -111,18 +122,32 @@ namespace VisualisationData
         {
             try
             {
-                SaveSettingForm saveSettingForm = new SaveSettingForm(Document, "csv");
-                saveSettingForm.ShowDialog();
-                if (saveSettingForm.Status)
+                string infoFileName = string.Empty;
+                string resultFileName = string.Empty;
+                Dictionary<string, ExcelProfile> excelProfileMap = null;
+
+                using (SheetsSettigsForm ssf = new SheetsSettigsForm())
                 {
-                    MessageBox.Show("Данные успешно сохранены");
+                    ssf.Type = "save";
+                    ssf.Format = "csv";
+                    ssf.Document = Document;
+                    ssf.ShowDialog();
+                    if (ssf.Status)
+                    {
+                        infoFileName = ssf.InfoFileName;
+                        resultFileName = ssf.ResultFileName;
+                        excelProfileMap = ssf.ExcelProfileMap;
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                else
-                {
-                    MessageBox.Show("Произошла ошибка.");
-                }
+
+                SaveService.SaveCSV(infoFileName, resultFileName, excelProfileMap, Document);
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -132,20 +157,33 @@ namespace VisualisationData
         {
             try
             {
-                SaveSettingForm saveSettingForm = new SaveSettingForm(Document, "excel");
-                saveSettingForm.ShowDialog();
-                if (saveSettingForm.Status)
+                string infoFileName = string.Empty;
+                string resultFileName = string.Empty;
+                Dictionary<string, ExcelProfile> excelProfileMap  = null;
+
+                using (SheetsSettigsForm ssf = new SheetsSettigsForm())
                 {
-                    MessageBox.Show("Данные успешно сохранены");
+                    ssf.Type = "save";
+                    ssf.Format = "excel";
+                    ssf.Document = Document;
+                    ssf.ShowDialog();
+                    if (ssf.Status)
+                    {
+                        infoFileName = ssf.InfoFileName;
+                        resultFileName = ssf.ResultFileName;
+                        excelProfileMap = ssf.ExcelProfileMap;
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                else
-                {
-                    MessageBox.Show("Произошла ошибка.");
-                }
+
+                SaveService.SaveExcel(infoFileName, resultFileName, excelProfileMap, Document);
+
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message);
             }
         }

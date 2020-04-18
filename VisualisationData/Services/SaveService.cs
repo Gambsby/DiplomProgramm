@@ -367,7 +367,7 @@ namespace VisualisationData.Services
             }
         }
 
-        public static ExcelDocument LoadMainProfile(MainProfile mainProfile)
+        public static ExcelDocument LoadMainProfileDB(MainProfile mainProfile)
         {
             List<ExcelResult> answerListContent = new List<ExcelResult>();
             List<ExcelProfile> profilesListContent = new List<ExcelProfile>();
@@ -412,6 +412,40 @@ namespace VisualisationData.Services
                 }
                 return new ExcelDocument { DocumentName = mainProfile.Name, AnswerListContent = answerListContent, ProfilesListContent = profilesListContent };
             }
+        }
+    
+        public static ExcelDocument LoadMainProfileExcel(string filePath, string infoFileName, string resultFileName, Dictionary<string, string> excelProfileMap)
+        {
+            List<ExcelQuestionType> infoListContent;
+            List<ExcelResult> answerListContent;
+            List<ExcelProfile> profilesListContent = new List<ExcelProfile>();
+
+            infoListContent = ExcelService.GetProfileNamesEP(filePath, infoFileName);
+            answerListContent = ExcelService.GetResultsEP(filePath, resultFileName);
+
+            foreach (var item in excelProfileMap)
+            {
+                ExcelQuestionType profileInfo = infoListContent.SingleOrDefault(info => info.ProfileName == item.Key);
+                string profileType = profileInfo.GetProfileType();
+                List<ExcelQuestion> questions = ExcelService.GetQuestionsEP(filePath, item.Value);
+                ExcelProfile excelProfile = new ExcelProfile
+                {
+                    Id = profileInfo.Id,
+                    Name = profileInfo.ProfileName,
+                    Type = profileType,
+                    Answers = profileInfo.Answers,
+                    Questions = questions
+                };
+                profilesListContent.Add(excelProfile);
+            }
+
+            string documentName = Path.GetFileNameWithoutExtension(filePath);
+            return new ExcelDocument
+            {
+                DocumentName = documentName,
+                AnswerListContent = answerListContent,
+                ProfilesListContent = profilesListContent
+            };
         }
     }
 }

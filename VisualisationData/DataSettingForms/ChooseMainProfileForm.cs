@@ -66,7 +66,7 @@ namespace VisualisationData.DataSettingForms
                     case "load":
                         {
                             var mainProfile = deleteLB.SelectedItems.Cast<MainProfile>().ToList()[0];
-                            Document = SaveService.LoadMainProfile(mainProfile);
+                            Document = SaveService.LoadMainProfileDB(mainProfile);
                             Status = true;
                             this.Close();
                             break;
