@@ -44,14 +44,14 @@
             this.barDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pieDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.groupVisBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.profilesCB = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.infoDG = new System.Windows.Forms.DataGridView();
             this.allColumnDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.allPieDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.allDoughnoutDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.allBarDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.profilesCB = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.infoDG = new System.Windows.Forms.DataGridView();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.infoDG)).BeginInit();
             this.SuspendLayout();
@@ -189,6 +189,34 @@
             this.groupVisBtn.Size = new System.Drawing.Size(229, 22);
             this.groupVisBtn.Text = "Создать для всех";
             // 
+            // allColumnDiagramBtn
+            // 
+            this.allColumnDiagramBtn.Name = "allColumnDiagramBtn";
+            this.allColumnDiagramBtn.Size = new System.Drawing.Size(222, 22);
+            this.allColumnDiagramBtn.Text = "Столбчатая диаграмма";
+            this.allColumnDiagramBtn.Click += new System.EventHandler(this.allColumnDiagramBtn_Click);
+            // 
+            // allPieDiagramBtn
+            // 
+            this.allPieDiagramBtn.Name = "allPieDiagramBtn";
+            this.allPieDiagramBtn.Size = new System.Drawing.Size(222, 22);
+            this.allPieDiagramBtn.Text = "Груговая диаграмма";
+            this.allPieDiagramBtn.Click += new System.EventHandler(this.allPieDiagramBtn_Click);
+            // 
+            // allDoughnoutDiagramBtn
+            // 
+            this.allDoughnoutDiagramBtn.Name = "allDoughnoutDiagramBtn";
+            this.allDoughnoutDiagramBtn.Size = new System.Drawing.Size(222, 22);
+            this.allDoughnoutDiagramBtn.Text = "Пончик диаграмма";
+            this.allDoughnoutDiagramBtn.Click += new System.EventHandler(this.allDoughnoutDiagramBtn_Click);
+            // 
+            // allBarDiagramBtn
+            // 
+            this.allBarDiagramBtn.Name = "allBarDiagramBtn";
+            this.allBarDiagramBtn.Size = new System.Drawing.Size(222, 22);
+            this.allBarDiagramBtn.Text = "Горионтальная диаграмма";
+            this.allBarDiagramBtn.Click += new System.EventHandler(this.allBarDiagramBtn_Click);
+            // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "физвоспитание анкета.xlsx";
@@ -227,34 +255,6 @@
             this.infoDG.Size = new System.Drawing.Size(866, 519);
             this.infoDG.TabIndex = 4;
             // 
-            // allColumnDiagramBtn
-            // 
-            this.allColumnDiagramBtn.Name = "allColumnDiagramBtn";
-            this.allColumnDiagramBtn.Size = new System.Drawing.Size(222, 22);
-            this.allColumnDiagramBtn.Text = "Столбчатая диаграмма";
-            this.allColumnDiagramBtn.Click += new System.EventHandler(this.allColumnDiagramBtn_Click);
-            // 
-            // allPieDiagramBtn
-            // 
-            this.allPieDiagramBtn.Name = "allPieDiagramBtn";
-            this.allPieDiagramBtn.Size = new System.Drawing.Size(222, 22);
-            this.allPieDiagramBtn.Text = "Груговая диаграмма";
-            this.allPieDiagramBtn.Click += new System.EventHandler(this.allPieDiagramBtn_Click);
-            // 
-            // allDoughnoutDiagramBtn
-            // 
-            this.allDoughnoutDiagramBtn.Name = "allDoughnoutDiagramBtn";
-            this.allDoughnoutDiagramBtn.Size = new System.Drawing.Size(222, 22);
-            this.allDoughnoutDiagramBtn.Text = "Пончик диаграмма";
-            this.allDoughnoutDiagramBtn.Click += new System.EventHandler(this.allDoughnoutDiagramBtn_Click);
-            // 
-            // allBarDiagramBtn
-            // 
-            this.allBarDiagramBtn.Name = "allBarDiagramBtn";
-            this.allBarDiagramBtn.Size = new System.Drawing.Size(222, 22);
-            this.allBarDiagramBtn.Text = "Горионтальная диаграмма";
-            this.allBarDiagramBtn.Click += new System.EventHandler(this.allBarDiagramBtn_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -266,7 +266,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Визуализация данных";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

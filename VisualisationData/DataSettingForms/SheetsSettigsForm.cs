@@ -110,11 +110,13 @@ namespace VisualisationData.DataSettingForms
                         ComboBox firstControl = new ComboBox();
                         firstControl.Name = "firstControl";
                         firstControl.Anchor = AnchorStyles.Left;
+                        firstControl.Dock = DockStyle.Fill;
                         tableL2.Controls.Add(firstControl, 1, 0);
 
                         ComboBox secondControl = new ComboBox();
                         secondControl.Name = "secondControl";
                         secondControl.Anchor = AnchorStyles.Left;
+                        secondControl.Dock = DockStyle.Fill;
                         tableL2.Controls.Add(secondControl, 1, 1);
 
                         break;
@@ -124,11 +126,13 @@ namespace VisualisationData.DataSettingForms
                         TextBox firstControl = new TextBox();
                         firstControl.Name = "firstControl";
                         firstControl.Anchor = AnchorStyles.Left;
+                        firstControl.Dock = DockStyle.Fill;
                         tableL2.Controls.Add(firstControl, 1, 0);
 
                         TextBox secondControl = new TextBox();
                         secondControl.Name = "secondControl";
                         secondControl.Anchor = AnchorStyles.Left;
+                        secondControl.Dock = DockStyle.Fill;
                         tableL2.Controls.Add(secondControl, 1, 1);
 
                         break;
