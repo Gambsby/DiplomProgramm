@@ -46,8 +46,6 @@ namespace VisualisationData
         private void Form1_Load(object sender, EventArgs e)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            infoDG.MultiSelect = true;
         }
 
         private void loadDataExcelBtn_Click(object sender, EventArgs e)//+
@@ -82,9 +80,13 @@ namespace VisualisationData
                     }
 
                     Document = SortDocument(SaveService.LoadMainProfileExcel(filePath, infoFileName, resultFileName, excelProfileMap));
-                    profilesCB.Items.Clear();
-                    profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
-                    profilesCB.SelectedIndex = 0;
+                    if (Document!= null)
+                    {
+                        ShowOnTabControl(Document);
+                        saveBtn.Enabled = true;
+                        closeProfileBtn.Enabled = true;
+                        visDataBtn.Enabled = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -102,9 +104,13 @@ namespace VisualisationData
                 if (chooseMainProfileForm.Status)
                 {
                     Document = SortDocument(chooseMainProfileForm.Document);
-                    profilesCB.Items.Clear();
-                    profilesCB.Items.AddRange(Document.ProfilesListContent.Select(p => p).ToArray());
-                    profilesCB.SelectedIndex = 0;
+                    if (Document != null)
+                    {
+                        ShowOnTabControl(Document);
+                        saveBtn.Enabled = true;
+                        closeProfileBtn.Enabled = true;
+                        visDataBtn.Enabled = true;
+                    }
                 }
                 else
                 {
@@ -241,10 +247,11 @@ namespace VisualisationData
 
         private void closeProfileBtn_Click(object sender, EventArgs e)//+
         {
-            profilesCB.Items.Clear();
-            infoDG.Rows.Clear();
-            infoDG.Columns.Clear();
+            mainTab.TabPages.Clear();
             Document = null;
+            saveBtn.Enabled = false;
+            closeProfileBtn.Enabled = false;
+            visDataBtn.Enabled = false;
         }
 
         private void columnDiagramBtn_Click(object sender, EventArgs e)//+
@@ -281,38 +288,6 @@ namespace VisualisationData
             {
                 MessageBox.Show("Ошибка при создании диаграммы.");
             }
-        }
-
-        private void profilesCB_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
-
-            InitDataGrid(selectedProfile.Type, infoDG);
-
-            foreach (var questionItem in selectedProfile.Questions)
-            {
-                switch (selectedProfile.Type)
-                {
-                    case "range":
-                        {
-                            infoDG.Rows.Add(questionItem.Id, questionItem, questionItem.LeftLimit, questionItem.RightLimit, selectedProfile.Answers);
-                            break;
-                        }
-                    case "radio":
-                        {
-                            infoDG.Rows.Add(questionItem.Id, questionItem, selectedProfile.Answers);
-                            break;
-                        }
-                    case "checkbox":
-                        {
-                            infoDG.Rows.Add(questionItem.Id, questionItem, selectedProfile.Answers);
-                            break;
-                        }
-                    default:
-                        break;
-                }
-            }
-
         }
 
         private void allColumnDiagramBtn_Click(object sender, EventArgs e)//+
@@ -374,12 +349,14 @@ namespace VisualisationData
         private void DiagramStart(SeriesChartType type)
         {
             List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
+            var currentTab = mainTab.SelectedTab;
+            var infoDG = currentTab.Controls[currentTab.Text + "DG"] as DataGridView;
             foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
             {
                 var question = rowItem.Cells["question"].Value as ExcelQuestion;
                 selectedQuestions.Add(question);
             }
-            var selectedProfile = profilesCB.SelectedItem as ExcelProfile;
+            var selectedProfile = Document.ProfilesListContent.SingleOrDefault(p => p.Name == currentTab.Text);
 
             VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, type);
             visualisationForm.Show();
@@ -396,5 +373,54 @@ namespace VisualisationData
             return document;
         }
 
+        private void ShowOnTabControl(ExcelDocument document)
+        {
+            foreach (var profileItem in document.ProfilesListContent)
+            {
+                DataGridView infoDG = new DataGridView();
+                infoDG.Name = profileItem.Name + "DG";
+                infoDG.Anchor = AnchorStyles.Top;
+                infoDG.Anchor = AnchorStyles.Right;
+                infoDG.Anchor = AnchorStyles.Bottom;
+                infoDG.Anchor = AnchorStyles.Left;
+                infoDG.Dock = DockStyle.Fill;
+                infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                infoDG.MultiSelect = true;
+                infoDG.AllowUserToAddRows = false;
+
+                TabPage tabPage = new TabPage();
+                tabPage.Text = profileItem.Name;
+                tabPage.Name = profileItem.Name + "Tab";
+
+                tabPage.Controls.Add(infoDG);
+                mainTab.TabPages.Add(tabPage);
+
+                InitDataGrid(profileItem.Type, infoDG);
+
+                foreach (var questionItem in profileItem.Questions)
+                {
+                    switch (profileItem.Type)
+                    {
+                        case "range":
+                            {
+                                infoDG.Rows.Add(questionItem.Id, questionItem, questionItem.LeftLimit, questionItem.RightLimit, profileItem.Answers);
+                                break;
+                            }
+                        case "radio":
+                            {
+                                infoDG.Rows.Add(questionItem.Id, questionItem, profileItem.Answers);
+                                break;
+                            }
+                        case "checkbox":
+                            {
+                                infoDG.Rows.Add(questionItem.Id, questionItem, profileItem.Answers);
+                                break;
+                            }
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
     }
 }
