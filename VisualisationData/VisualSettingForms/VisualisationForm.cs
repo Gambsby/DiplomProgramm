@@ -37,17 +37,19 @@ namespace VisualisationData.VisualSettingForms
             showAxisYBtn.Checked = true;
 
             var visualData = VisualisationService.GetVisualData(selectedQuestions, selectedProfile, selectedDocument);
-            Dictionary<ExcelQuestion, int> allCountQuestionAnswer = new Dictionary<ExcelQuestion, int>();
+            Dictionary<string, int> allCountQuestionAnswer = new Dictionary<string, int>();
             foreach (var questionItem in selectedQuestions)
             {
                 var allQuestioned = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == questionItem.Id && a.Answer != "").Count();
-                allCountQuestionAnswer.Add(questionItem, allQuestioned);
+                allCountQuestionAnswer.Add(questionItem.GetForSeries(), allQuestioned);
             }
-            //var allQuestioned = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id).ToList();
+            
             foreach (var seriesItem in visualData)
             {
                 visualChart.Series.Add(seriesItem.Key);
                 visualChart.Series[seriesItem.Key].ChartType = diagramType;
+
+                visualChart.Series[seriesItem.Key].LegendText = seriesItem.Key + " Всего " + allCountQuestionAnswer[seriesItem.Key];
                 if (Form1.CompanyColor.Count > colorIndex)
                 {
                     visualChart.Series[seriesItem.Key].Color = Form1.CompanyColor.Values.ToList()[colorIndex];
