@@ -52,6 +52,7 @@
             this.seriesSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pointsSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.visualChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.allItemBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
             this.SuspendLayout();
@@ -178,7 +179,8 @@
             this.diagramTypeSettingBtn,
             this.titleSettingBtn,
             this.seriesSettingBtn,
-            this.pointsSettingBtn});
+            this.pointsSettingBtn,
+            this.allItemBtn});
             this.dataSettingsBtn.Name = "dataSettingsBtn";
             this.dataSettingsBtn.Size = new System.Drawing.Size(121, 20);
             this.dataSettingsBtn.Text = "Настройка данных";
@@ -240,6 +242,13 @@
             this.visualChart.TabIndex = 1;
             this.visualChart.Text = "visualChart";
             // 
+            // allItemBtn
+            // 
+            this.allItemBtn.Name = "allItemBtn";
+            this.allItemBtn.Size = new System.Drawing.Size(188, 22);
+            this.allItemBtn.Text = "Элемент \'Всего\"";
+            this.allItemBtn.Click += new System.EventHandler(this.allItemBtn_Click);
+            // 
             // VisualisationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -284,5 +293,6 @@
         private System.Windows.Forms.ToolStripMenuItem markerFontBtn;
         private System.Windows.Forms.ToolStripMenuItem legendFontBtn;
         private System.Windows.Forms.ToolStripMenuItem titleFontBtn;
+        private System.Windows.Forms.ToolStripMenuItem allItemBtn;
     }
 }

@@ -15,17 +15,18 @@ namespace VisualisationData.VisualSettingForms
 {
     public partial class VisualisationForm : Form
     {
-        private List<ExcelQuestion> selectedQuestions;
+        private ExcelQuestion selectedQuestion;
         private ExcelProfile selectedProfile;
         private ExcelDocument selectedDocument;
         private SeriesChartType diagramType;
+        private string allItem = string.Empty;
 
-        public VisualisationForm(List<ExcelQuestion> selectedQuestions, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
+        public VisualisationForm(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
         {
             InitializeComponent();
             this.selectedDocument = selectedDocument;
             this.selectedProfile = selectedProfile;
-            this.selectedQuestions = selectedQuestions;
+            this.selectedQuestion = selectedQuestion;
             this.diagramType = diagramType;
         }
 
@@ -35,54 +36,42 @@ namespace VisualisationData.VisualSettingForms
             showGridBtn.Checked = visualChart.ChartAreas[0].AxisX.MajorGrid.Enabled;
             showAxisXBtn.Checked = true;
             showAxisYBtn.Checked = true;
+            allItemBtn.Checked = true;
 
-            var visualData = VisualisationService.GetVisualData(selectedQuestions, selectedProfile, selectedDocument);
-            Dictionary<string, int> allCountQuestionAnswer = new Dictionary<string, int>();
-            foreach (var questionItem in selectedQuestions)
+            var visualData = VisualisationService.GetVisualData(new List<ExcelQuestion>() { selectedQuestion }, selectedProfile, selectedDocument);
+
+            string question = visualData.Keys.ToList()[0];
+            Dictionary<string, int> points = visualData[question];
+            int allQuestioned = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id && a.Answer != "").Count();
+
+            visualChart.Series.Add(question);
+            visualChart.Series[question].ChartType = diagramType;
+            Title mainTitle = new Title();
+            mainTitle.Name = "mainTitle";
+            mainTitle.Text = question;
+            visualChart.Titles.Add(mainTitle);
+            Title allTitle = new Title();
+            allTitle.Name = "allTitle";
+            allItem = "Всего " + allQuestioned + " участников";
+            allTitle.Text = allItem;
+            visualChart.Titles.Add(allTitle);
+
+            visualChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[colorIndex];
+
+            foreach (var item in points)
             {
-                var allQuestioned = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == questionItem.Id && a.Answer != "").Count();
-                allCountQuestionAnswer.Add(questionItem.GetForSeries(), allQuestioned);
+                visualChart.Series[question].Points.AddXY(item.Key, item.Value);
             }
-            
-            foreach (var seriesItem in visualData)
-            {
-                visualChart.Series.Add(seriesItem.Key);
-                visualChart.Series[seriesItem.Key].ChartType = diagramType;
 
-                visualChart.Series[seriesItem.Key].LegendText = seriesItem.Key + " Всего " + allCountQuestionAnswer[seriesItem.Key];
-                if (Form1.CompanyColor.Count > colorIndex)
+            if (visualChart.Series[question].ChartType == SeriesChartType.Pie || visualChart.Series[question].ChartType == SeriesChartType.Doughnut)
+            {
+                colorIndex = 0;
+                foreach (var item in visualChart.Series[question].Points)
                 {
-                    visualChart.Series[seriesItem.Key].Color = Form1.CompanyColor.Values.ToList()[colorIndex];
+                    item.Color = Form1.CompanyColor.Values.ToList()[colorIndex];
                     colorIndex++;
                 }
-
-                foreach (var item in seriesItem.Value)
-                {
-                    visualChart.Series[seriesItem.Key].Points.AddXY(item.Key, item.Value);
-                }
-
-                if (visualChart.Series[seriesItem.Key].ChartType == SeriesChartType.Pie || visualChart.Series[seriesItem.Key].ChartType == SeriesChartType.Doughnut)
-                {
-                    colorIndex = 0;
-                    foreach (var item in visualChart.Series[seriesItem.Key].Points)
-                    {
-                        item.Color = Form1.CompanyColor.Values.ToList()[colorIndex];
-                        colorIndex++;
-                    }
-                }
             }
-
-            //Legend legend = new Legend();
-            //legend.Name = "Legend2";
-            //visualChart.Legends.Add(legend);
-            //foreach (var item in allCountQuestionAnswer)
-            //{
-            //    LegendItem legendItem = new LegendItem();
-            //    legendItem.Color = visualChart.Series[item.Key.GetForSeries()].Color;
-            //    legendItem.Cells[1].Text = "Всего " + item.Value;
-            //    visualChart.Legends["Legend2"].CustomItems.Add(legendItem);
-            //    //visualChart.Legends["Legend2"].CustomItems.Add(new LegendItem("Всего " + item.Value, color, ))
-            //}
         }
 
         private void BGSettingBtn_Click(object sender, EventArgs e)
@@ -157,16 +146,44 @@ namespace VisualisationData.VisualSettingForms
         private void titleSettingBtn_Click(object sender, EventArgs e)
         {
             string title = string.Empty;
-            if (visualChart.Titles.Count > 0)
+            if (visualChart.Titles.Select(t => t.Name).Contains("mainTitle"))
             {
-                title = visualChart.Titles[0].Text;
+                title = visualChart.Titles["mainTitle"].Text;
             }
             TextDialog textDialog = new TextDialog("Введите желаемый заголовок:", title);
             textDialog.ShowDialog();
             if (textDialog.DialogResult == DialogResult.OK)
             {
-                visualChart.Titles.Clear();
-                visualChart.Titles.Add(textDialog.Result);
+                if (visualChart.Titles.Select(t => t.Name).Contains("mainTitle"))
+                {
+                    if (string.IsNullOrEmpty(textDialog.Result))
+                    {
+                        visualChart.Titles.Remove(visualChart.Titles["mainTitle"]);
+                    }
+                    else
+                    {
+                        visualChart.Titles["mainTitle"].Text = textDialog.Result;
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(textDialog.Result))
+                    {
+                        Title mainTitle = new Title();
+                        mainTitle.Name = "mainTitle";
+                        mainTitle.Text = textDialog.Result;
+                        visualChart.Titles.Add(mainTitle);
+
+                        if (visualChart.Titles.Select(t => t.Name).Contains("allTitle"))
+                        {
+                            visualChart.Titles.Remove(visualChart.Titles["allTitle"]);
+                            Title allTitle = new Title();
+                            allTitle.Name = "allTitle";
+                            allTitle.Text = allItem;
+                            visualChart.Titles.Add(allTitle);
+                        }
+                    }
+                }
             }
             
         }
@@ -279,16 +296,16 @@ namespace VisualisationData.VisualSettingForms
                 using (FontDialog fd = new FontDialog())
                 {
                     fd.ShowColor = true;
-                    fd.Font = visualChart.Titles[0].Font;
-                    fd.Color = visualChart.Titles[0].ForeColor;
+                    fd.Font = visualChart.Titles["mainTitle"].Font;
+                    fd.Color = visualChart.Titles["mainTitle"].ForeColor;
                     if (fd.ShowDialog() == DialogResult.Cancel)
                     {
                         return;
                     }
                     else
                     {
-                        visualChart.Titles[0].Font = fd.Font;
-                        visualChart.Titles[0].ForeColor = fd.Color;
+                        visualChart.Titles["mainTitle"].Font = fd.Font;
+                        visualChart.Titles["mainTitle"].ForeColor = fd.Color;
                     }
                 }
             }
@@ -316,6 +333,29 @@ namespace VisualisationData.VisualSettingForms
                         seriesItem.Font = fd.Font;
                         seriesItem.LabelForeColor = fd.Color;
                     }
+                }
+            }
+        }
+
+        private void allItemBtn_Click(object sender, EventArgs e)
+        {
+            if (allItemBtn.Checked)
+            {
+                allItemBtn.Checked = false;
+                if (visualChart.Titles.Select(t => t.Name).Contains("allTitle"))
+                {
+                    visualChart.Titles.Remove(visualChart.Titles["allTitle"]);
+                }
+            }
+            else
+            {
+                allItemBtn.Checked = true;
+                if (!visualChart.Titles.Select(t => t.Name).Contains("allTitle"))
+                {
+                    Title mainTitle = new Title();
+                    mainTitle.Name = "allTitle";
+                    mainTitle.Text = allItem;
+                    visualChart.Titles.Add(mainTitle);
                 }
             }
         }

@@ -376,14 +376,10 @@ namespace VisualisationData
             List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
             var currentTab = mainTab.SelectedTab;
             var infoDG = currentTab.Controls[currentTab.Text + "DG"] as DataGridView;
-            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>())
-            {
-                var question = rowItem.Cells["question"].Value as ExcelQuestion;
-                selectedQuestions.Add(question);
-            }
+            var selectedQuestion = infoDG.SelectedRows.Cast<DataGridViewRow>().ToList()[0].Cells["question"].Value as ExcelQuestion;
             var selectedProfile = Document.ProfilesListContent.SingleOrDefault(p => p.Name == currentTab.Text);
 
-            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestions, selectedProfile, Document, type);
+            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestion, selectedProfile, Document, type);
             visualisationForm.Show();
         }
 
@@ -410,7 +406,7 @@ namespace VisualisationData
                 infoDG.Anchor = AnchorStyles.Left;
                 infoDG.Dock = DockStyle.Fill;
                 infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                infoDG.MultiSelect = true;
+                infoDG.MultiSelect = false;
                 infoDG.AllowUserToAddRows = false;
 
                 TabPage tabPage = new TabPage();
