@@ -37,7 +37,13 @@ namespace VisualisationData.VisualSettingForms
             showAxisYBtn.Checked = true;
 
             var visualData = VisualisationService.GetVisualData(selectedQuestions, selectedProfile, selectedDocument);
-
+            Dictionary<ExcelQuestion, int> allCountQuestionAnswer = new Dictionary<ExcelQuestion, int>();
+            foreach (var questionItem in selectedQuestions)
+            {
+                var allQuestioned = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == questionItem.Id && a.Answer != "").Count();
+                allCountQuestionAnswer.Add(questionItem, allQuestioned);
+            }
+            //var allQuestioned = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id).ToList();
             foreach (var seriesItem in visualData)
             {
                 visualChart.Series.Add(seriesItem.Key);
@@ -52,10 +58,32 @@ namespace VisualisationData.VisualSettingForms
                 {
                     visualChart.Series[seriesItem.Key].Points.AddXY(item.Key, item.Value);
                 }
+
+                if (visualChart.Series[seriesItem.Key].ChartType == SeriesChartType.Pie || visualChart.Series[seriesItem.Key].ChartType == SeriesChartType.Doughnut)
+                {
+                    colorIndex = 0;
+                    foreach (var item in visualChart.Series[seriesItem.Key].Points)
+                    {
+                        item.Color = Form1.CompanyColor.Values.ToList()[colorIndex];
+                        colorIndex++;
+                    }
+                }
             }
+
+            //Legend legend = new Legend();
+            //legend.Name = "Legend2";
+            //visualChart.Legends.Add(legend);
+            //foreach (var item in allCountQuestionAnswer)
+            //{
+            //    LegendItem legendItem = new LegendItem();
+            //    legendItem.Color = visualChart.Series[item.Key.GetForSeries()].Color;
+            //    legendItem.Cells[1].Text = "Всего " + item.Value;
+            //    visualChart.Legends["Legend2"].CustomItems.Add(legendItem);
+            //    //visualChart.Legends["Legend2"].CustomItems.Add(new LegendItem("Всего " + item.Value, color, ))
+            //}
         }
 
-        private void BGSettingBtn_Click(object sender, EventArgs e)//+
+        private void BGSettingBtn_Click(object sender, EventArgs e)
         {
             using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
             {
@@ -65,7 +93,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void diagramBGSettingRtn_Click(object sender, EventArgs e)//+
+        private void diagramBGSettingRtn_Click(object sender, EventArgs e)
         {
             using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
             {
@@ -75,7 +103,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void borderSettingBtn_Click(object sender, EventArgs e)//+
+        private void borderSettingBtn_Click(object sender, EventArgs e)
         {
             using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
             {
@@ -85,7 +113,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void signatureSettingBtn_Click(object sender, EventArgs e)//+
+        private void signatureSettingBtn_Click(object sender, EventArgs e)
         {
             if (signatureSettingBtn.Checked)
             {
@@ -101,7 +129,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void mode3DSettingBtn_Click(object sender, EventArgs e)//+
+        private void mode3DSettingBtn_Click(object sender, EventArgs e)
         {
             if (mode3DSettingBtn.Checked)
             {
@@ -114,7 +142,7 @@ namespace VisualisationData.VisualSettingForms
             visualChart.ChartAreas[0].Area3DStyle.Enable3D = mode3DSettingBtn.Checked;
         }
 
-        private void diagramTypeSettingBtn_Click(object sender, EventArgs e)//+
+        private void diagramTypeSettingBtn_Click(object sender, EventArgs e)
         {
             using (DataSettingForm dsf = new DataSettingForm(visualChart))
             {
@@ -124,7 +152,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void titleSettingBtn_Click(object sender, EventArgs e)//+
+        private void titleSettingBtn_Click(object sender, EventArgs e)
         {
             string title = string.Empty;
             if (visualChart.Titles.Count > 0)
@@ -141,7 +169,7 @@ namespace VisualisationData.VisualSettingForms
             
         }
 
-        private void seriesSettingBtn_Click(object sender, EventArgs e)//+
+        private void seriesSettingBtn_Click(object sender, EventArgs e)
         {
             using (DataSettingForm dsf = new DataSettingForm(visualChart))
             {
@@ -151,7 +179,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void pointsSettingBtn_Click(object sender, EventArgs e)//+
+        private void pointsSettingBtn_Click(object sender, EventArgs e)
         {
             using (DataSettingForm dsf = new DataSettingForm(visualChart))
             {
@@ -161,7 +189,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void savaDiagramBtn_Click(object sender, EventArgs e)//+
+        private void savaDiagramBtn_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
@@ -181,7 +209,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void showGridBtn_Click(object sender, EventArgs e)//+
+        private void showGridBtn_Click(object sender, EventArgs e)
         {
             if (showGridBtn.Checked)
             {
@@ -195,7 +223,7 @@ namespace VisualisationData.VisualSettingForms
             visualChart.ChartAreas[0].AxisY.MajorGrid.Enabled = showGridBtn.Checked;
         }
 
-        private void showAxisXBtn_Click(object sender, EventArgs e)//+
+        private void showAxisXBtn_Click(object sender, EventArgs e)
         {
             if (showAxisXBtn.Checked)
             {
@@ -209,7 +237,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void showAxisYBtn_Click(object sender, EventArgs e)//+
+        private void showAxisYBtn_Click(object sender, EventArgs e)
         {
             if (showAxisYBtn.Checked)
             {
@@ -223,7 +251,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void legendFontBtn_Click(object sender, EventArgs e)//+
+        private void legendFontBtn_Click(object sender, EventArgs e)
         {
             using (FontDialog fd = new FontDialog())
             {
@@ -242,7 +270,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void titleFontBtn_Click(object sender, EventArgs e)//+
+        private void titleFontBtn_Click(object sender, EventArgs e)
         {
             if (visualChart.Titles.Count != 0)
             {
@@ -268,7 +296,7 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void markerFontBtn_Click(object sender, EventArgs e)//+
+        private void markerFontBtn_Click(object sender, EventArgs e)
         {
             using (FontDialog fd = new FontDialog())
             {

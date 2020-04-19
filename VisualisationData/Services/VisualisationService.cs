@@ -43,7 +43,7 @@ namespace VisualisationData.Services
                 }
                 if (!string.IsNullOrEmpty(selectedQuestionItem.LeftLimit) && !string.IsNullOrEmpty(selectedQuestionItem.RightLimit))
                 {
-                    result.Add(selectedQuestionItem.Content + " (" + selectedQuestionItem.LeftLimit + ")-(" + selectedQuestionItem.RightLimit + ")", visualDataQuestion);
+                    result.Add(selectedQuestionItem.GetForSeries(), visualDataQuestion);
                 }
                 else
                 {

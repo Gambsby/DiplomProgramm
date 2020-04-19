@@ -55,5 +55,17 @@ namespace VisualisationData.Excel
         {
             return Content;
         }
+    
+        public string GetForSeries()
+        {
+            if (string.IsNullOrEmpty(LeftLimit) || string.IsNullOrEmpty(RightLimit))
+            {
+                return this.Content;
+            }
+            else
+            {
+                return this.Content + " (" + this.LeftLimit + ")-(" + this.RightLimit + ")";
+            }
+        }
     }
 }
