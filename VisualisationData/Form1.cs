@@ -79,7 +79,7 @@ namespace VisualisationData
                         return;
                     }
 
-                    Document = SortDocument(SaveService.LoadMainProfileExcel(filePath, infoFileName, resultFileName, excelProfileMap));
+                    Document = SortDocument(DataService.LoadMainProfileExcel(filePath, infoFileName, resultFileName, excelProfileMap));
                     if (Document!= null)
                     {
                         ShowOnTabControl(Document);
@@ -99,22 +99,28 @@ namespace VisualisationData
         {
             try
             {
-                ChooseMainProfileForm chooseMainProfileForm = new ChooseMainProfileForm("load");
-                chooseMainProfileForm.ShowDialog();
-                if (chooseMainProfileForm.Status)
+                MainProfile mainProfile = null;
+                using (ChooseMainProfileForm cmp = new ChooseMainProfileForm())
                 {
-                    Document = SortDocument(chooseMainProfileForm.Document);
-                    if (Document != null)
+                    cmp.Type = "load";
+                    cmp.ShowDialog();
+                    if (cmp.Status)
                     {
-                        ShowOnTabControl(Document);
-                        saveBtn.Enabled = true;
-                        closeProfileBtn.Enabled = true;
-                        visDataBtn.Enabled = true;
+                        mainProfile = cmp.SelectedMainProfiles[0];
+                        Document = SortDocument(DataService.LoadMainProfileDB(mainProfile));
+                        if (Document != null)
+                        {
+                            ShowOnTabControl(Document);
+                            saveBtn.Enabled = true;
+                            closeProfileBtn.Enabled = true;
+                            visDataBtn.Enabled = true;
+                            MessageBox.Show("Данные успешно загружены.");
+                        }
                     }
-                }
-                else
-                {
-                    return;
+                    else
+                    {
+                        return;
+                    }
                 }
             }
             catch (Exception ex)
@@ -150,7 +156,7 @@ namespace VisualisationData
                     }
                 }
 
-                SaveService.SaveCSV(infoFileName, resultFileName, excelProfileMap, Document);
+                DataService.SaveCSV(infoFileName, resultFileName, excelProfileMap, Document);
 
             }
             catch (Exception ex)
@@ -185,7 +191,7 @@ namespace VisualisationData
                     }
                 }
 
-                SaveService.SaveExcel(infoFileName, resultFileName, excelProfileMap, Document);
+                DataService.SaveExcel(infoFileName, resultFileName, excelProfileMap, Document);
 
             }
             catch (Exception ex)
@@ -206,7 +212,7 @@ namespace VisualisationData
                         {
                             try
                             {
-                                SaveService.SaveProfileToDB(db, tr, Document);
+                                DataService.SaveProfileToDB(db, tr, Document);
                                 tr.Commit();
                             }
                             catch (Exception ex)
@@ -215,7 +221,7 @@ namespace VisualisationData
                                 MessageBox.Show(ex.Message);
                                 return;
                             }
-                            SaveService.SaveResultToDB(db, tr, Document);
+                            DataService.SaveResultToDB(db, tr, Document);
                         }
                         catch (Exception ex)
                         {
@@ -241,12 +247,20 @@ namespace VisualisationData
         {
             try
             {
-                using (ChooseMainProfileForm deleteSettingForm = new ChooseMainProfileForm("delete"))
+                List<MainProfile> mainProfiles = null;
+                using (ChooseMainProfileForm dsf = new ChooseMainProfileForm())
                 {
-                    deleteSettingForm.ShowDialog();
-                    if (deleteSettingForm.Status)
+                    dsf.Type = "delete";
+                    dsf.ShowDialog();
+                    if (dsf.Status)
                     {
+                        mainProfiles = dsf.SelectedMainProfiles;
+                        DataService.DeleteMainProfile(mainProfiles);
                         MessageBox.Show("Данные успешно удалены.");
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
             }

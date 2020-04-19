@@ -15,14 +15,13 @@ namespace VisualisationData.DataSettingForms
 {
     public partial class ChooseMainProfileForm : Form
     {
-        public ExcelDocument Document { get; set; }
+        public string Type { get; set; } = "delete";
         public bool Status { get; set; } = false;
+        public List<MainProfile> SelectedMainProfiles { get; set; } = null;
 
-        private string type;
-        public ChooseMainProfileForm(string type)
+        public ChooseMainProfileForm()
         {
             InitializeComponent();
-            this.type = type;
         }
 
         private void DeleteSettingForm_Load(object sender, EventArgs e)
@@ -39,9 +38,10 @@ namespace VisualisationData.DataSettingForms
             {
                 MessageBox.Show(ex.Message);
                 this.Close();
+                return;
             }
 
-            switch (type)
+            switch (Type)
             {
                 case "delete":
                     {
@@ -62,20 +62,18 @@ namespace VisualisationData.DataSettingForms
         {
             try
             {
-                switch (type)
+                switch (Type)
                 {
                     case "delete":
                         {
-                            var deletedMainProfiles = deleteLB.SelectedItems.Cast<MainProfile>().ToList();
-                            SaveService.DeleteMainProfile(deletedMainProfiles);
+                            SelectedMainProfiles = deleteLB.SelectedItems.Cast<MainProfile>().ToList();
                             Status = true;
                             this.Close();
                             break;
                         }
                     case "load":
                         {
-                            var mainProfile = deleteLB.SelectedItems.Cast<MainProfile>().ToList()[0];
-                            Document = SaveService.LoadMainProfileDB(mainProfile);
+                            SelectedMainProfiles = deleteLB.SelectedItems.Cast<MainProfile>().ToList();
                             Status = true;
                             this.Close();
                             break;
@@ -86,7 +84,6 @@ namespace VisualisationData.DataSettingForms
             }
             catch (Exception ex)
             {
-                Document = null;
                 MessageBox.Show(ex.Message);
                 return;
             }

@@ -17,7 +17,7 @@ using System.Globalization;
 
 namespace VisualisationData.Services
 {
-    class SaveService
+    class DataService
     {
         public static void SaveProfileToDB(profileContext db, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr, Excel.ExcelDocument document)
         {
