@@ -21,6 +21,9 @@ namespace VisualisationData.VisualSettingForms
         private SeriesChartType diagramType;
         private string allItem = string.Empty;
 
+        private object CurrentFirst = null;
+        private object CurrentSecond = null;
+
         public VisualisationForm(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
         {
             InitializeComponent();
@@ -37,6 +40,8 @@ namespace VisualisationData.VisualSettingForms
             showAxisXBtn.Checked = true;
             showAxisYBtn.Checked = true;
             allItemBtn.Checked = true;
+
+            visualChart.MouseClick += VisualChart_MouseClick;
 
             var visualData = VisualisationService.GetVisualData(new List<ExcelQuestion>() { selectedQuestion }, selectedProfile, selectedDocument);
 
@@ -358,6 +363,194 @@ namespace VisualisationData.VisualSettingForms
                     visualChart.Titles.Add(mainTitle);
                 }
             }
+        }
+
+        //private void VisualChart_MouseDoubleClick(object sender, MouseEventArgs e)
+        //{
+        //    var res = visualChart.HitTest(e.X, e.Y);
+        //    switch (res.ChartElementType)
+        //    {
+        //        case ChartElementType.Nothing:
+        //            break;
+        //        case ChartElementType.Title:
+        //            {
+        //                var currentTitle = res.Object as Title;
+
+        //                TextDialog textDialog = new TextDialog("Введите желаемый заголовок:", currentTitle.Text);
+        //                textDialog.ShowDialog();
+        //                if (textDialog.DialogResult == DialogResult.OK)
+        //                {
+        //                    if (!string.IsNullOrEmpty(textDialog.Result))
+        //                    {
+        //                        currentTitle.Text = textDialog.Result;
+        //                    }
+        //                }
+        //                break;
+        //            }
+        //        case ChartElementType.PlottingArea:
+        //            break;
+        //        case ChartElementType.Axis:
+        //            break;
+        //        case ChartElementType.TickMarks:
+        //            break;
+        //        case ChartElementType.Gridlines:
+        //            break;
+        //        case ChartElementType.StripLines:
+        //            break;
+        //        case ChartElementType.AxisLabelImage:
+        //            break;
+        //        case ChartElementType.AxisLabels:
+        //            break;
+        //        case ChartElementType.AxisTitle:
+        //            break;
+        //        case ChartElementType.ScrollBarThumbTracker:
+        //            break;
+        //        case ChartElementType.ScrollBarSmallDecrement:
+        //            break;
+        //        case ChartElementType.ScrollBarSmallIncrement:
+        //            break;
+        //        case ChartElementType.ScrollBarLargeDecrement:
+        //            break;
+        //        case ChartElementType.ScrollBarLargeIncrement:
+        //            break;
+        //        case ChartElementType.ScrollBarZoomReset:
+        //            break;
+        //        case ChartElementType.DataPoint:
+        //            break;
+        //        case ChartElementType.DataPointLabel:
+        //            break;
+        //        case ChartElementType.LegendArea:
+        //            break;
+        //        case ChartElementType.LegendTitle:
+        //            break;
+        //        case ChartElementType.LegendHeader:
+        //            break;
+        //        case ChartElementType.LegendItem:
+        //            {
+        //                var currentSeries = res.Series as Series;
+
+        //                break;
+        //            }
+        //        case ChartElementType.Annotation:
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
+
+        private void VisualChart_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var res = visualChart.HitTest(e.X, e.Y);
+                switch (res.ChartElementType)
+                {
+                    case ChartElementType.Nothing:
+                        break;
+                    case ChartElementType.Title:
+                        {
+                            Title title = res.Object as Title;
+                            if (title.Name == "mainTitle")
+                            {
+                                changeTtileBtn.Enabled = true;
+                            }
+                            else
+                            {
+                                changeTtileBtn.Enabled = false;
+                            }
+                            CurrentFirst = title;
+                            titleMenu.Show(Control.MousePosition);
+                            break;
+                        }
+                    case ChartElementType.PlottingArea:
+                        break;
+                    case ChartElementType.Axis:
+                        break;
+                    case ChartElementType.TickMarks:
+                        break;
+                    case ChartElementType.Gridlines:
+                        break;
+                    case ChartElementType.StripLines:
+                        break;
+                    case ChartElementType.AxisLabelImage:
+                        break;
+                    case ChartElementType.AxisLabels:
+                        break;
+                    case ChartElementType.AxisTitle:
+                        break;
+                    case ChartElementType.ScrollBarThumbTracker:
+                        break;
+                    case ChartElementType.ScrollBarSmallDecrement:
+                        break;
+                    case ChartElementType.ScrollBarSmallIncrement:
+                        break;
+                    case ChartElementType.ScrollBarLargeDecrement:
+                        break;
+                    case ChartElementType.ScrollBarLargeIncrement:
+                        break;
+                    case ChartElementType.ScrollBarZoomReset:
+                        break;
+                    case ChartElementType.DataPoint:
+                        {
+                            CurrentFirst = res.Series.Points[res.PointIndex];
+                            CurrentSecond = res.Series;
+                            seriesMenu.Show(Control.MousePosition);
+
+                            break;
+                        }
+                    case ChartElementType.DataPointLabel:
+                        break;
+                    case ChartElementType.LegendArea:
+                        break;
+                    case ChartElementType.LegendTitle:
+                        break;
+                    case ChartElementType.LegendHeader:
+                        break;
+                    case ChartElementType.LegendItem:
+                        break;
+                    case ChartElementType.Annotation:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void seriesColorBtn_Click(object sender, EventArgs e)
+        {
+            Series series = CurrentSecond as Series;
+            series.Color = CommonService.ChooseColor(colorDialog, series.Color);
+        }
+
+        private void pointColorBtn_Click(object sender, EventArgs e)
+        {
+            DataPoint point = CurrentFirst as DataPoint;
+            point.Color = CommonService.ChooseColor(colorDialog, point.Color);
+        }
+
+        private void changeTtileBtn_Click(object sender, EventArgs e)
+        {
+            Title title = CurrentFirst as Title;
+
+            TextDialog textDialog = new TextDialog("Введите желаемый заголовок:", title.Text);
+            textDialog.ShowDialog();
+            if (textDialog.DialogResult == DialogResult.OK)
+            {
+                if (!string.IsNullOrEmpty(textDialog.Result))
+                {
+                    title.Text = textDialog.Result;
+                }
+            }
+        }
+
+        private void deleteTitleBtn_Click(object sender, EventArgs e)
+        {
+            Title title = CurrentFirst as Title;
+            if (title.Name == "allTitle")
+            {
+                allItemBtn.Checked = false;
+            }
+            visualChart.Titles.Remove(title);
         }
     }
 }

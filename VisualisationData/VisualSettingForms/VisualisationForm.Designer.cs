@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savaDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,10 +52,19 @@
             this.titleSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.seriesSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pointsSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.visualChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.allItemBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.visualChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.seriesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.seriesColorBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.pointColorBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.titleMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.changeTtileBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteTitleBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
+            this.seriesMenu.SuspendLayout();
+            this.titleMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -227,27 +237,71 @@
             this.pointsSettingBtn.Text = "Элементы серии";
             this.pointsSettingBtn.Click += new System.EventHandler(this.pointsSettingBtn_Click);
             // 
-            // visualChart
-            // 
-            this.visualChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.visualChart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.visualChart.Legends.Add(legend1);
-            this.visualChart.Location = new System.Drawing.Point(13, 28);
-            this.visualChart.Name = "visualChart";
-            this.visualChart.Size = new System.Drawing.Size(959, 521);
-            this.visualChart.TabIndex = 1;
-            this.visualChart.Text = "visualChart";
-            // 
             // allItemBtn
             // 
             this.allItemBtn.Name = "allItemBtn";
             this.allItemBtn.Size = new System.Drawing.Size(188, 22);
             this.allItemBtn.Text = "Элемент \'Всего\"";
             this.allItemBtn.Click += new System.EventHandler(this.allItemBtn_Click);
+            // 
+            // visualChart
+            // 
+            this.visualChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea2.Name = "ChartArea1";
+            this.visualChart.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.visualChart.Legends.Add(legend2);
+            this.visualChart.Location = new System.Drawing.Point(13, 28);
+            this.visualChart.Name = "visualChart";
+            this.visualChart.Size = new System.Drawing.Size(959, 521);
+            this.visualChart.TabIndex = 1;
+            this.visualChart.Text = "visualChart";
+            // 
+            // seriesMenu
+            // 
+            this.seriesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.seriesColorBtn,
+            this.pointColorBtn});
+            this.seriesMenu.Name = "seriesMenu";
+            this.seriesMenu.Size = new System.Drawing.Size(192, 48);
+            // 
+            // seriesColorBtn
+            // 
+            this.seriesColorBtn.Name = "seriesColorBtn";
+            this.seriesColorBtn.Size = new System.Drawing.Size(191, 22);
+            this.seriesColorBtn.Text = "Изменить цвет серии";
+            this.seriesColorBtn.Click += new System.EventHandler(this.seriesColorBtn_Click);
+            // 
+            // pointColorBtn
+            // 
+            this.pointColorBtn.Name = "pointColorBtn";
+            this.pointColorBtn.Size = new System.Drawing.Size(191, 22);
+            this.pointColorBtn.Text = "Изменить цвет точки";
+            this.pointColorBtn.Click += new System.EventHandler(this.pointColorBtn_Click);
+            // 
+            // titleMenu
+            // 
+            this.titleMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeTtileBtn,
+            this.deleteTitleBtn});
+            this.titleMenu.Name = "seriesMenu";
+            this.titleMenu.Size = new System.Drawing.Size(181, 70);
+            // 
+            // changeTtileBtn
+            // 
+            this.changeTtileBtn.Name = "changeTtileBtn";
+            this.changeTtileBtn.Size = new System.Drawing.Size(180, 22);
+            this.changeTtileBtn.Text = "Изменить";
+            this.changeTtileBtn.Click += new System.EventHandler(this.changeTtileBtn_Click);
+            // 
+            // deleteTitleBtn
+            // 
+            this.deleteTitleBtn.Name = "deleteTitleBtn";
+            this.deleteTitleBtn.Size = new System.Drawing.Size(180, 22);
+            this.deleteTitleBtn.Text = "Удалить";
+            this.deleteTitleBtn.Click += new System.EventHandler(this.deleteTitleBtn_Click);
             // 
             // VisualisationForm
             // 
@@ -264,6 +318,8 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).EndInit();
+            this.seriesMenu.ResumeLayout(false);
+            this.titleMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -294,5 +350,12 @@
         private System.Windows.Forms.ToolStripMenuItem legendFontBtn;
         private System.Windows.Forms.ToolStripMenuItem titleFontBtn;
         private System.Windows.Forms.ToolStripMenuItem allItemBtn;
+        private System.Windows.Forms.ContextMenuStrip seriesMenu;
+        private System.Windows.Forms.ToolStripMenuItem seriesColorBtn;
+        private System.Windows.Forms.ToolStripMenuItem pointColorBtn;
+        private System.Windows.Forms.ColorDialog colorDialog;
+        private System.Windows.Forms.ContextMenuStrip titleMenu;
+        private System.Windows.Forms.ToolStripMenuItem changeTtileBtn;
+        private System.Windows.Forms.ToolStripMenuItem deleteTitleBtn;
     }
 }
