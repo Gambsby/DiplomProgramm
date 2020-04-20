@@ -29,8 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savaDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,14 +56,21 @@
             this.seriesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.seriesColorBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.pointColorBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.markFontBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
             this.titleMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeTtileBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTitleBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.fontTitleBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showLegendBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.legendMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.changeLegendFontBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showLegendMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
             this.seriesMenu.SuspendLayout();
             this.titleMenu.SuspendLayout();
+            this.legendMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -90,7 +96,7 @@
             // savaDiagramBtn
             // 
             this.savaDiagramBtn.Name = "savaDiagramBtn";
-            this.savaDiagramBtn.Size = new System.Drawing.Size(132, 22);
+            this.savaDiagramBtn.Size = new System.Drawing.Size(180, 22);
             this.savaDiagramBtn.Text = "Сохранить";
             this.savaDiagramBtn.Click += new System.EventHandler(this.savaDiagramBtn_Click);
             // 
@@ -104,7 +110,8 @@
             this.showAxisBtn,
             this.markerFontBtn,
             this.legendFontBtn,
-            this.titleFontBtn});
+            this.titleFontBtn,
+            this.showLegendBtn});
             this.appearanceSettingBtn.Name = "appearanceSettingBtn";
             this.appearanceSettingBtn.Size = new System.Drawing.Size(164, 20);
             this.appearanceSettingBtn.Text = "Настройка внешнего вида";
@@ -112,28 +119,28 @@
             // BGSettingBtn
             // 
             this.BGSettingBtn.Name = "BGSettingBtn";
-            this.BGSettingBtn.Size = new System.Drawing.Size(183, 22);
+            this.BGSettingBtn.Size = new System.Drawing.Size(187, 22);
             this.BGSettingBtn.Text = "Фон ";
             this.BGSettingBtn.Click += new System.EventHandler(this.BGSettingBtn_Click);
             // 
             // diagramBGSettingRtn
             // 
             this.diagramBGSettingRtn.Name = "diagramBGSettingRtn";
-            this.diagramBGSettingRtn.Size = new System.Drawing.Size(183, 22);
+            this.diagramBGSettingRtn.Size = new System.Drawing.Size(187, 22);
             this.diagramBGSettingRtn.Text = "Фон диаграммы";
             this.diagramBGSettingRtn.Click += new System.EventHandler(this.diagramBGSettingRtn_Click);
             // 
             // borderSettingBtn
             // 
             this.borderSettingBtn.Name = "borderSettingBtn";
-            this.borderSettingBtn.Size = new System.Drawing.Size(183, 22);
+            this.borderSettingBtn.Size = new System.Drawing.Size(187, 22);
             this.borderSettingBtn.Text = "Рамка";
             this.borderSettingBtn.Click += new System.EventHandler(this.borderSettingBtn_Click);
             // 
             // showGridBtn
             // 
             this.showGridBtn.Name = "showGridBtn";
-            this.showGridBtn.Size = new System.Drawing.Size(183, 22);
+            this.showGridBtn.Size = new System.Drawing.Size(187, 22);
             this.showGridBtn.Text = "Отображение сетки";
             this.showGridBtn.Click += new System.EventHandler(this.showGridBtn_Click);
             // 
@@ -143,7 +150,7 @@
             this.showAxisXBtn,
             this.showAxisYBtn});
             this.showAxisBtn.Name = "showAxisBtn";
-            this.showAxisBtn.Size = new System.Drawing.Size(183, 22);
+            this.showAxisBtn.Size = new System.Drawing.Size(187, 22);
             this.showAxisBtn.Text = "Отображение осей";
             // 
             // showAxisXBtn
@@ -163,21 +170,21 @@
             // markerFontBtn
             // 
             this.markerFontBtn.Name = "markerFontBtn";
-            this.markerFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.markerFontBtn.Size = new System.Drawing.Size(187, 22);
             this.markerFontBtn.Text = "Шрифт маркеров";
             this.markerFontBtn.Click += new System.EventHandler(this.markerFontBtn_Click);
             // 
             // legendFontBtn
             // 
             this.legendFontBtn.Name = "legendFontBtn";
-            this.legendFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.legendFontBtn.Size = new System.Drawing.Size(187, 22);
             this.legendFontBtn.Text = "Шрифт легенды";
             this.legendFontBtn.Click += new System.EventHandler(this.legendFontBtn_Click);
             // 
             // titleFontBtn
             // 
             this.titleFontBtn.Name = "titleFontBtn";
-            this.titleFontBtn.Size = new System.Drawing.Size(183, 22);
+            this.titleFontBtn.Size = new System.Drawing.Size(187, 22);
             this.titleFontBtn.Text = "Шрифт заголовка";
             this.titleFontBtn.Click += new System.EventHandler(this.titleFontBtn_Click);
             // 
@@ -249,10 +256,8 @@
             this.visualChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.visualChart.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.visualChart.Legends.Add(legend2);
+            chartArea6.Name = "ChartArea1";
+            this.visualChart.ChartAreas.Add(chartArea6);
             this.visualChart.Location = new System.Drawing.Point(13, 28);
             this.visualChart.Name = "visualChart";
             this.visualChart.Size = new System.Drawing.Size(959, 521);
@@ -263,45 +268,90 @@
             // 
             this.seriesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.seriesColorBtn,
-            this.pointColorBtn});
+            this.pointColorBtn,
+            this.markFontBtn});
             this.seriesMenu.Name = "seriesMenu";
-            this.seriesMenu.Size = new System.Drawing.Size(192, 48);
+            this.seriesMenu.Size = new System.Drawing.Size(221, 70);
             // 
             // seriesColorBtn
             // 
             this.seriesColorBtn.Name = "seriesColorBtn";
-            this.seriesColorBtn.Size = new System.Drawing.Size(191, 22);
+            this.seriesColorBtn.Size = new System.Drawing.Size(220, 22);
             this.seriesColorBtn.Text = "Изменить цвет серии";
             this.seriesColorBtn.Click += new System.EventHandler(this.seriesColorBtn_Click);
             // 
             // pointColorBtn
             // 
             this.pointColorBtn.Name = "pointColorBtn";
-            this.pointColorBtn.Size = new System.Drawing.Size(191, 22);
+            this.pointColorBtn.Size = new System.Drawing.Size(220, 22);
             this.pointColorBtn.Text = "Изменить цвет точки";
             this.pointColorBtn.Click += new System.EventHandler(this.pointColorBtn_Click);
+            // 
+            // markFontBtn
+            // 
+            this.markFontBtn.Name = "markFontBtn";
+            this.markFontBtn.Size = new System.Drawing.Size(220, 22);
+            this.markFontBtn.Text = "Изменить шрифт маркера";
+            this.markFontBtn.Click += new System.EventHandler(this.markFontBtn_Click);
             // 
             // titleMenu
             // 
             this.titleMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeTtileBtn,
-            this.deleteTitleBtn});
+            this.deleteTitleBtn,
+            this.fontTitleBtn});
             this.titleMenu.Name = "seriesMenu";
-            this.titleMenu.Size = new System.Drawing.Size(181, 70);
+            this.titleMenu.Size = new System.Drawing.Size(171, 70);
             // 
             // changeTtileBtn
             // 
             this.changeTtileBtn.Name = "changeTtileBtn";
-            this.changeTtileBtn.Size = new System.Drawing.Size(180, 22);
+            this.changeTtileBtn.Size = new System.Drawing.Size(170, 22);
             this.changeTtileBtn.Text = "Изменить";
             this.changeTtileBtn.Click += new System.EventHandler(this.changeTtileBtn_Click);
             // 
             // deleteTitleBtn
             // 
             this.deleteTitleBtn.Name = "deleteTitleBtn";
-            this.deleteTitleBtn.Size = new System.Drawing.Size(180, 22);
+            this.deleteTitleBtn.Size = new System.Drawing.Size(170, 22);
             this.deleteTitleBtn.Text = "Удалить";
             this.deleteTitleBtn.Click += new System.EventHandler(this.deleteTitleBtn_Click);
+            // 
+            // fontTitleBtn
+            // 
+            this.fontTitleBtn.Name = "fontTitleBtn";
+            this.fontTitleBtn.Size = new System.Drawing.Size(170, 22);
+            this.fontTitleBtn.Text = "Изменить шрифт";
+            this.fontTitleBtn.Click += new System.EventHandler(this.fontTitleBtn_Click);
+            // 
+            // showLegendBtn
+            // 
+            this.showLegendBtn.Name = "showLegendBtn";
+            this.showLegendBtn.Size = new System.Drawing.Size(187, 22);
+            this.showLegendBtn.Text = "Отображать легенду";
+            this.showLegendBtn.Click += new System.EventHandler(this.showLegend_Click);
+            // 
+            // legendMenu
+            // 
+            this.legendMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeLegendFontBtn,
+            this.showLegendMenuBtn});
+            this.legendMenu.Name = "seriesMenu";
+            this.legendMenu.Size = new System.Drawing.Size(188, 70);
+            // 
+            // changeLegendFontBtn
+            // 
+            this.changeLegendFontBtn.Name = "changeLegendFontBtn";
+            this.changeLegendFontBtn.Size = new System.Drawing.Size(187, 22);
+            this.changeLegendFontBtn.Text = "Изменить шрифт";
+            this.changeLegendFontBtn.Click += new System.EventHandler(this.changeLegendFontBtn_Click);
+            // 
+            // showLegendMenuBtn
+            // 
+            this.showLegendMenuBtn.Name = "showLegendMenuBtn";
+            this.showLegendMenuBtn.Size = new System.Drawing.Size(187, 22);
+            this.showLegendMenuBtn.Text = "Отображать легенду";
+            this.showLegendMenuBtn.Click += new System.EventHandler(this.showLegend_Click);
             // 
             // VisualisationForm
             // 
@@ -320,6 +370,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).EndInit();
             this.seriesMenu.ResumeLayout(false);
             this.titleMenu.ResumeLayout(false);
+            this.legendMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -357,5 +408,11 @@
         private System.Windows.Forms.ContextMenuStrip titleMenu;
         private System.Windows.Forms.ToolStripMenuItem changeTtileBtn;
         private System.Windows.Forms.ToolStripMenuItem deleteTitleBtn;
+        private System.Windows.Forms.ToolStripMenuItem fontTitleBtn;
+        private System.Windows.Forms.ToolStripMenuItem markFontBtn;
+        private System.Windows.Forms.ToolStripMenuItem showLegendBtn;
+        private System.Windows.Forms.ContextMenuStrip legendMenu;
+        private System.Windows.Forms.ToolStripMenuItem changeLegendFontBtn;
+        private System.Windows.Forms.ToolStripMenuItem showLegendMenuBtn;
     }
 }

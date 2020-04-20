@@ -54,6 +54,36 @@ namespace VisualisationData.Services
             return column;
         }
 
+        public static Title CreateTitle(string name, string text)
+        {
+            Title title = new Title();
+            title.Name = name;
+            title.Text = text;
+
+            return title;
+        }
+
+        public static Legend CreateLegend(Series series, string name)
+        {
+            Legend legend = new Legend();
+            legend.Name = name;
+
+            for (int i = 0; i < series.Points.Count; i++)
+            {
+                DataPoint dataPointItem = series.Points[i];
+
+                LegendItem newItem = new LegendItem();
+                newItem.SeriesPointIndex = i;
+                newItem.ImageStyle = LegendImageStyle.Rectangle;
+                newItem.Color = dataPointItem.Color;
+                newItem.Cells.Add(LegendCellType.SeriesSymbol, "", ContentAlignment.MiddleLeft); // Symbol
+                newItem.Cells.Add(LegendCellType.Text, dataPointItem.AxisLabel, ContentAlignment.MiddleLeft); // Series Name
+                legend.CustomItems.Add(newItem);
+            }
+
+            return legend;
+        }
+
         public static Color ChooseColor(ColorDialog colorDialog, Color oldColor)
         {
             colorDialog.FullOpen = false;
@@ -66,6 +96,8 @@ namespace VisualisationData.Services
                 return colorDialog.Color;
         }
 
+        
+        
         private static int[] GetIntColors(Dictionary<string, Color> colors)
         {
             List<int> intColors = new List<int>();

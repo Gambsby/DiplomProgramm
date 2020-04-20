@@ -41,15 +41,8 @@ namespace VisualisationData.Services
                         visualDataQuestion.Add(answerItem, countCurrentAnswers);
                     }
                 }
-                if (!string.IsNullOrEmpty(selectedQuestionItem.LeftLimit) && !string.IsNullOrEmpty(selectedQuestionItem.RightLimit))
-                {
-                    result.Add(selectedQuestionItem.GetForSeries(), visualDataQuestion);
-                }
-                else
-                {
-                    result.Add(selectedQuestionItem.Content, visualDataQuestion);
-                }
-                
+                result.Add(selectedQuestionItem.GetForSeries(), visualDataQuestion);
+
             }
 
             return result;

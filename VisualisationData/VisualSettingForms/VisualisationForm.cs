@@ -15,14 +15,24 @@ namespace VisualisationData.VisualSettingForms
 {
     public partial class VisualisationForm : Form
     {
+        public static Dictionary<string, SeriesChartType> seriesTypeMap = new Dictionary<string, SeriesChartType>
+        {
+            { "Pie", SeriesChartType.Pie },
+            { "Doughnut", SeriesChartType.Doughnut },
+            { "Bar", SeriesChartType.Bar },
+            { "StackedBar", SeriesChartType.StackedBar },
+            { "StackedBar100", SeriesChartType.StackedBar100 },
+            { "Column", SeriesChartType.Column },
+            { "StackedColumn", SeriesChartType.StackedColumn },
+            { "StackedColumn100", SeriesChartType.StackedColumn100 },
+
+        };
+
         private ExcelQuestion selectedQuestion;
         private ExcelProfile selectedProfile;
         private ExcelDocument selectedDocument;
         private SeriesChartType diagramType;
         private string allItem = string.Empty;
-
-        private object CurrentFirst = null;
-        private object CurrentSecond = null;
 
         public VisualisationForm(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
         {
@@ -40,28 +50,25 @@ namespace VisualisationData.VisualSettingForms
             showAxisXBtn.Checked = true;
             showAxisYBtn.Checked = true;
             allItemBtn.Checked = true;
+            showLegendBtn.Checked = true;
+            showLegendMenuBtn.Checked = true;
 
             visualChart.MouseClick += VisualChart_MouseClick;
 
             var visualData = VisualisationService.GetVisualData(new List<ExcelQuestion>() { selectedQuestion }, selectedProfile, selectedDocument);
 
-            string question = visualData.Keys.ToList()[0];
+            string question = selectedQuestion.GetForSeries();
             Dictionary<string, int> points = visualData[question];
             int allQuestioned = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id && a.Answer != "").Count();
 
             visualChart.Series.Add(question);
             visualChart.Series[question].ChartType = diagramType;
-            Title mainTitle = new Title();
-            mainTitle.Name = "mainTitle";
-            mainTitle.Text = question;
-            visualChart.Titles.Add(mainTitle);
-            Title allTitle = new Title();
-            allTitle.Name = "allTitle";
-            allItem = "Всего " + allQuestioned + " участников";
-            allTitle.Text = allItem;
-            visualChart.Titles.Add(allTitle);
 
-            visualChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[colorIndex];
+            visualChart.Titles.Add(CommonService.CreateTitle("mainTitle", question));
+            allItem = "Всего " + allQuestioned + " участников";
+            visualChart.Titles.Add(CommonService.CreateTitle("allTitle", allItem));
+
+            visualChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[0];
 
             foreach (var item in points)
             {
@@ -77,6 +84,11 @@ namespace VisualisationData.VisualSettingForms
                     colorIndex++;
                 }
             }
+
+            Legend legend = CommonService.CreateLegend(visualChart.Series[question], "mainLegend");
+            
+            visualChart.Series[question].IsVisibleInLegend = false;
+            visualChart.Legends.Add(legend);
         }
 
         private void BGSettingBtn_Click(object sender, EventArgs e)
@@ -140,11 +152,17 @@ namespace VisualisationData.VisualSettingForms
 
         private void diagramTypeSettingBtn_Click(object sender, EventArgs e)
         {
-            using (DataSettingForm dsf = new DataSettingForm(visualChart))
+            using (DataSettingForm dsf = new DataSettingForm())
             {
                 dsf.NameGroupBox = "Настройка типа диаграммы";
                 dsf.TypeSettings = "diagramType";
+                dsf.SeriesItem = visualChart.Series[selectedQuestion.GetForSeries()];
                 dsf.ShowDialog();
+                if (dsf.Status)
+                {
+                    string selectedType = dsf.SelectedItem as string;
+                    visualChart.Series[selectedQuestion.GetForSeries()].ChartType = seriesTypeMap[selectedType];
+                }
             }
         }
 
@@ -195,21 +213,36 @@ namespace VisualisationData.VisualSettingForms
 
         private void seriesSettingBtn_Click(object sender, EventArgs e)
         {
-            using (DataSettingForm dsf = new DataSettingForm(visualChart))
+            Color oldColor = visualChart.Series[selectedQuestion.GetForSeries()].Color;
+            Color selectedColor = CommonService.ChooseColor(colorDialog, oldColor);
+            if (selectedColor != oldColor)
             {
-                dsf.NameGroupBox = "Настройка цвета серии данных";
-                dsf.TypeSettings = "seriesColor";
-                dsf.ShowDialog();
+                foreach (var dataPointItem in visualChart.Series[selectedQuestion.GetForSeries()].Points)
+                {
+                    dataPointItem.Color = selectedColor;
+                }
+                RefreshLegend();
             }
         }
 
         private void pointsSettingBtn_Click(object sender, EventArgs e)
         {
-            using (DataSettingForm dsf = new DataSettingForm(visualChart))
+            using (DataSettingForm dsf = new DataSettingForm())
             {
-                dsf.NameGroupBox = "Настройка цвета элементов серии";
-                dsf.TypeSettings = "pointColor";
+                dsf.NameGroupBox = "Настройка цвета точек";
+                dsf.TypeSettings = "color";
+                dsf.SeriesItem = visualChart.Series[selectedQuestion.GetForSeries()];
                 dsf.ShowDialog();
+                if (dsf.Status)
+                {
+                    string selectedPointName = dsf.SelectedItem as string;
+                    Color selectedColor = dsf.Color;
+
+                    DataPoint selectedPoint = visualChart.Series[selectedQuestion.GetForSeries()].Points.SingleOrDefault(x => x.AxisLabel == selectedPointName);
+
+                    selectedPoint.Color = selectedColor;
+                    RefreshLegend();
+                }
             }
         }
 
@@ -333,11 +366,8 @@ namespace VisualisationData.VisualSettingForms
                 }
                 else
                 {
-                    foreach (var seriesItem in visualChart.Series)
-                    {
-                        seriesItem.Font = fd.Font;
-                        seriesItem.LabelForeColor = fd.Color;
-                    }
+                    visualChart.Series[0].Font = fd.Font;
+                    visualChart.Series[0].LabelForeColor = fd.Color;
                 }
             }
         }
@@ -365,79 +395,6 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        //private void VisualChart_MouseDoubleClick(object sender, MouseEventArgs e)
-        //{
-        //    var res = visualChart.HitTest(e.X, e.Y);
-        //    switch (res.ChartElementType)
-        //    {
-        //        case ChartElementType.Nothing:
-        //            break;
-        //        case ChartElementType.Title:
-        //            {
-        //                var currentTitle = res.Object as Title;
-
-        //                TextDialog textDialog = new TextDialog("Введите желаемый заголовок:", currentTitle.Text);
-        //                textDialog.ShowDialog();
-        //                if (textDialog.DialogResult == DialogResult.OK)
-        //                {
-        //                    if (!string.IsNullOrEmpty(textDialog.Result))
-        //                    {
-        //                        currentTitle.Text = textDialog.Result;
-        //                    }
-        //                }
-        //                break;
-        //            }
-        //        case ChartElementType.PlottingArea:
-        //            break;
-        //        case ChartElementType.Axis:
-        //            break;
-        //        case ChartElementType.TickMarks:
-        //            break;
-        //        case ChartElementType.Gridlines:
-        //            break;
-        //        case ChartElementType.StripLines:
-        //            break;
-        //        case ChartElementType.AxisLabelImage:
-        //            break;
-        //        case ChartElementType.AxisLabels:
-        //            break;
-        //        case ChartElementType.AxisTitle:
-        //            break;
-        //        case ChartElementType.ScrollBarThumbTracker:
-        //            break;
-        //        case ChartElementType.ScrollBarSmallDecrement:
-        //            break;
-        //        case ChartElementType.ScrollBarSmallIncrement:
-        //            break;
-        //        case ChartElementType.ScrollBarLargeDecrement:
-        //            break;
-        //        case ChartElementType.ScrollBarLargeIncrement:
-        //            break;
-        //        case ChartElementType.ScrollBarZoomReset:
-        //            break;
-        //        case ChartElementType.DataPoint:
-        //            break;
-        //        case ChartElementType.DataPointLabel:
-        //            break;
-        //        case ChartElementType.LegendArea:
-        //            break;
-        //        case ChartElementType.LegendTitle:
-        //            break;
-        //        case ChartElementType.LegendHeader:
-        //            break;
-        //        case ChartElementType.LegendItem:
-        //            {
-        //                var currentSeries = res.Series as Series;
-
-        //                break;
-        //            }
-        //        case ChartElementType.Annotation:
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
-
         private void VisualChart_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -458,7 +415,9 @@ namespace VisualisationData.VisualSettingForms
                             {
                                 changeTtileBtn.Enabled = false;
                             }
-                            CurrentFirst = title;
+                            changeTtileBtn.Tag = title;
+                            deleteTitleBtn.Tag = title;
+                            fontTitleBtn.Tag = title;
                             titleMenu.Show(Control.MousePosition);
                             break;
                         }
@@ -492,14 +451,18 @@ namespace VisualisationData.VisualSettingForms
                         break;
                     case ChartElementType.DataPoint:
                         {
-                            CurrentFirst = res.Series.Points[res.PointIndex];
-                            CurrentSecond = res.Series;
+                            seriesColorBtn.Tag = res.Series;
+                            pointColorBtn.Tag = res.Series.Points[res.PointIndex];
+                            markFontBtn.Tag = res.Series;
                             seriesMenu.Show(Control.MousePosition);
 
                             break;
                         }
                     case ChartElementType.DataPointLabel:
-                        break;
+                        {
+
+                            break;
+                        }
                     case ChartElementType.LegendArea:
                         break;
                     case ChartElementType.LegendTitle:
@@ -507,7 +470,14 @@ namespace VisualisationData.VisualSettingForms
                     case ChartElementType.LegendHeader:
                         break;
                     case ChartElementType.LegendItem:
-                        break;
+                        {
+                            Legend legend = (res.Object as LegendItem).Legend;
+                            changeLegendFontBtn.Tag = legend;
+                            showLegendMenuBtn.Tag = legend;
+                            legendMenu.Show(Control.MousePosition);
+
+                            break;
+                        }
                     case ChartElementType.Annotation:
                         break;
                     default:
@@ -518,39 +488,146 @@ namespace VisualisationData.VisualSettingForms
 
         private void seriesColorBtn_Click(object sender, EventArgs e)
         {
-            Series series = CurrentSecond as Series;
-            series.Color = CommonService.ChooseColor(colorDialog, series.Color);
+            Series series = seriesColorBtn.Tag as Series;
+            Color oldColor = series.Color;
+            Color selectedColor = CommonService.ChooseColor(colorDialog, oldColor);
+            if (selectedColor != oldColor)
+            {
+                foreach (var dataPointItem in series.Points)
+                {
+                    dataPointItem.Color = selectedColor;
+                }
+                RefreshLegend();
+            }
         }
 
         private void pointColorBtn_Click(object sender, EventArgs e)
         {
-            DataPoint point = CurrentFirst as DataPoint;
+            DataPoint point = pointColorBtn.Tag as DataPoint;
             point.Color = CommonService.ChooseColor(colorDialog, point.Color);
+            RefreshLegend();
+        }
+
+        private void markFontBtn_Click(object sender, EventArgs e)
+        {
+            Series series = markFontBtn.Tag as Series;
+            using (FontDialog fd = new FontDialog())
+            {
+                fd.ShowColor = true;
+                fd.Font = series.Font;
+                fd.Color = series.LabelForeColor;
+                if (fd.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+                else
+                {
+                    series.Font = fd.Font;
+                    series.LabelForeColor = fd.Color;
+                }
+            }
         }
 
         private void changeTtileBtn_Click(object sender, EventArgs e)
         {
-            Title title = CurrentFirst as Title;
+            Title title = changeTtileBtn.Tag as Title;
 
-            TextDialog textDialog = new TextDialog("Введите желаемый заголовок:", title.Text);
-            textDialog.ShowDialog();
-            if (textDialog.DialogResult == DialogResult.OK)
+            using (TextDialog textDialog = new TextDialog("Введите желаемый заголовок:", title.Text))
             {
-                if (!string.IsNullOrEmpty(textDialog.Result))
+                textDialog.ShowDialog();
+                if (textDialog.DialogResult == DialogResult.OK)
                 {
-                    title.Text = textDialog.Result;
+                    if (!string.IsNullOrEmpty(textDialog.Result))
+                    {
+                        title.Text = textDialog.Result;
+                    }
                 }
             }
         }
 
         private void deleteTitleBtn_Click(object sender, EventArgs e)
         {
-            Title title = CurrentFirst as Title;
+            Title title = deleteTitleBtn.Tag as Title;
+
             if (title.Name == "allTitle")
             {
                 allItemBtn.Checked = false;
             }
             visualChart.Titles.Remove(title);
+        }
+
+        private void fontTitleBtn_Click(object sender, EventArgs e)
+        {
+            Title title = fontTitleBtn.Tag as Title;
+
+            using (FontDialog fd = new FontDialog())
+            {
+                fd.ShowColor = true;
+                fd.Font = title.Font;
+                fd.Color = title.ForeColor;
+                if (fd.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+                else
+                {
+                    title.Font = fd.Font;
+                    title.ForeColor = fd.Color;
+                }
+            }
+        }
+
+        private void showLegend_Click(object sender, EventArgs e)
+        {
+            if (showLegendBtn.Checked)
+            {
+                showLegendBtn.Checked = false;
+                showLegendMenuBtn.Checked = false;
+
+                visualChart.Legends.Remove(visualChart.Legends["mainLegend"]);
+            }
+            else
+            {
+                showLegendBtn.Checked = true;
+                showLegendMenuBtn.Checked = true;
+
+                Legend legend = CommonService.CreateLegend(visualChart.Series[selectedQuestion.GetForSeries()], "mainLegend");
+                visualChart.Series[selectedQuestion.GetForSeries()].IsVisibleInLegend = false;
+                visualChart.Legends.Add(legend);
+            }
+        }
+
+        private void changeLegendFontBtn_Click(object sender, EventArgs e)
+        {
+            Legend legend = changeLegendFontBtn.Tag as Legend;
+
+            using (FontDialog fd = new FontDialog())
+            {
+                fd.ShowColor = true;
+                fd.Font = legend.Font;
+                fd.Color = legend.ForeColor;
+                if (fd.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+                else
+                {
+                    legend.Font = fd.Font;
+                    legend.ForeColor = fd.Color;
+                }
+            }
+        }
+
+        private void RefreshLegend()
+        {
+            if (visualChart.Legends.Select(x => x.Name).Contains("mainLegend"))
+            {
+                for (int i = 0; i < visualChart.Series[selectedQuestion.GetForSeries()].Points.Count; i++)
+                {
+                    LegendItem currentLegendItem = visualChart.Legends["mainLegend"].CustomItems.SingleOrDefault(x => x.SeriesPointIndex == i);
+                    currentLegendItem.Color = visualChart.Series[selectedQuestion.GetForSeries()].Points[i].Color;
+                }
+            }
         }
     }
 }
