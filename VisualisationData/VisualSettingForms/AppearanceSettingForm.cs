@@ -45,13 +45,19 @@ namespace VisualisationData.VisualSettingForms
 
         public string NameGroupBox { get; set; }
         public string TypeSettings { get; set; }
-        private Chart visualChart;
+        public Chart VisualChart { get; set; }
 
-        public AppearanceSettingForm(Chart visualChart)
+        public bool Status { get; set; } = false;
+        public Color FirstColor { get; set; }
+        public Color SecondColor { get; set; }
+        public GradientStyle GradientStyle { get; set; }
+        public ChartDashStyle ChartDashStyle { get; set; }
+        public BorderSkinStyle BorderSkinStyle { get; set; }
+
+        public AppearanceSettingForm()
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.visualChart = visualChart;
         }
 
         private void AppearanceSettingForm_Load(object sender, EventArgs e)
@@ -61,19 +67,19 @@ namespace VisualisationData.VisualSettingForms
             {
                 case "background":
                     {
-                        firstColorBtn.BackColor = visualChart.BackColor;
-                        secondColorBtn.BackColor = visualChart.BackSecondaryColor;
+                        firstColorBtn.BackColor = VisualChart.BackColor;
+                        secondColorBtn.BackColor = VisualChart.BackSecondaryColor;
                         gradientTypeCB.Items.AddRange(gradientStyleMap.Keys.ToArray());
 
-                        gradientTypeCB.SelectedItem = gradientStyleMap.Where(x => x.Value == visualChart.BackGradientStyle).SingleOrDefault().Key;
+                        gradientTypeCB.SelectedItem = gradientStyleMap.Where(x => x.Value == VisualChart.BackGradientStyle).SingleOrDefault().Key;
                         break;
                     }
                 case "diagram":
                     {
-                        firstColorBtn.BackColor = visualChart.ChartAreas[0].BackColor;
-                        secondColorBtn.BackColor = visualChart.ChartAreas[0].BackSecondaryColor;
+                        firstColorBtn.BackColor = VisualChart.ChartAreas[0].BackColor;
+                        secondColorBtn.BackColor = VisualChart.ChartAreas[0].BackSecondaryColor;
                         gradientTypeCB.Items.AddRange(gradientStyleMap.Keys.ToArray());
-                        gradientTypeCB.SelectedItem = gradientStyleMap.Where(x => x.Value == visualChart.ChartAreas[0].BackGradientStyle).SingleOrDefault().Key;
+                        gradientTypeCB.SelectedItem = gradientStyleMap.Where(x => x.Value == VisualChart.ChartAreas[0].BackGradientStyle).SingleOrDefault().Key;
                         break;
                     }
                 case "border":
@@ -85,11 +91,11 @@ namespace VisualisationData.VisualSettingForms
                         this.Height = 233;
                         settingGB.Height = 142;
 
-                        firstColorBtn.BackColor = visualChart.BorderlineColor;
+                        firstColorBtn.BackColor = VisualChart.BorderlineColor;
                         gradientTypeCB.Items.AddRange(borderTypeMap.Keys.ToArray());
-                        gradientTypeCB.SelectedItem = borderTypeMap.Where(x => x.Value == visualChart.BorderlineDashStyle).SingleOrDefault().Key;
+                        gradientTypeCB.SelectedItem = borderTypeMap.Where(x => x.Value == VisualChart.BorderlineDashStyle).SingleOrDefault().Key;
                         borderStyleCB.Items.AddRange(borderStyleMap.Keys.ToArray());
-                        borderStyleCB.SelectedItem = borderStyleMap.Where(x => x.Value == visualChart.BorderSkin.SkinStyle).SingleOrDefault().Key;
+                        borderStyleCB.SelectedItem = borderStyleMap.Where(x => x.Value == VisualChart.BorderSkin.SkinStyle).SingleOrDefault().Key;
                         break;
                     }
                 default:
@@ -103,23 +109,35 @@ namespace VisualisationData.VisualSettingForms
             {
                 case "background":
                     {
-                        visualChart.BackColor = firstColorBtn.BackColor;
-                        visualChart.BackSecondaryColor = secondColorBtn.BackColor;
-                        visualChart.BackGradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
+                        FirstColor = firstColorBtn.BackColor;
+                        SecondColor = secondColorBtn.BackColor;
+                        GradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
+                        //visualChart.BackColor = firstColorBtn.BackColor;
+                        //visualChart.BackSecondaryColor = secondColorBtn.BackColor;
+                        //visualChart.BackGradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
+                        Status = true;
                         break;
                     }
                 case "diagram":
                     {
-                        visualChart.ChartAreas[0].BackColor = firstColorBtn.BackColor;
-                        visualChart.ChartAreas[0].BackSecondaryColor = secondColorBtn.BackColor;
-                        visualChart.ChartAreas[0].BackGradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
+                        FirstColor = firstColorBtn.BackColor;
+                        SecondColor = secondColorBtn.BackColor;
+                        GradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
+                        //visualChart.ChartAreas[0].BackColor = firstColorBtn.BackColor;
+                        //visualChart.ChartAreas[0].BackSecondaryColor = secondColorBtn.BackColor;
+                        //visualChart.ChartAreas[0].BackGradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
+                        Status = true;
                         break;
                     }
                 case "border":
                     {
-                        visualChart.BorderlineColor = firstColorBtn.BackColor;
-                        visualChart.BorderlineDashStyle = borderTypeMap[gradientTypeCB.SelectedItem.ToString()];
-                        visualChart.BorderSkin.SkinStyle = borderStyleMap[borderStyleCB.SelectedItem.ToString()];
+                        FirstColor = firstColorBtn.BackColor;
+                        ChartDashStyle = borderTypeMap[gradientTypeCB.SelectedItem.ToString()];
+                        BorderSkinStyle = borderStyleMap[borderStyleCB.SelectedItem.ToString()];
+                        //visualChart.BorderlineColor = firstColorBtn.BackColor;
+                        //visualChart.BorderlineDashStyle = borderTypeMap[gradientTypeCB.SelectedItem.ToString()];
+                        //visualChart.BorderSkin.SkinStyle = borderStyleMap[borderStyleCB.SelectedItem.ToString()];
+                        Status = true;
                         break;
                     }
                 default:

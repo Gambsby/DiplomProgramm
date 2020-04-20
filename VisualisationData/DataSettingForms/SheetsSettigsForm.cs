@@ -148,14 +148,14 @@ namespace VisualisationData.DataSettingForms
                 case "excel":
                     {
                         firstInfoLbl.Text = "Введите название листа с информацией о возможных ответах:";
-                        secondInfoLbl.Text = "Ведите название листа с результатами анкетирования:";
+                        secondInfoLbl.Text = "Введите название листа с результатами анкетирования:";
                         chooseDG.Columns.Add(CommonService.CreateTextColumn("Название листа", "sheetName", true, false));
                         break;
                     }
                 case "csv":
                     {
                         firstInfoLbl.Text = "Введите название файла с информацией о возможных ответах:";
-                        secondInfoLbl.Text = "Ведите название файла с результатами анкетирования:";
+                        secondInfoLbl.Text = "Введите название файла с результатами анкетирования:";
                         chooseDG.Columns.Add(CommonService.CreateTextColumn("Название файла", "sheetName", true, false));
                         break;
                     }
@@ -290,6 +290,11 @@ namespace VisualisationData.DataSettingForms
             ExcelSheetMap = excelProfileMap;
 
             Status = true;
+        }
+
+        private void cancelBtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

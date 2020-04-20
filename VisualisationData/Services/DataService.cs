@@ -180,7 +180,7 @@ namespace VisualisationData.Services
             }
         }
 
-        public static void SaveExcel(string infoFileName, string resultFileName, Dictionary<string, ExcelProfile> excelProfileMap, ExcelDocument document)
+        public static void SaveExcel(string infoFileName, string resultFileName, Dictionary<string, ExcelProfile> excelProfileMap, ExcelDocument document, string filePath)
         {
 
             using (ExcelPackage excelPackage = new ExcelPackage())
@@ -237,21 +237,8 @@ namespace VisualisationData.Services
                     rowResultNumber++;
                 }
 
-                FileInfo fi = null;
-                using (SaveFileDialog sfd = new SaveFileDialog())
-                {
-                    sfd.Title = "Сохранить файл как ...";
-                    sfd.Filter = "*.xlsx|*.xlsx";
-                    sfd.AddExtension = true;
-                    sfd.FileName = document.DocumentName;
-                    var res = sfd.ShowDialog();
-                    if (res == DialogResult.Cancel)
-                        return;
-                    else if (res == DialogResult.OK)
-                    {
-                        fi = new FileInfo(sfd.FileName);
-                    }
-                }
+                FileInfo fi = new FileInfo(filePath);
+
                 excelPackage.SaveAs(fi);
             }
         }
@@ -292,34 +279,27 @@ namespace VisualisationData.Services
                 resultFile.Add(new { ID = resultItem.GetId(), Profile = resultItem.GetProfileNum(), QuestionNum = resultItem.GetQuestionNum(), Answer = resultItem.GetAnswer() });
             }
 
-            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
-            {
-                var res = fbd.ShowDialog();
-                if (res == DialogResult.Cancel)
-                    return;
-                else if (res == DialogResult.OK)
-                {
-                    string dirName = fbd.SelectedPath + "\\" + document.DocumentName;
-                    if (!Directory.Exists(dirName))
-                    {
-                        Directory.CreateDirectory(dirName);
-                    }
-                    try
-                    {
-                        WriteFile(dirName + "\\" + infoFileName + ".csv", infoFile);
-                        WriteFile(dirName + "\\" + resultFileName + ".csv", resultFile);
+            string selectedPath = CommonService.GetFolderPath();
+            string dirName = selectedPath + "\\" + document.DocumentName;
 
-                        for (int i = 0; i < questionFiles.Count; i++)
-                        {
-                            WriteFile(dirName + "\\" + questionFilesName[i] + ".csv", questionFiles[i]);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Directory.Delete(dirName, true);
-                        throw ex;
-                    }
+            if (!Directory.Exists(dirName))
+            {
+                Directory.CreateDirectory(dirName);
+            }
+            try
+            {
+                WriteFile(dirName + "\\" + infoFileName + ".csv", infoFile);
+                WriteFile(dirName + "\\" + resultFileName + ".csv", resultFile);
+
+                for (int i = 0; i < questionFiles.Count; i++)
+                {
+                    WriteFile(dirName + "\\" + questionFilesName[i] + ".csv", questionFiles[i]);
                 }
+            }
+            catch (Exception ex)
+            {
+                Directory.Delete(dirName, true);
+                throw ex;
             }
         }
 

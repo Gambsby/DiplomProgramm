@@ -115,6 +115,7 @@
             this.cancelBtn.TabIndex = 1;
             this.cancelBtn.Text = "Отмена";
             this.cancelBtn.UseVisualStyleBackColor = true;
+            this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
             // 
             // acceptBtn
             // 

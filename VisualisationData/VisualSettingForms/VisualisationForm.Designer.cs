@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savaDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,6 +44,7 @@
             this.markerFontBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.legendFontBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.titleFontBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showLegendBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.dataSettingsBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.signatureSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.mode3DSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,10 +63,10 @@
             this.changeTtileBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTitleBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.fontTitleBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.showLegendBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.legendMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.changeLegendFontBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.showLegendMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.legendsBGSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
             this.seriesMenu.SuspendLayout();
@@ -96,7 +97,7 @@
             // savaDiagramBtn
             // 
             this.savaDiagramBtn.Name = "savaDiagramBtn";
-            this.savaDiagramBtn.Size = new System.Drawing.Size(180, 22);
+            this.savaDiagramBtn.Size = new System.Drawing.Size(132, 22);
             this.savaDiagramBtn.Text = "Сохранить";
             this.savaDiagramBtn.Click += new System.EventHandler(this.savaDiagramBtn_Click);
             // 
@@ -111,7 +112,8 @@
             this.markerFontBtn,
             this.legendFontBtn,
             this.titleFontBtn,
-            this.showLegendBtn});
+            this.showLegendBtn,
+            this.legendsBGSettingBtn});
             this.appearanceSettingBtn.Name = "appearanceSettingBtn";
             this.appearanceSettingBtn.Size = new System.Drawing.Size(164, 20);
             this.appearanceSettingBtn.Text = "Настройка внешнего вида";
@@ -188,6 +190,13 @@
             this.titleFontBtn.Text = "Шрифт заголовка";
             this.titleFontBtn.Click += new System.EventHandler(this.titleFontBtn_Click);
             // 
+            // showLegendBtn
+            // 
+            this.showLegendBtn.Name = "showLegendBtn";
+            this.showLegendBtn.Size = new System.Drawing.Size(187, 22);
+            this.showLegendBtn.Text = "Отображать легенду";
+            this.showLegendBtn.Click += new System.EventHandler(this.showLegend_Click);
+            // 
             // dataSettingsBtn
             // 
             this.dataSettingsBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -248,7 +257,7 @@
             // 
             this.allItemBtn.Name = "allItemBtn";
             this.allItemBtn.Size = new System.Drawing.Size(188, 22);
-            this.allItemBtn.Text = "Элемент \'Всего\"";
+            this.allItemBtn.Text = "Элемент \"Всего\"";
             this.allItemBtn.Click += new System.EventHandler(this.allItemBtn_Click);
             // 
             // visualChart
@@ -256,8 +265,8 @@
             this.visualChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea6.Name = "ChartArea1";
-            this.visualChart.ChartAreas.Add(chartArea6);
+            chartArea1.Name = "ChartArea1";
+            this.visualChart.ChartAreas.Add(chartArea1);
             this.visualChart.Location = new System.Drawing.Point(13, 28);
             this.visualChart.Name = "visualChart";
             this.visualChart.Size = new System.Drawing.Size(959, 521);
@@ -324,20 +333,13 @@
             this.fontTitleBtn.Text = "Изменить шрифт";
             this.fontTitleBtn.Click += new System.EventHandler(this.fontTitleBtn_Click);
             // 
-            // showLegendBtn
-            // 
-            this.showLegendBtn.Name = "showLegendBtn";
-            this.showLegendBtn.Size = new System.Drawing.Size(187, 22);
-            this.showLegendBtn.Text = "Отображать легенду";
-            this.showLegendBtn.Click += new System.EventHandler(this.showLegend_Click);
-            // 
             // legendMenu
             // 
             this.legendMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeLegendFontBtn,
             this.showLegendMenuBtn});
             this.legendMenu.Name = "seriesMenu";
-            this.legendMenu.Size = new System.Drawing.Size(188, 70);
+            this.legendMenu.Size = new System.Drawing.Size(188, 48);
             // 
             // changeLegendFontBtn
             // 
@@ -352,6 +354,13 @@
             this.showLegendMenuBtn.Size = new System.Drawing.Size(187, 22);
             this.showLegendMenuBtn.Text = "Отображать легенду";
             this.showLegendMenuBtn.Click += new System.EventHandler(this.showLegend_Click);
+            // 
+            // legendsBGSettingBtn
+            // 
+            this.legendsBGSettingBtn.Name = "legendsBGSettingBtn";
+            this.legendsBGSettingBtn.Size = new System.Drawing.Size(187, 22);
+            this.legendsBGSettingBtn.Text = "Фон легенды";
+            this.legendsBGSettingBtn.Click += new System.EventHandler(this.legendsBGSettingBtn_Click);
             // 
             // VisualisationForm
             // 
@@ -414,5 +423,6 @@
         private System.Windows.Forms.ContextMenuStrip legendMenu;
         private System.Windows.Forms.ToolStripMenuItem changeLegendFontBtn;
         private System.Windows.Forms.ToolStripMenuItem showLegendMenuBtn;
+        private System.Windows.Forms.ToolStripMenuItem legendsBGSettingBtn;
     }
 }

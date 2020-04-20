@@ -93,31 +93,72 @@ namespace VisualisationData.VisualSettingForms
 
         private void BGSettingBtn_Click(object sender, EventArgs e)
         {
-            using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
+            using (AppearanceSettingForm asf = new AppearanceSettingForm())
             {
                 asf.NameGroupBox = "Настройка фона";
                 asf.TypeSettings = "background";
+                asf.VisualChart = visualChart;
                 asf.ShowDialog();
+                if (asf.Status)
+                {
+                    visualChart.BackColor = asf.FirstColor;
+                    visualChart.BackSecondaryColor = asf.SecondColor;
+                    visualChart.BackGradientStyle = asf.GradientStyle;
+                }
             }
         }
 
         private void diagramBGSettingRtn_Click(object sender, EventArgs e)
         {
-            using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
+            using (AppearanceSettingForm asf = new AppearanceSettingForm())
             {
                 asf.NameGroupBox = "Настройка фона";
                 asf.TypeSettings = "diagram";
+                asf.VisualChart = visualChart;
                 asf.ShowDialog();
+                if (asf.Status)
+                {
+                    visualChart.ChartAreas[0].BackColor = asf.FirstColor;
+                    visualChart.ChartAreas[0].BackSecondaryColor = asf.SecondColor;
+                    visualChart.ChartAreas[0].BackGradientStyle = asf.GradientStyle;
+                }
             }
         }
 
         private void borderSettingBtn_Click(object sender, EventArgs e)
         {
-            using (AppearanceSettingForm asf = new AppearanceSettingForm(visualChart))
+            using (AppearanceSettingForm asf = new AppearanceSettingForm())
             {
                 asf.NameGroupBox = "Настройка рамки";
                 asf.TypeSettings = "border";
+                asf.VisualChart = visualChart;
                 asf.ShowDialog();
+                if (asf.Status)
+                {
+                    visualChart.BorderlineColor = asf.FirstColor;
+                    visualChart.BorderlineDashStyle = asf.ChartDashStyle;
+                    visualChart.BorderSkin.SkinStyle = asf.BorderSkinStyle;
+                }
+            }
+        }
+
+        private void legendsBGSettingBtn_Click(object sender, EventArgs e)
+        {
+            using (AppearanceSettingForm asf = new AppearanceSettingForm())
+            {
+                asf.NameGroupBox = "Настройка фона легенды";
+                asf.TypeSettings = "diagram";
+                asf.VisualChart = visualChart;
+                asf.ShowDialog();
+                if (asf.Status)
+                {
+                    if (visualChart.Legends.Select(x => x.Name).Contains("mainLegend"))
+                    {
+                        visualChart.Legends["mainLegend"].BackColor = asf.FirstColor;
+                        visualChart.Legends["mainLegend"].BackSecondaryColor = asf.SecondColor;
+                        visualChart.Legends["mainLegend"].BackGradientStyle = asf.GradientStyle;
+                    }
+                }
             }
         }
 

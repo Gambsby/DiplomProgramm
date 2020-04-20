@@ -190,8 +190,9 @@ namespace VisualisationData
                         return;
                     }
                 }
+                string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", Document.DocumentName);
 
-                DataService.SaveExcel(infoFileName, resultFileName, excelProfileMap, Document);
+                DataService.SaveExcel(infoFileName, resultFileName, excelProfileMap, Document, filePath);
 
             }
             catch (Exception ex)
@@ -317,37 +318,97 @@ namespace VisualisationData
 
         private void allColumnDiagramBtn_Click(object sender, EventArgs e)//+
         {
-            string dirPath = CommonService.GetFolderPath();
-            if (dirPath != null)
+            try
             {
-                VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Column);
+                string dirPath = CommonService.GetFolderPath();
+                string newDirPath = string.Empty;
+                if (dirPath != null)
+                {
+                    newDirPath = VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Column);
+
+                    Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+                    foreach (var excelProfileItem in Document.ProfilesListContent)
+                    {
+                        excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                    }
+                    DataService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void allPieDiagramBtn_Click(object sender, EventArgs e)//+
         {
-            string dirPath = CommonService.GetFolderPath();
-            if (dirPath != null)
+            try
             {
-                VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Pie);
+                string dirPath = CommonService.GetFolderPath();
+                string newDirPath = string.Empty;
+                if (dirPath != null)
+                {
+                    newDirPath = VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Pie);
+
+                    Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+                    foreach (var excelProfileItem in Document.ProfilesListContent)
+                    {
+                        excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                    }
+                    DataService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void allDoughnoutDiagramBtn_Click(object sender, EventArgs e)//+
         {
-            string dirPath = CommonService.GetFolderPath();
-            if (dirPath != null)
+            try
             {
-                VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Doughnut);
+                string dirPath = CommonService.GetFolderPath();
+                string newDirPath = string.Empty;
+                if (dirPath != null)
+                {
+                    newDirPath = VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Doughnut);
+
+                    Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+                    foreach (var excelProfileItem in Document.ProfilesListContent)
+                    {
+                        excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                    }
+                    DataService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void allBarDiagramBtn_Click(object sender, EventArgs e)//+
         {
-            string dirPath = CommonService.GetFolderPath();
-            if (dirPath != null)
+            try
             {
-                VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Bar);
+                string dirPath = CommonService.GetFolderPath();
+                string newDirPath = string.Empty;
+                if (dirPath != null)
+                {
+                    newDirPath = VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Bar);
+
+                    Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+                    foreach (var excelProfileItem in Document.ProfilesListContent)
+                    {
+                        excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                    }
+                    DataService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

@@ -48,7 +48,7 @@ namespace VisualisationData.Services
             return result;
         }
 
-        public static void GroupDiagramSave(ExcelDocument document, string dirPath, SeriesChartType type)
+        public static string GroupDiagramSave(ExcelDocument document, string dirPath, SeriesChartType type)
         {
             dirPath += "\\" + document.DocumentName;
             foreach (var profileItem in document.ProfilesListContent)
@@ -115,6 +115,8 @@ namespace VisualisationData.Services
                     chartNum++;
                 }
             }
+
+            return dirPath;
         }
     }
 }

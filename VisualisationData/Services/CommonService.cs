@@ -95,8 +95,6 @@ namespace VisualisationData.Services
             else
                 return colorDialog.Color;
         }
-
-        
         
         private static int[] GetIntColors(Dictionary<string, Color> colors)
         {
@@ -133,6 +131,26 @@ namespace VisualisationData.Services
                 ofd.FileName = fileName;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     return ofd.FileName; 
+                else
+                {
+                    return null;
+                }
+            }
+        }
+    
+        public static string SaveFilePath(string filter, string fileName = "")
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Title = "Сохранить файл как ...";
+                sfd.Filter = filter;
+                sfd.AddExtension = true;
+                sfd.FileName = fileName;
+                var res = sfd.ShowDialog();
+                if (res == DialogResult.OK)
+                {
+                    return sfd.FileName;
+                }
                 else
                 {
                     return null;
