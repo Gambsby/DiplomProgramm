@@ -83,9 +83,11 @@ namespace VisualisationData
                     if (Document!= null)
                     {
                         ShowOnTabControl(Document);
+                        InitAutoComplete(questionTB, Document);
                         saveBtn.Enabled = true;
                         closeProfileBtn.Enabled = true;
                         visDataBtn.Enabled = true;
+                        questionBtn.Enabled = true;
                     }
                 }
             }
@@ -111,9 +113,11 @@ namespace VisualisationData
                         if (Document != null)
                         {
                             ShowOnTabControl(Document);
+                            InitAutoComplete(questionTB, Document);
                             saveBtn.Enabled = true;
                             closeProfileBtn.Enabled = true;
                             visDataBtn.Enabled = true;
+                            questionBtn.Enabled = true;
                             MessageBox.Show("Данные успешно загружены.");
                         }
                     }
@@ -278,6 +282,7 @@ namespace VisualisationData
             saveBtn.Enabled = false;
             closeProfileBtn.Enabled = false;
             visDataBtn.Enabled = false;
+            questionBtn.Enabled = false;
         }
 
         private void columnDiagramBtn_Click(object sender, EventArgs e)//+
@@ -412,24 +417,31 @@ namespace VisualisationData
             }
         }
 
-        private void InitDataGrid(string type, DataGridView dataGrid)
+        private void questionBtn_Click(object sender, EventArgs e)
         {
-            dataGrid.Columns.Clear();
-            dataGrid.Rows.Clear();
+            string selectedQuestion = questionTB.Text.Trim();
+            bool brake = false;
 
-            dataGrid.Columns.Add(CommonService.CreateTextColumn("Номер вопроса", "serielNumber"));
-            dataGrid.Columns.Add(CommonService.CreateTextColumn("Вопрос", "question", true));
-
-            switch (type)
+            foreach (TabPage tabPageItem in mainTab.TabPages)
             {
-                case "range":
+                DataGridView currentDataGrid = tabPageItem.Controls[tabPageItem.Text + "DG"] as DataGridView;
+                foreach (DataGridViewRow rowItem in currentDataGrid.Rows)
+                {
+                    if (rowItem.Cells["question"].Value.ToString() == selectedQuestion)
                     {
-                        dataGrid.Columns.Add(CommonService.CreateTextColumn("Левая граница", "leftLimit", true));
-                        dataGrid.Columns.Add(CommonService.CreateTextColumn("Правая граница", "rightLimit", true));
+                        rowItem.Cells["sort"].Value = 1;
+                        currentDataGrid.SelectedRows = new DataGridViewSelectedRowCollection(rowItem);
+                        brake = true;
                         break;
                     }
+                }
+                if (brake)
+                {
+                    mainTab.SelectedTab = tabPageItem;
+                    currentDataGrid.Sort(currentDataGrid.Columns["sort"], System.ComponentModel.ListSortDirection.Descending);
+                    break;
+                }
             }
-            dataGrid.Columns.Add(CommonService.CreateTextColumn("Возможные ответы", "answers", true));
         }
 
         private void DiagramStart(SeriesChartType type)
@@ -453,6 +465,28 @@ namespace VisualisationData
             }
 
             return document;
+        }
+
+        private void InitDataGrid(string type, DataGridView dataGrid)
+        {
+            dataGrid.Columns.Clear();
+            dataGrid.Rows.Clear();
+
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Номер вопроса", "serielNumber"));
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Вопрос", "question", true));
+
+            switch (type)
+            {
+                case "range":
+                    {
+                        dataGrid.Columns.Add(CommonService.CreateTextColumn("Левая граница", "leftLimit", true));
+                        dataGrid.Columns.Add(CommonService.CreateTextColumn("Правая граница", "rightLimit", true));
+                        break;
+                    }
+            }
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Возможные ответы", "answers", true));
+            dataGrid.Columns.Add(CommonService.CreateTextColumn("Сортировка", "sort"));
+            dataGrid.Columns["sort"].Visible = false;
         }
 
         private void ShowOnTabControl(ExcelDocument document)
@@ -485,17 +519,17 @@ namespace VisualisationData
                     {
                         case "range":
                             {
-                                infoDG.Rows.Add(questionItem.Id, questionItem, questionItem.LeftLimit, questionItem.RightLimit, profileItem.Answers);
+                                infoDG.Rows.Add(questionItem.Id, questionItem, questionItem.LeftLimit, questionItem.RightLimit, profileItem.Answers, 0);
                                 break;
                             }
                         case "radio":
                             {
-                                infoDG.Rows.Add(questionItem.Id, questionItem, profileItem.Answers);
+                                infoDG.Rows.Add(questionItem.Id, questionItem, profileItem.Answers, 0);
                                 break;
                             }
                         case "checkbox":
                             {
-                                infoDG.Rows.Add(questionItem.Id, questionItem, profileItem.Answers);
+                                infoDG.Rows.Add(questionItem.Id, questionItem, profileItem.Answers, 0);
                                 break;
                             }
                         default:
@@ -503,6 +537,22 @@ namespace VisualisationData
                     }
                 }
             }
+        }
+    
+        private void InitAutoComplete(TextBox textBox, ExcelDocument document)
+        {
+            AutoCompleteStringCollection autoCompleteQuestions = new AutoCompleteStringCollection();
+            foreach (var profileItem in document.ProfilesListContent)
+            {
+                foreach (var questionItem in profileItem.Questions)
+                {
+                    autoCompleteQuestions.Add(questionItem.Content);
+                }
+            }
+
+            textBox.AutoCompleteCustomSource = autoCompleteQuestions;
+            textBox.AutoCompleteMode = AutoCompleteMode.Suggest;
+            textBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
     }
 }
