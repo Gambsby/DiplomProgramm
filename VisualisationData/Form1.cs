@@ -430,7 +430,6 @@ namespace VisualisationData
                     if (rowItem.Cells["question"].Value.ToString() == selectedQuestion)
                     {
                         rowItem.Cells["sort"].Value = 1;
-                        currentDataGrid.SelectedRows = new DataGridViewSelectedRowCollection(rowItem);
                         brake = true;
                         break;
                     }
