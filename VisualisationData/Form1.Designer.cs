@@ -55,6 +55,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.questionTB = new System.Windows.Forms.TextBox();
             this.questionBtn = new System.Windows.Forms.Button();
+            this.helpBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableL1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -64,7 +65,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.файлToolStripMenuItem,
-            this.visDataBtn});
+            this.visDataBtn,
+            this.helpBtn});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1117, 24);
@@ -301,6 +303,13 @@
             this.questionBtn.UseVisualStyleBackColor = true;
             this.questionBtn.Click += new System.EventHandler(this.questionBtn_Click);
             // 
+            // helpBtn
+            // 
+            this.helpBtn.Name = "helpBtn";
+            this.helpBtn.Size = new System.Drawing.Size(65, 20);
+            this.helpBtn.Text = "Справка";
+            this.helpBtn.Click += new System.EventHandler(this.helpBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -351,6 +360,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox questionTB;
         private System.Windows.Forms.Button questionBtn;
+        private System.Windows.Forms.ToolStripMenuItem helpBtn;
     }
 }
 

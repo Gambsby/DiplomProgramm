@@ -443,6 +443,11 @@ namespace VisualisationData
             }
         }
 
+        private void helpBtn_Click(object sender, EventArgs e)
+        {
+            Help.ShowHelp(this, "Help.chm", HelpNavigator.TableOfContents);
+        }
+
         private void DiagramStart(SeriesChartType type)
         {
             List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
