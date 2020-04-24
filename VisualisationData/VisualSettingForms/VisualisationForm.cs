@@ -55,17 +55,16 @@ namespace VisualisationData.VisualSettingForms
 
             visualChart.MouseClick += VisualChart_MouseClick;
 
-            var visualData = VisualisationService.GetVisualData(new List<ExcelQuestion>() { selectedQuestion }, selectedProfile, selectedDocument);
-
+            var questionInfo = VisualisationService.GetQuestionInfo(selectedQuestion, selectedProfile, selectedDocument);
             string question = selectedQuestion.GetForSeries();
-            Dictionary<string, int> points = visualData[question];
-            int allQuestioned = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id && a.Answer != "").Count();
+            Dictionary<string, int> points = questionInfo.Item1;
+            int respondedCount = questionInfo.Item2;
 
             visualChart.Series.Add(question);
             visualChart.Series[question].ChartType = diagramType;
 
             visualChart.Titles.Add(CommonService.CreateTitle("mainTitle", question));
-            allItem = "Всего " + allQuestioned + " участников";
+            allItem = "Всего " + respondedCount + " ответивших участников";
             visualChart.Titles.Add(CommonService.CreateTitle("allTitle", allItem));
 
             visualChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[0];
@@ -443,8 +442,6 @@ namespace VisualisationData.VisualSettingForms
                 var res = visualChart.HitTest(e.X, e.Y);
                 switch (res.ChartElementType)
                 {
-                    case ChartElementType.Nothing:
-                        break;
                     case ChartElementType.Title:
                         {
                             Title title = res.Object as Title;
@@ -462,34 +459,6 @@ namespace VisualisationData.VisualSettingForms
                             titleMenu.Show(Control.MousePosition);
                             break;
                         }
-                    case ChartElementType.PlottingArea:
-                        break;
-                    case ChartElementType.Axis:
-                        break;
-                    case ChartElementType.TickMarks:
-                        break;
-                    case ChartElementType.Gridlines:
-                        break;
-                    case ChartElementType.StripLines:
-                        break;
-                    case ChartElementType.AxisLabelImage:
-                        break;
-                    case ChartElementType.AxisLabels:
-                        break;
-                    case ChartElementType.AxisTitle:
-                        break;
-                    case ChartElementType.ScrollBarThumbTracker:
-                        break;
-                    case ChartElementType.ScrollBarSmallDecrement:
-                        break;
-                    case ChartElementType.ScrollBarSmallIncrement:
-                        break;
-                    case ChartElementType.ScrollBarLargeDecrement:
-                        break;
-                    case ChartElementType.ScrollBarLargeIncrement:
-                        break;
-                    case ChartElementType.ScrollBarZoomReset:
-                        break;
                     case ChartElementType.DataPoint:
                         {
                             seriesColorBtn.Tag = res.Series;
@@ -504,12 +473,6 @@ namespace VisualisationData.VisualSettingForms
 
                             break;
                         }
-                    case ChartElementType.LegendArea:
-                        break;
-                    case ChartElementType.LegendTitle:
-                        break;
-                    case ChartElementType.LegendHeader:
-                        break;
                     case ChartElementType.LegendItem:
                         {
                             Legend legend = (res.Object as LegendItem).Legend;
@@ -519,8 +482,6 @@ namespace VisualisationData.VisualSettingForms
 
                             break;
                         }
-                    case ChartElementType.Annotation:
-                        break;
                     default:
                         break;
                 }

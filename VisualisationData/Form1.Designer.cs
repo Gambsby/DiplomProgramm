@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadDataBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,17 +49,19 @@
             this.allPieDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.allDoughnoutDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.allBarDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.helpBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.mainTab = new System.Windows.Forms.TabControl();
             this.tableL1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.questionTB = new System.Windows.Forms.TextBox();
             this.questionBtn = new System.Windows.Forms.Button();
-            this.helpBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.infoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showInfoBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableL1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.infoMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -90,7 +93,7 @@
             this.loadDataExcelBtn,
             this.loadDataDBBtn});
             this.loadDataBtn.Name = "loadDataBtn";
-            this.loadDataBtn.Size = new System.Drawing.Size(180, 22);
+            this.loadDataBtn.Size = new System.Drawing.Size(171, 22);
             this.loadDataBtn.Text = "Загрузить анкету";
             // 
             // loadDataExcelBtn
@@ -115,7 +118,7 @@
             this.saveDBBtn});
             this.saveBtn.Enabled = false;
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(180, 22);
+            this.saveBtn.Size = new System.Drawing.Size(171, 22);
             this.saveBtn.Text = "Сохранить анкету";
             // 
             // saveCSVBtn
@@ -142,7 +145,7 @@
             // deleteDataBtn
             // 
             this.deleteDataBtn.Name = "deleteDataBtn";
-            this.deleteDataBtn.Size = new System.Drawing.Size(180, 22);
+            this.deleteDataBtn.Size = new System.Drawing.Size(171, 22);
             this.deleteDataBtn.Text = "Удалить анкету";
             this.deleteDataBtn.Click += new System.EventHandler(this.deleteDataBtn_Click);
             // 
@@ -150,7 +153,7 @@
             // 
             this.closeProfileBtn.Enabled = false;
             this.closeProfileBtn.Name = "closeProfileBtn";
-            this.closeProfileBtn.Size = new System.Drawing.Size(180, 22);
+            this.closeProfileBtn.Size = new System.Drawing.Size(171, 22);
             this.closeProfileBtn.Text = "Закрыть анкету";
             this.closeProfileBtn.Click += new System.EventHandler(this.closeProfileBtn_Click);
             // 
@@ -225,9 +228,12 @@
             this.allBarDiagramBtn.Text = "Горизонтальная диаграмма";
             this.allBarDiagramBtn.Click += new System.EventHandler(this.allBarDiagramBtn_Click);
             // 
-            // openFileDialog
+            // helpBtn
             // 
-            this.openFileDialog.FileName = "физвоспитание анкета.xlsx";
+            this.helpBtn.Name = "helpBtn";
+            this.helpBtn.Size = new System.Drawing.Size(65, 20);
+            this.helpBtn.Text = "Справка";
+            this.helpBtn.Click += new System.EventHandler(this.helpBtn_Click);
             // 
             // mainTab
             // 
@@ -303,12 +309,19 @@
             this.questionBtn.UseVisualStyleBackColor = true;
             this.questionBtn.Click += new System.EventHandler(this.questionBtn_Click);
             // 
-            // helpBtn
+            // infoMenu
             // 
-            this.helpBtn.Name = "helpBtn";
-            this.helpBtn.Size = new System.Drawing.Size(65, 20);
-            this.helpBtn.Text = "Справка";
-            this.helpBtn.Click += new System.EventHandler(this.helpBtn_Click);
+            this.infoMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showInfoBtn});
+            this.infoMenu.Name = "infoMenu";
+            this.infoMenu.Size = new System.Drawing.Size(204, 48);
+            // 
+            // showInfoBtn
+            // 
+            this.showInfoBtn.Name = "showInfoBtn";
+            this.showInfoBtn.Size = new System.Drawing.Size(203, 22);
+            this.showInfoBtn.Text = "Показать информацию";
+            this.showInfoBtn.Click += new System.EventHandler(this.showInfoBtn_Click);
             // 
             // Form1
             // 
@@ -326,6 +339,7 @@
             this.tableL1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.infoMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -336,7 +350,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveBtn;
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripMenuItem deleteDataBtn;
         private System.Windows.Forms.ToolStripMenuItem loadDataBtn;
         private System.Windows.Forms.ToolStripMenuItem visDataBtn;
@@ -361,6 +374,8 @@
         private System.Windows.Forms.TextBox questionTB;
         private System.Windows.Forms.Button questionBtn;
         private System.Windows.Forms.ToolStripMenuItem helpBtn;
+        private System.Windows.Forms.ContextMenuStrip infoMenu;
+        private System.Windows.Forms.ToolStripMenuItem showInfoBtn;
     }
 }
 

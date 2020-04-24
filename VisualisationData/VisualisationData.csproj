@@ -363,6 +363,12 @@
     <Compile Include="VisualSettingForms\DataSettingForm.Designer.cs">
       <DependentUpon>DataSettingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="VisualSettingForms\QuestionInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VisualSettingForms\QuestionInfoForm.Designer.cs">
+      <DependentUpon>QuestionInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="VisualSettingForms\TextDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -398,6 +404,9 @@
     </Compile>
     <EmbeddedResource Include="VisualSettingForms\DataSettingForm.resx">
       <DependentUpon>DataSettingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VisualSettingForms\QuestionInfoForm.resx">
+      <DependentUpon>QuestionInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VisualSettingForms\TextDialog.resx">
       <DependentUpon>TextDialog.cs</DependentUpon>

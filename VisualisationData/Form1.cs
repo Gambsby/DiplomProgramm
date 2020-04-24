@@ -424,7 +424,7 @@ namespace VisualisationData
 
             foreach (TabPage tabPageItem in mainTab.TabPages)
             {
-                DataGridView currentDataGrid = tabPageItem.Controls[tabPageItem.Text + "DG"] as DataGridView;
+                DataGridView currentDataGrid = tabPageItem.Controls[0] as DataGridView;
                 foreach (DataGridViewRow rowItem in currentDataGrid.Rows)
                 {
                     if (rowItem.Cells["question"].Value.ToString() == selectedQuestion)
@@ -448,11 +448,51 @@ namespace VisualisationData
             Help.ShowHelp(this, "Help.chm", HelpNavigator.TableOfContents);
         }
 
+        private void InfoDG_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                TabPage selectedTabPage = mainTab.SelectedTab;
+                DataGridView selectedDataGrid = selectedTabPage.Controls[0] as DataGridView;
+                var res = selectedDataGrid.HitTest(e.X, e.Y);
+
+                DataGridViewRow selectedDataGridRow = selectedDataGrid.Rows[res.RowIndex];
+
+                showInfoBtn.Tag = selectedDataGridRow;
+
+                infoMenu.Show(Control.MousePosition);
+            }
+        }
+
+        private void showInfoBtn_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedDataGridRow = showInfoBtn.Tag as DataGridViewRow;
+
+            ExcelQuestion selectedQuestion = selectedDataGridRow.Cells["question"].Value as ExcelQuestion;
+            ExcelProfile selectedProfile = mainTab.SelectedTab.Tag as ExcelProfile;
+
+            var questionInfo = VisualisationService.GetQuestionInfo(selectedQuestion, selectedProfile, Document);
+
+            var points = questionInfo.Item1;
+            var respondedCount = questionInfo.Item2;
+            var questionedCount = questionInfo.Item3;
+
+            using(QuestionInfoForm qif = new QuestionInfoForm())
+            {
+                qif.Points = points;
+                qif.RespondedCount = respondedCount;
+                qif.QuestionedCount = questionedCount;
+                qif.Question = selectedQuestion;
+                qif.ShowDialog();
+            }
+
+        }
+
         private void DiagramStart(SeriesChartType type)
         {
-            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
-            var currentTab = mainTab.SelectedTab;
-            var infoDG = currentTab.Controls[currentTab.Text + "DG"] as DataGridView;
+            TabPage currentTab = mainTab.SelectedTab;
+
+            DataGridView infoDG = currentTab.Controls[0] as DataGridView;
             var selectedQuestion = infoDG.SelectedRows.Cast<DataGridViewRow>().ToList()[0].Cells["question"].Value as ExcelQuestion;
             var selectedProfile = Document.ProfilesListContent.SingleOrDefault(p => p.Name == currentTab.Text);
 
@@ -498,7 +538,8 @@ namespace VisualisationData
             foreach (var profileItem in document.ProfilesListContent)
             {
                 DataGridView infoDG = new DataGridView();
-                infoDG.Name = profileItem.Name + "DG";
+                infoDG.Name = profileItem.Id + profileItem.Name + "DG";
+                infoDG.Tag = profileItem;
                 infoDG.Anchor = AnchorStyles.Top;
                 infoDG.Anchor = AnchorStyles.Right;
                 infoDG.Anchor = AnchorStyles.Bottom;
@@ -507,10 +548,12 @@ namespace VisualisationData
                 infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 infoDG.MultiSelect = false;
                 infoDG.AllowUserToAddRows = false;
+                infoDG.MouseClick += InfoDG_MouseClick;
 
                 TabPage tabPage = new TabPage();
                 tabPage.Text = profileItem.Name;
-                tabPage.Name = profileItem.Name + "Tab";
+                tabPage.Name = profileItem.Id + profileItem.Name + "Tab";
+                tabPage.Tag = profileItem;
 
                 tabPage.Controls.Add(infoDG);
                 mainTab.TabPages.Add(tabPage);
@@ -542,7 +585,7 @@ namespace VisualisationData
                 }
             }
         }
-    
+
         private void InitAutoComplete(TextBox textBox, ExcelDocument document)
         {
             AutoCompleteStringCollection autoCompleteQuestions = new AutoCompleteStringCollection();
