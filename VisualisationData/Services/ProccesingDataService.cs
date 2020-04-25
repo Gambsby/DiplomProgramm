@@ -59,19 +59,12 @@ namespace VisualisationData.Services
             int respondedCount = questionInfo.Item2;
             int questionedCount = questionInfo.Item3;
 
-            currentChart.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
-            currentChart.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
-
             currentChart.Series.Add(question);
             currentChart.Series[question].ChartType = type;
             currentChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[0];
-            currentChart.Series[question].IsValueShownAsLabel = true;
-            currentChart.Series[question].Font = new Font("Arial", 18f);
 
             currentChart.Titles.Add(CommonService.CreateTitle("mainTitle", question));
             currentChart.Titles.Add(CommonService.CreateTitle("allTitle", "Всего " + respondedCount + " ответивших участников"));
-            currentChart.Titles["mainTitle"].Font = new Font("Arial", 14f);
-            currentChart.Titles["allTitle"].Font = new Font("Arial", 14f);
 
             foreach (var item in points)
             {
@@ -99,11 +92,28 @@ namespace VisualisationData.Services
             }
 
             Legend legend = CommonService.CreateLegend(currentChart.Series[question], "mainLegend");
-            legend.Font = new Font("Arial", 14f);
 
-
-            currentChart.Series[question].IsVisibleInLegend = false;
             currentChart.Legends.Add(legend);
+
+            return currentChart;
+        }
+
+        public static Chart SettingDefaultChart(Chart currentChart, ExcelQuestion excelQuestion)
+        {
+            string question = excelQuestion.GetForSeries();
+
+            currentChart.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+            currentChart.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+
+            currentChart.Series[question].IsValueShownAsLabel = true;
+            currentChart.Series[question].Label = "#PERCENT";
+            currentChart.Series[question].Font = new Font("Arial", 14f);
+            currentChart.Series[question].IsVisibleInLegend = false;
+
+            currentChart.Titles["mainTitle"].Font = new Font("Arial", 14f);
+            currentChart.Titles["allTitle"].Font = new Font("Arial", 14f);
+
+            currentChart.Legends["mainLegend"].Font = new Font("Arial", 14f);
 
             return currentChart;
         }
@@ -129,6 +139,7 @@ namespace VisualisationData.Services
                     currentChart.ChartAreas.Add(chartArea);
 
                     currentChart = CreateDefaultChart(currentChart, questionInfo, questionItem, type);
+                    currentChart = SettingDefaultChart(currentChart, questionItem);
 
                     currentChart.SaveImage(dirName + "\\Chart" + chartNum + ".png", ChartImageFormat.Png);
                     chartNum++;

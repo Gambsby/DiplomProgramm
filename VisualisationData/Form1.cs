@@ -548,6 +548,8 @@ namespace VisualisationData
                 infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 infoDG.MultiSelect = false;
                 infoDG.AllowUserToAddRows = false;
+                infoDG.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                infoDG.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
                 infoDG.MouseClick += InfoDG_MouseClick;
 
                 TabPage tabPage = new TabPage();

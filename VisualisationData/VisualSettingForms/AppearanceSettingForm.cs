@@ -65,6 +65,15 @@ namespace VisualisationData.VisualSettingForms
             settingGB.Text = NameGroupBox;
             switch (TypeSettings)
             {
+                case "legend":
+                    {
+                        firstColorBtn.BackColor = VisualChart.Legends[0].BackColor;
+                        secondColorBtn.BackColor = VisualChart.Legends[0].BackSecondaryColor;
+                        gradientTypeCB.Items.AddRange(gradientStyleMap.Keys.ToArray());
+
+                        gradientTypeCB.SelectedItem = gradientStyleMap.Where(x => x.Value == VisualChart.Legends[0].BackGradientStyle).SingleOrDefault().Key;
+                        break;
+                    }
                 case "background":
                     {
                         firstColorBtn.BackColor = VisualChart.BackColor;
@@ -107,14 +116,19 @@ namespace VisualisationData.VisualSettingForms
         {
             switch (TypeSettings)
             {
+                case "legend":
+                    {
+                        FirstColor = firstColorBtn.BackColor;
+                        SecondColor = secondColorBtn.BackColor;
+                        GradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
+                        Status = true;
+                        break;
+                    }
                 case "background":
                     {
                         FirstColor = firstColorBtn.BackColor;
                         SecondColor = secondColorBtn.BackColor;
                         GradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
-                        //visualChart.BackColor = firstColorBtn.BackColor;
-                        //visualChart.BackSecondaryColor = secondColorBtn.BackColor;
-                        //visualChart.BackGradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
                         Status = true;
                         break;
                     }
@@ -123,9 +137,6 @@ namespace VisualisationData.VisualSettingForms
                         FirstColor = firstColorBtn.BackColor;
                         SecondColor = secondColorBtn.BackColor;
                         GradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
-                        //visualChart.ChartAreas[0].BackColor = firstColorBtn.BackColor;
-                        //visualChart.ChartAreas[0].BackSecondaryColor = secondColorBtn.BackColor;
-                        //visualChart.ChartAreas[0].BackGradientStyle = gradientStyleMap[gradientTypeCB.SelectedItem.ToString()];
                         Status = true;
                         break;
                     }
@@ -134,9 +145,6 @@ namespace VisualisationData.VisualSettingForms
                         FirstColor = firstColorBtn.BackColor;
                         ChartDashStyle = borderTypeMap[gradientTypeCB.SelectedItem.ToString()];
                         BorderSkinStyle = borderStyleMap[borderStyleCB.SelectedItem.ToString()];
-                        //visualChart.BorderlineColor = firstColorBtn.BackColor;
-                        //visualChart.BorderlineDashStyle = borderTypeMap[gradientTypeCB.SelectedItem.ToString()];
-                        //visualChart.BorderSkin.SkinStyle = borderStyleMap[borderStyleCB.SelectedItem.ToString()];
                         Status = true;
                         break;
                     }

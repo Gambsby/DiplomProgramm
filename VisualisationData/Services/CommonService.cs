@@ -78,6 +78,7 @@ namespace VisualisationData.Services
                 newItem.Color = dataPointItem.Color;
                 newItem.Cells.Add(LegendCellType.SeriesSymbol, "", ContentAlignment.MiddleLeft); // Symbol
                 newItem.Cells.Add(LegendCellType.Text, dataPointItem.AxisLabel, ContentAlignment.MiddleLeft); // Series Name
+                newItem.Cells.Add(LegendCellType.Text, dataPointItem.YValues[0].ToString(), ContentAlignment.MiddleLeft);
                 legend.CustomItems.Add(newItem);
             }
 
