@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savaDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,6 +79,7 @@
             this.legendColPerBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.legendColValBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.legendColNoneBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showOpenAnswersBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
             this.seriesMenu.SuspendLayout();
@@ -103,7 +104,8 @@
             // файлToolStripMenuItem
             // 
             this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.savaDiagramBtn});
+            this.savaDiagramBtn,
+            this.showOpenAnswersBtn});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
             this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.файлToolStripMenuItem.Text = "Файл";
@@ -111,7 +113,7 @@
             // savaDiagramBtn
             // 
             this.savaDiagramBtn.Name = "savaDiagramBtn";
-            this.savaDiagramBtn.Size = new System.Drawing.Size(132, 22);
+            this.savaDiagramBtn.Size = new System.Drawing.Size(273, 22);
             this.savaDiagramBtn.Text = "Сохранить";
             this.savaDiagramBtn.Click += new System.EventHandler(this.savaDiagramBtn_Click);
             // 
@@ -326,8 +328,8 @@
             this.visualChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.visualChart.ChartAreas.Add(chartArea4);
+            chartArea2.Name = "ChartArea1";
+            this.visualChart.ChartAreas.Add(chartArea2);
             this.visualChart.Location = new System.Drawing.Point(13, 28);
             this.visualChart.Name = "visualChart";
             this.visualChart.Size = new System.Drawing.Size(959, 521);
@@ -470,6 +472,14 @@
             this.legendColNoneBtn.Text = "Отсутствуют";
             this.legendColNoneBtn.Click += new System.EventHandler(this.legendColNoneBtn_Click);
             // 
+            // showOpenAnswersBtn
+            // 
+            this.showOpenAnswersBtn.Name = "showOpenAnswersBtn";
+            this.showOpenAnswersBtn.Size = new System.Drawing.Size(273, 22);
+            this.showOpenAnswersBtn.Text = "Показать таблицу открытых ответов";
+            this.showOpenAnswersBtn.Visible = false;
+            this.showOpenAnswersBtn.Click += new System.EventHandler(this.showOpenAnswersBtn_Click);
+            // 
             // VisualisationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -544,5 +554,6 @@
         private System.Windows.Forms.ToolStripMenuItem legendColPerBtn;
         private System.Windows.Forms.ToolStripMenuItem legendColValBtn;
         private System.Windows.Forms.ToolStripMenuItem legendColNoneBtn;
+        private System.Windows.Forms.ToolStripMenuItem showOpenAnswersBtn;
     }
 }

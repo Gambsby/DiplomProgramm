@@ -12,6 +12,43 @@ namespace VisualisationData.Services
 {
     class ProccesingDataService
     {
+        public static Dictionary<string, int> GetOpenAnswers(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument)
+        {
+            Dictionary<string, int> points = new Dictionary<string, int>();
+
+            var currentResults = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id).ToList();
+            foreach (var resultItem in currentResults)
+            {
+                var openAnswers = resultItem.GetAnswers(selectedProfile.Type).Except(selectedProfile.GetProfileAnswers()).ToList();
+                if (openAnswers.Count != 0)
+                {
+                    foreach (var item in openAnswers)
+                    {
+                        if (points.ContainsKey(item))
+                        {
+                            points[item]++;
+                        }
+                        else
+                        {
+                            points.Add(item, 1);
+                        }
+                    }
+                }
+            }
+
+            return points;
+        }
+
+        public static Tuple<Dictionary<string, int>, int, int> GetOpenInfo(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument)
+        {
+            var points = GetOpenAnswers(selectedQuestion, selectedProfile, selectedDocument);
+
+            int questionedCount = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id).Count();
+            int respondedCount = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id && a.Answer != "").Count();
+
+            return new Tuple<Dictionary<string, int>, int, int>(points, respondedCount, questionedCount);
+        }
+
         private static Dictionary<string, int> GetQuestionPoints(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument)
         {
             Dictionary<string, int> points = new Dictionary<string, int>();
@@ -69,10 +106,6 @@ namespace VisualisationData.Services
             foreach (var item in points)
             {
                 currentChart.Series[question].Points.AddXY(item.Key, item.Value);
-                if (item.Value == 0)
-                {
-                    currentChart.Series[question].Points[currentChart.Series[question].Points.Count - 1].LabelForeColor = Color.Transparent;
-                }
             }
 
             if (currentChart.Series[question].ChartType == SeriesChartType.Pie || currentChart.Series[question].ChartType == SeriesChartType.Doughnut)
@@ -80,6 +113,10 @@ namespace VisualisationData.Services
                 int colorIndex = 0;
                 foreach (var item in currentChart.Series[question].Points)
                 {
+                    if (item.YValues[0] == 0)
+                    {
+                        item.LabelForeColor = Color.Transparent;
+                    }
                     item.Color = Form1.CompanyColor.Values.ToList()[colorIndex];
                     colorIndex++;
                 }

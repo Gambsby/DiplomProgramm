@@ -27,18 +27,20 @@ namespace VisualisationData.VisualSettingForms
         private void QuestionInfoForm_Load(object sender, EventArgs e)
         {
             infoDG.AllowUserToAddRows = false;
+            infoDG.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            infoDG.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
 
             questionLbl.Text = Question.GetForSeries();
 
             infoDG.Columns.Add(CommonService.CreateTextColumn("Вариант ответа", "answer", true));
-            infoDG.Columns.Add(CommonService.CreateTextColumn("Количество", "count", true));
+            infoDG.Columns.Add(CommonService.CreateTextColumn("Количество", "count"));
+            infoDG.Columns.Add(CommonService.CreateTextColumn("Число ответивших", "respondedCount"));
+            infoDG.Columns.Add(CommonService.CreateTextColumn("Число принявших участие", "questionedCount"));
+
             foreach (var pointItem in Points)
             {
-                infoDG.Rows.Add(pointItem.Key, pointItem.Value);
+                infoDG.Rows.Add(pointItem.Key, pointItem.Value, RespondedCount, QuestionedCount);
             }
-
-            infoDG.Rows.Add("Число ответивших", RespondedCount);
-            infoDG.Rows.Add("Число принявших участие", QuestionedCount);
         }
     }
 }

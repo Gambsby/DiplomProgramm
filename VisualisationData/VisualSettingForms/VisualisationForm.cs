@@ -94,6 +94,11 @@ namespace VisualisationData.VisualSettingForms
             }
             legendColValBtn.Checked = true;
 
+            if (points.ContainsKey("другое"))
+            {
+                showOpenAnswersBtn.Visible = true;
+            }
+
             visualChart.MouseClick += VisualChart_MouseClick;
         }
 
@@ -714,6 +719,24 @@ namespace VisualisationData.VisualSettingForms
                         pointItem.LabelForeColor = fd.Color;
                     }
                 }
+            }
+        }
+
+        private void showOpenAnswersBtn_Click(object sender, EventArgs e)
+        {
+            var questionInfo = ProccesingDataService.GetOpenInfo(selectedQuestion, selectedProfile, selectedDocument);
+
+            var points = questionInfo.Item1;
+            var respondedCount = questionInfo.Item2;
+            var questionedCount = questionInfo.Item3;
+
+            using (QuestionInfoForm qif = new QuestionInfoForm())
+            {
+                qif.Points = points;
+                qif.RespondedCount = respondedCount;
+                qif.QuestionedCount = questionedCount;
+                qif.Question = selectedQuestion;
+                qif.ShowDialog();
             }
         }
     }

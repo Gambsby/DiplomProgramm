@@ -86,6 +86,7 @@ namespace VisualisationData.DataSettingForms
         private void SheetsSettigsForm_Load(object sender, EventArgs e)
         {
             InitForm();
+
             switch (Type)
             {
                 case "load":
@@ -103,6 +104,10 @@ namespace VisualisationData.DataSettingForms
 
         private void InitForm()
         {
+
+            chooseDG.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            chooseDG.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+
             switch (Type)
             {
                 case "load":
