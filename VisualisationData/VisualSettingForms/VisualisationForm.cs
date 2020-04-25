@@ -32,7 +32,7 @@ namespace VisualisationData.VisualSettingForms
         private ExcelProfile selectedProfile;
         private ExcelDocument selectedDocument;
         private SeriesChartType diagramType;
-        private string allItem = string.Empty;
+        private Title allTitle;
 
         public VisualisationForm(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
         {
@@ -45,49 +45,20 @@ namespace VisualisationData.VisualSettingForms
 
         private void VisualisationForm_Load(object sender, EventArgs e)
         {
-            int colorIndex = 0;
+            var questionInfo = ProccesingDataService.GetQuestionInfo(selectedQuestion, selectedProfile, selectedDocument);
+
+            visualChart = ProccesingDataService.CreateDefaultChart(visualChart, questionInfo, selectedQuestion, diagramType);
+            allTitle = visualChart.Titles["allTitle"];
+
             showGridBtn.Checked = visualChart.ChartAreas[0].AxisX.MajorGrid.Enabled;
             showAxisXBtn.Checked = true;
             showAxisYBtn.Checked = true;
             allItemBtn.Checked = true;
             showLegendBtn.Checked = true;
             showLegendMenuBtn.Checked = true;
+            signatureSettingBtn.Checked = visualChart.Series[0].IsValueShownAsLabel;
 
             visualChart.MouseClick += VisualChart_MouseClick;
-
-            var questionInfo = ProccesingDataService.GetQuestionInfo(selectedQuestion, selectedProfile, selectedDocument);
-            string question = selectedQuestion.GetForSeries();
-            Dictionary<string, int> points = questionInfo.Item1;
-            int respondedCount = questionInfo.Item2;
-
-            visualChart.Series.Add(question);
-            visualChart.Series[question].ChartType = diagramType;
-
-            visualChart.Titles.Add(CommonService.CreateTitle("mainTitle", question));
-            allItem = "Всего " + respondedCount + " ответивших участников";
-            visualChart.Titles.Add(CommonService.CreateTitle("allTitle", allItem));
-
-            visualChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[0];
-
-            foreach (var item in points)
-            {
-                visualChart.Series[question].Points.AddXY(item.Key, item.Value);
-            }
-
-            if (visualChart.Series[question].ChartType == SeriesChartType.Pie || visualChart.Series[question].ChartType == SeriesChartType.Doughnut)
-            {
-                colorIndex = 0;
-                foreach (var item in visualChart.Series[question].Points)
-                {
-                    item.Color = Form1.CompanyColor.Values.ToList()[colorIndex];
-                    colorIndex++;
-                }
-            }
-
-            Legend legend = CommonService.CreateLegend(visualChart.Series[question], "mainLegend");
-            
-            visualChart.Series[question].IsVisibleInLegend = false;
-            visualChart.Legends.Add(legend);
         }
 
         private void BGSettingBtn_Click(object sender, EventArgs e)
@@ -171,10 +142,7 @@ namespace VisualisationData.VisualSettingForms
             {
                 signatureSettingBtn.Checked = true;
             }
-            foreach (var seriesItem in visualChart.Series)
-            {
-                seriesItem.IsValueShownAsLabel = signatureSettingBtn.Checked;
-            }
+            visualChart.Series[0].IsValueShownAsLabel = signatureSettingBtn.Checked;
         }
 
         private void mode3DSettingBtn_Click(object sender, EventArgs e)
@@ -240,9 +208,6 @@ namespace VisualisationData.VisualSettingForms
                         if (visualChart.Titles.Select(t => t.Name).Contains("allTitle"))
                         {
                             visualChart.Titles.Remove(visualChart.Titles["allTitle"]);
-                            Title allTitle = new Title();
-                            allTitle.Name = "allTitle";
-                            allTitle.Text = allItem;
                             visualChart.Titles.Add(allTitle);
                         }
                     }
@@ -427,10 +392,8 @@ namespace VisualisationData.VisualSettingForms
                 allItemBtn.Checked = true;
                 if (!visualChart.Titles.Select(t => t.Name).Contains("allTitle"))
                 {
-                    Title mainTitle = new Title();
-                    mainTitle.Name = "allTitle";
-                    mainTitle.Text = allItem;
-                    visualChart.Titles.Add(mainTitle);
+
+                    visualChart.Titles.Add(allTitle);
                 }
             }
         }

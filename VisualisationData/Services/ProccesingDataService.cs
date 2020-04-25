@@ -52,6 +52,62 @@ namespace VisualisationData.Services
             return new Tuple<Dictionary<string, int>, int, int>(points, respondedCount, questionedCount);
         }
 
+        public static Chart CreateDefaultChart(Chart currentChart, Tuple<Dictionary<string, int>, int, int> questionInfo, ExcelQuestion excelQuestion, SeriesChartType type)
+        {
+            string question = excelQuestion.GetForSeries();
+            Dictionary<string, int> points = questionInfo.Item1;
+            int respondedCount = questionInfo.Item2;
+            int questionedCount = questionInfo.Item3;
+
+            currentChart.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+            currentChart.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+
+            currentChart.Series.Add(question);
+            currentChart.Series[question].ChartType = type;
+            currentChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[0];
+            currentChart.Series[question].IsValueShownAsLabel = true;
+            currentChart.Series[question].Font = new Font("Arial", 18f);
+
+            currentChart.Titles.Add(CommonService.CreateTitle("mainTitle", question));
+            currentChart.Titles.Add(CommonService.CreateTitle("allTitle", "Всего " + respondedCount + " ответивших участников"));
+            currentChart.Titles["mainTitle"].Font = new Font("Arial", 14f);
+            currentChart.Titles["allTitle"].Font = new Font("Arial", 14f);
+
+            foreach (var item in points)
+            {
+                currentChart.Series[question].Points.AddXY(item.Key, item.Value);
+                if (item.Value == 0)
+                {
+                    currentChart.Series[question].Points[currentChart.Series[question].Points.Count - 1].LabelForeColor = Color.Transparent;
+                }
+            }
+
+            if (currentChart.Series[question].ChartType == SeriesChartType.Pie || currentChart.Series[question].ChartType == SeriesChartType.Doughnut)
+            {
+                int colorIndex = 0;
+                foreach (var item in currentChart.Series[question].Points)
+                {
+                    item.Color = Form1.CompanyColor.Values.ToList()[colorIndex];
+                    colorIndex++;
+                }
+
+                currentChart.Series[question].LabelForeColor = Color.White;
+            }
+            else
+            {
+                currentChart.Series[question].LabelForeColor = Color.Black;
+            }
+
+            Legend legend = CommonService.CreateLegend(currentChart.Series[question], "mainLegend");
+            legend.Font = new Font("Arial", 14f);
+
+
+            currentChart.Series[question].IsVisibleInLegend = false;
+            currentChart.Legends.Add(legend);
+
+            return currentChart;
+        }
+
         public static string GroupDiagramSave(ExcelDocument document, string dirPath, SeriesChartType type)
         {
             dirPath += "\\" + document.DocumentName;
@@ -63,60 +119,16 @@ namespace VisualisationData.Services
                 foreach (var questionItem in profileItem.Questions)
                 {
                     var questionInfo = GetQuestionInfo(questionItem, profileItem, document);
-                    var points = questionInfo.Item1;
-                    var respondedCount = questionInfo.Item2;
 
                     Chart currentChart = new Chart();
                     currentChart.Width = 1920;
                     currentChart.Height = 1080;
 
                     ChartArea chartArea = new ChartArea();
-                    Legend legend = new Legend();
                     chartArea.Name = "ChartArea1";
                     currentChart.ChartAreas.Add(chartArea);
-                    legend.Name = "Legend1";
-                    currentChart.Legends.Add(legend);
 
-                    currentChart.Series.Add(questionItem.GetForSeries());
-
-                    currentChart.Series[questionItem.GetForSeries()].ChartType = type;
-                    currentChart.Series[questionItem.GetForSeries()].Color = Form1.CompanyColor.Values.ToList()[0];
-                    currentChart.Series[questionItem.GetForSeries()].IsValueShownAsLabel = true;
-                    currentChart.Series[questionItem.GetForSeries()].Font = new Font("Arial", 20f);
-                    if (type == SeriesChartType.Pie || type == SeriesChartType.Doughnut)
-                    {
-                        currentChart.Titles.Add(questionItem.GetForSeries());
-                        currentChart.Titles[0].Font = new Font("Arial", 14f);
-                        currentChart.Series[questionItem.GetForSeries()].LabelForeColor = Color.White;
-                    }
-                    else
-                    {
-                        currentChart.Series[questionItem.GetForSeries()].LabelForeColor = Color.Black;
-                    }
-                    currentChart.Legends["Legend1"].Font = new Font("Arial", 14f);
-                    currentChart.ChartAreas["ChartArea1"].AxisX.LabelAutoFitMinFontSize = 14;
-                    currentChart.ChartAreas["ChartArea1"].AxisY.LabelAutoFitMinFontSize = 14;
-                    currentChart.ChartAreas["ChartArea1"].AxisX.MajorGrid.Enabled = false;
-                    currentChart.ChartAreas["ChartArea1"].AxisY.MajorGrid.Enabled = false;
-
-                    foreach (var item in points)
-                    {
-                        currentChart.Series[questionItem.GetForSeries()].Points.AddXY(item.Key, item.Value);
-                        if (item.Value == 0)
-                        {
-                            currentChart.Series[questionItem.GetForSeries()].Points[currentChart.Series[questionItem.GetForSeries()].Points.Count - 1].LabelForeColor = Color.Transparent;
-                        }
-                    }
-
-                    if (type == SeriesChartType.Pie || type == SeriesChartType.Doughnut)
-                    {
-                        int colorIndex = 0;
-                        foreach (var item in currentChart.Series[questionItem.GetForSeries()].Points)
-                        {
-                            item.Color = Form1.CompanyColor.Values.ToList()[colorIndex];
-                            colorIndex++;
-                        }
-                    }
+                    currentChart = CreateDefaultChart(currentChart, questionInfo, questionItem, type);
 
                     currentChart.SaveImage(dirName + "\\Chart" + chartNum + ".png", ChartImageFormat.Png);
                     chartNum++;
