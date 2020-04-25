@@ -10,7 +10,7 @@ using VisualisationData.Excel;
 
 namespace VisualisationData.Services
 {
-    class ExcelService
+    class GetExcelService
     {
         private static string GetClearString(string source)
         {

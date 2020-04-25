@@ -58,6 +58,7 @@
             this.questionBtn = new System.Windows.Forms.Button();
             this.infoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showInfoBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveQuestionInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableL1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -312,16 +313,24 @@
             // infoMenu
             // 
             this.infoMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showInfoBtn});
+            this.showInfoBtn,
+            this.saveQuestionInfo});
             this.infoMenu.Name = "infoMenu";
-            this.infoMenu.Size = new System.Drawing.Size(204, 48);
+            this.infoMenu.Size = new System.Drawing.Size(260, 70);
             // 
             // showInfoBtn
             // 
             this.showInfoBtn.Name = "showInfoBtn";
-            this.showInfoBtn.Size = new System.Drawing.Size(203, 22);
+            this.showInfoBtn.Size = new System.Drawing.Size(259, 22);
             this.showInfoBtn.Text = "Показать информацию";
             this.showInfoBtn.Click += new System.EventHandler(this.showInfoBtn_Click);
+            // 
+            // saveQuestionInfo
+            // 
+            this.saveQuestionInfo.Name = "saveQuestionInfo";
+            this.saveQuestionInfo.Size = new System.Drawing.Size(259, 22);
+            this.saveQuestionInfo.Text = "Сохранить информацию для всех";
+            this.saveQuestionInfo.Click += new System.EventHandler(this.saveQuestionInfo_Click);
             // 
             // Form1
             // 
@@ -376,6 +385,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpBtn;
         private System.Windows.Forms.ContextMenuStrip infoMenu;
         private System.Windows.Forms.ToolStripMenuItem showInfoBtn;
+        private System.Windows.Forms.ToolStripMenuItem saveQuestionInfo;
     }
 }
 

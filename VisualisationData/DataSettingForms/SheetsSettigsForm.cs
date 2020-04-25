@@ -241,7 +241,7 @@ namespace VisualisationData.DataSettingForms
             ResultFileName = (tableL2.Controls["secondControl"] as ComboBox).SelectedItem.ToString();
             try
             {
-                infoListContent = ExcelService.GetProfileNamesEP(FilePath, InfoFileName);
+                infoListContent = GetExcelService.GetProfileNamesEP(FilePath, InfoFileName);
             }
             catch (Exception ex)
             {

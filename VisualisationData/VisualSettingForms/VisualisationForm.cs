@@ -55,7 +55,7 @@ namespace VisualisationData.VisualSettingForms
 
             visualChart.MouseClick += VisualChart_MouseClick;
 
-            var questionInfo = VisualisationService.GetQuestionInfo(selectedQuestion, selectedProfile, selectedDocument);
+            var questionInfo = ProccesingDataService.GetQuestionInfo(selectedQuestion, selectedProfile, selectedDocument);
             string question = selectedQuestion.GetForSeries();
             Dictionary<string, int> points = questionInfo.Item1;
             int respondedCount = questionInfo.Item2;

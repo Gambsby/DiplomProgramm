@@ -327,8 +327,8 @@
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\profileContext.cs" />
     <Compile Include="Props.cs" />
-    <Compile Include="Services\DataService.cs" />
-    <Compile Include="Services\VisualisationService.cs" />
+    <Compile Include="Services\DataManipulationService.cs" />
+    <Compile Include="Services\ProccesingDataService.cs" />
     <Compile Include="VisualSettingForms\AppearanceSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -356,7 +356,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommonService.cs" />
-    <Compile Include="Services\ExcelService.cs" />
+    <Compile Include="Services\GetExcelService.cs" />
     <Compile Include="VisualSettingForms\DataSettingForm.cs">
       <SubType>Form</SubType>
     </Compile>

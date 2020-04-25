@@ -17,7 +17,7 @@ using System.Globalization;
 
 namespace VisualisationData.Services
 {
-    class DataService
+    class DataManipulationService
     {
         public static void SaveProfileToDB(profileContext db, Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction tr, Excel.ExcelDocument document)
         {
@@ -400,14 +400,14 @@ namespace VisualisationData.Services
             List<ExcelResult> answerListContent;
             List<ExcelProfile> profilesListContent = new List<ExcelProfile>();
 
-            infoListContent = ExcelService.GetProfileNamesEP(filePath, infoFileName);
-            answerListContent = ExcelService.GetResultsEP(filePath, resultFileName);
+            infoListContent = GetExcelService.GetProfileNamesEP(filePath, infoFileName);
+            answerListContent = GetExcelService.GetResultsEP(filePath, resultFileName);
 
             foreach (var item in excelProfileMap)
             {
                 ExcelQuestionType profileInfo = infoListContent.SingleOrDefault(info => info.ProfileName == item.Key);
                 string profileType = profileInfo.GetProfileType();
-                List<ExcelQuestion> questions = ExcelService.GetQuestionsEP(filePath, item.Value);
+                List<ExcelQuestion> questions = GetExcelService.GetQuestionsEP(filePath, item.Value);
                 ExcelProfile excelProfile = new ExcelProfile
                 {
                     Id = profileInfo.Id,
@@ -426,6 +426,83 @@ namespace VisualisationData.Services
                 AnswerListContent = answerListContent,
                 ProfilesListContent = profilesListContent
             };
+        }
+    
+        public static void SaveQuestionInfoExcel(ExcelDocument document, string filePath)
+        {
+            using (ExcelPackage excelPackage = new ExcelPackage())
+            {
+                excelPackage.Workbook.Properties.Author = "User";
+                excelPackage.Workbook.Properties.Title = document.DocumentName;
+                excelPackage.Workbook.Properties.Created = DateTime.Now;
+
+                ExcelWorksheet infoSheet = excelPackage.Workbook.Worksheets.Add("Результаты");
+                int rowInfoNumber = 1;
+
+                foreach (var profileItem in document.ProfilesListContent)
+                {
+                    int column = 1;
+
+                    infoSheet.Cells[rowInfoNumber, 1].Value = profileItem.Name;
+                    rowInfoNumber++;
+
+                    bool firstRow = true;
+                    foreach (var questionItem in profileItem.Questions)
+                    {
+                        var questionInfo = ProccesingDataService.GetQuestionInfo(questionItem, profileItem, document);
+                        var points = questionInfo.Item1;
+                        var respondedCount = questionInfo.Item2;
+                        var questionedCount = questionInfo.Item3;
+
+                        if (firstRow)
+                        {
+                            column = 1;
+                            infoSheet.Cells[rowInfoNumber, column].Value = "Номер вопроса";
+                            column++;
+                            infoSheet.Cells[rowInfoNumber, column].Value = "Вопрос";
+                            column++;
+
+                            foreach (var pointItem in points)
+                            {
+                                infoSheet.Cells[rowInfoNumber, column].Value = pointItem.Key;
+                                column++;
+                            }
+
+                            infoSheet.Cells[rowInfoNumber, column].Value = "Число ответивших";
+                            column++;
+                            infoSheet.Cells[rowInfoNumber, column].Value = "Число прошедших";
+                            column++;
+
+                            rowInfoNumber++;
+                            firstRow = false;
+                        }
+
+                        column = 1;
+                        infoSheet.Cells[rowInfoNumber, column].Value = questionItem.Id;
+                        column++;
+                        infoSheet.Cells[rowInfoNumber, column].Value = questionItem.GetForSeries();
+                        column++;
+
+                        foreach (var pointItem in points)
+                        {
+                            infoSheet.Cells[rowInfoNumber, column].Value = pointItem.Value;
+                            column++;
+                        }
+
+                        infoSheet.Cells[rowInfoNumber, column].Value = respondedCount;
+                        column++;
+                        infoSheet.Cells[rowInfoNumber, column].Value = questionedCount;
+                        column++;
+
+                        rowInfoNumber++;
+                    }
+                    rowInfoNumber++;
+                }
+
+                FileInfo fi = new FileInfo(filePath);
+
+                excelPackage.SaveAs(fi);
+            }
         }
     }
 }

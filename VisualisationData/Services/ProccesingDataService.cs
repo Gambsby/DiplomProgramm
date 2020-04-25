@@ -10,7 +10,7 @@ using VisualisationData.Excel;
 
 namespace VisualisationData.Services
 {
-    class VisualisationService
+    class ProccesingDataService
     {
         private static Dictionary<string, int> GetQuestionPoints(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument)
         {

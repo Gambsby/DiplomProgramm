@@ -79,7 +79,7 @@ namespace VisualisationData
                         return;
                     }
 
-                    Document = SortDocument(DataService.LoadMainProfileExcel(filePath, infoFileName, resultFileName, excelProfileMap));
+                    Document = SortDocument(DataManipulationService.LoadMainProfileExcel(filePath, infoFileName, resultFileName, excelProfileMap));
                     if (Document!= null)
                     {
                         ShowOnTabControl(Document);
@@ -109,7 +109,7 @@ namespace VisualisationData
                     if (cmp.Status)
                     {
                         mainProfile = cmp.SelectedMainProfiles[0];
-                        Document = SortDocument(DataService.LoadMainProfileDB(mainProfile));
+                        Document = SortDocument(DataManipulationService.LoadMainProfileDB(mainProfile));
                         if (Document != null)
                         {
                             ShowOnTabControl(Document);
@@ -160,7 +160,7 @@ namespace VisualisationData
                     }
                 }
 
-                DataService.SaveCSV(infoFileName, resultFileName, excelProfileMap, Document);
+                DataManipulationService.SaveCSV(infoFileName, resultFileName, excelProfileMap, Document);
 
             }
             catch (Exception ex)
@@ -196,7 +196,7 @@ namespace VisualisationData
                 }
                 string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", Document.DocumentName);
 
-                DataService.SaveExcel(infoFileName, resultFileName, excelProfileMap, Document, filePath);
+                DataManipulationService.SaveExcel(infoFileName, resultFileName, excelProfileMap, Document, filePath);
 
             }
             catch (Exception ex)
@@ -217,7 +217,7 @@ namespace VisualisationData
                         {
                             try
                             {
-                                DataService.SaveProfileToDB(db, tr, Document);
+                                DataManipulationService.SaveProfileToDB(db, tr, Document);
                                 tr.Commit();
                             }
                             catch (Exception ex)
@@ -226,7 +226,7 @@ namespace VisualisationData
                                 MessageBox.Show(ex.Message);
                                 return;
                             }
-                            DataService.SaveResultToDB(db, tr, Document);
+                            DataManipulationService.SaveResultToDB(db, tr, Document);
                         }
                         catch (Exception ex)
                         {
@@ -260,7 +260,7 @@ namespace VisualisationData
                     if (dsf.Status)
                     {
                         mainProfiles = dsf.SelectedMainProfiles;
-                        DataService.DeleteMainProfile(mainProfiles);
+                        DataManipulationService.DeleteMainProfile(mainProfiles);
                         MessageBox.Show("Данные успешно удалены.");
                     }
                     else
@@ -329,14 +329,14 @@ namespace VisualisationData
                 string newDirPath = string.Empty;
                 if (dirPath != null)
                 {
-                    newDirPath = VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Column);
+                    newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Column);
 
                     Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
                     foreach (var excelProfileItem in Document.ProfilesListContent)
                     {
                         excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
                     }
-                    DataService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                    DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
                 }
             }
             catch (Exception ex)
@@ -353,14 +353,14 @@ namespace VisualisationData
                 string newDirPath = string.Empty;
                 if (dirPath != null)
                 {
-                    newDirPath = VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Pie);
+                    newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Pie);
 
                     Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
                     foreach (var excelProfileItem in Document.ProfilesListContent)
                     {
                         excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
                     }
-                    DataService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                    DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
                 }
             }
             catch (Exception ex)
@@ -377,14 +377,14 @@ namespace VisualisationData
                 string newDirPath = string.Empty;
                 if (dirPath != null)
                 {
-                    newDirPath = VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Doughnut);
+                    newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Doughnut);
 
                     Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
                     foreach (var excelProfileItem in Document.ProfilesListContent)
                     {
                         excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
                     }
-                    DataService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                    DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
                 }
             }
             catch (Exception ex)
@@ -401,14 +401,14 @@ namespace VisualisationData
                 string newDirPath = string.Empty;
                 if (dirPath != null)
                 {
-                    newDirPath = VisualisationService.GroupDiagramSave(Document, dirPath, SeriesChartType.Bar);
+                    newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Bar);
 
                     Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
                     foreach (var excelProfileItem in Document.ProfilesListContent)
                     {
                         excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
                     }
-                    DataService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                    DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
                 }
             }
             catch (Exception ex)
@@ -471,7 +471,7 @@ namespace VisualisationData
             ExcelQuestion selectedQuestion = selectedDataGridRow.Cells["question"].Value as ExcelQuestion;
             ExcelProfile selectedProfile = mainTab.SelectedTab.Tag as ExcelProfile;
 
-            var questionInfo = VisualisationService.GetQuestionInfo(selectedQuestion, selectedProfile, Document);
+            var questionInfo = ProccesingDataService.GetQuestionInfo(selectedQuestion, selectedProfile, Document);
 
             var points = questionInfo.Item1;
             var respondedCount = questionInfo.Item2;
@@ -600,6 +600,13 @@ namespace VisualisationData
             textBox.AutoCompleteCustomSource = autoCompleteQuestions;
             textBox.AutoCompleteMode = AutoCompleteMode.Suggest;
             textBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        }
+
+        private void saveQuestionInfo_Click(object sender, EventArgs e)
+        {
+            string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", Document.DocumentName + " результаты");
+
+            DataManipulationService.SaveQuestionInfoExcel(Document, filePath);
         }
     }
 }
