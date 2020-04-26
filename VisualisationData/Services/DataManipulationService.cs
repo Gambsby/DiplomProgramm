@@ -428,10 +428,11 @@ namespace VisualisationData.Services
             };
         }
     
-        public static void SaveQuestionInfoExcel(ExcelDocument document, string filePath)
+        public static void SaveAllQuestionInfoExcel(ExcelDocument document, string filePath)
         {
             using (ExcelPackage excelPackage = new ExcelPackage())
             {
+                int column = 0;
                 excelPackage.Workbook.Properties.Author = "User";
                 excelPackage.Workbook.Properties.Title = document.DocumentName;
                 excelPackage.Workbook.Properties.Created = DateTime.Now;
@@ -441,8 +442,6 @@ namespace VisualisationData.Services
 
                 foreach (var profileItem in document.ProfilesListContent)
                 {
-                    int column = 1;
-
                     infoSheet.Cells[rowInfoNumber, 1].Value = profileItem.Name;
                     rowInfoNumber++;
 
@@ -456,43 +455,27 @@ namespace VisualisationData.Services
 
                         if (firstRow)
                         {
-                            column = 1;
-                            infoSheet.Cells[rowInfoNumber, column].Value = "Номер вопроса";
-                            column++;
-                            infoSheet.Cells[rowInfoNumber, column].Value = "Вопрос";
-                            column++;
-
-                            foreach (var pointItem in points)
+                            column = WriteRowExcel(new string[] { "Номер вопроса", "Вопрос", "Число ответивших", "Число прошедших" }, points.Keys.ToArray(), infoSheet, 1, rowInfoNumber);
+                            if (points.ContainsKey("другое"))
                             {
-                                infoSheet.Cells[rowInfoNumber, column].Value = pointItem.Key;
-                                column++;
+                                var questionOpenInfo = ProccesingDataService.GetOpenInfo(questionItem, profileItem, document); ;
+                                var openPoints = questionOpenInfo.Item1;
+                                WriteRowExcel(new string[] { }, openPoints.Keys.ToArray(), infoSheet, column, rowInfoNumber);
                             }
-
-                            infoSheet.Cells[rowInfoNumber, column].Value = "Число ответивших";
-                            column++;
-                            infoSheet.Cells[rowInfoNumber, column].Value = "Число прошедших";
-                            column++;
 
                             rowInfoNumber++;
                             firstRow = false;
                         }
 
-                        column = 1;
-                        infoSheet.Cells[rowInfoNumber, column].Value = questionItem.Id;
-                        column++;
-                        infoSheet.Cells[rowInfoNumber, column].Value = questionItem.GetForSeries();
-                        column++;
-
-                        foreach (var pointItem in points)
+                        string[] pointsValue = points.Values.Select(x => x.ToString()).ToArray();
+                        column = WriteRowExcel(new string[] { questionItem.Id.ToString(), questionItem.GetForSeries(), respondedCount.ToString(), questionedCount.ToString() }, pointsValue, infoSheet, 1, rowInfoNumber);
+                        if (points.ContainsKey("другое"))
                         {
-                            infoSheet.Cells[rowInfoNumber, column].Value = pointItem.Value;
-                            column++;
+                            var questionOpenInfo = ProccesingDataService.GetOpenInfo(questionItem, profileItem, document); ;
+                            var openPoints = questionOpenInfo.Item1;
+                            string[] openPointsValue = openPoints.Values.Select(x => x.ToString()).ToArray();
+                            column = WriteRowExcel(new string[] { }, openPointsValue, infoSheet, column, rowInfoNumber);
                         }
-
-                        infoSheet.Cells[rowInfoNumber, column].Value = respondedCount;
-                        column++;
-                        infoSheet.Cells[rowInfoNumber, column].Value = questionedCount;
-                        column++;
 
                         rowInfoNumber++;
                     }
@@ -503,6 +486,79 @@ namespace VisualisationData.Services
 
                 excelPackage.SaveAs(fi);
             }
+        }
+    
+        public static void SaveQuestionInfoExcel(ExcelQuestion excelQuestion, ExcelProfile excelProfile, ExcelDocument document, string filePath)
+        {
+            using (ExcelPackage excelPackage = new ExcelPackage())
+            {
+                var questionInfo = ProccesingDataService.GetQuestionInfo(excelQuestion, excelProfile, document);
+                var points = questionInfo.Item1;
+                var respondedCount = questionInfo.Item2;
+                var questionedCount = questionInfo.Item3;
+
+                excelPackage.Workbook.Properties.Author = "User";
+                excelPackage.Workbook.Properties.Title = excelQuestion.GetForSeries();
+                excelPackage.Workbook.Properties.Created = DateTime.Now;
+
+                ExcelWorksheet infoSheet = excelPackage.Workbook.Worksheets.Add("Результаты");
+
+                int rowInfoNumber = 1;
+
+                infoSheet.Cells[rowInfoNumber, 1].Value = excelProfile.Name;
+                rowInfoNumber++;
+
+                int column = WriteRowExcel(new string[] { "Номер вопроса", "Вопрос", "Число ответивших", "Число прошедших" }, points.Keys.ToArray(), infoSheet, 1, rowInfoNumber);
+                if (points.ContainsKey("другое"))
+                {
+                    var questionOpenInfo = ProccesingDataService.GetOpenInfo(excelQuestion, excelProfile, document);;
+                    var openPoints = questionOpenInfo.Item1;
+                    WriteRowExcel(new string[] { }, openPoints.Keys.ToArray(), infoSheet, column, rowInfoNumber);
+                }
+                rowInfoNumber++;
+
+                //-----------------------------------------------
+                string[] pointsValue = points.Values.Select(x => x.ToString()).ToArray();
+                column = WriteRowExcel(new string[] { excelQuestion.Id.ToString(), excelQuestion.GetForSeries(), respondedCount.ToString(), questionedCount.ToString() }, pointsValue, infoSheet, 1, rowInfoNumber);
+                if (points.ContainsKey("другое"))
+                {
+                    var questionOpenInfo = ProccesingDataService.GetOpenInfo(excelQuestion, excelProfile, document); ;
+                    var openPoints = questionOpenInfo.Item1;
+                    string[] openPointsValue = openPoints.Values.Select(x => x.ToString()).ToArray();
+                    column = WriteRowExcel(new string[] { }, openPointsValue, infoSheet, column, rowInfoNumber);
+                }
+
+                FileInfo fi = new FileInfo(filePath);
+
+                excelPackage.SaveAs(fi);
+            }
+        }
+
+        private static int WriteRowExcel(string[] values, string[] points, ExcelWorksheet infoSheet, int column, int row)
+        {
+            if (values.Length != 0)
+            {
+                infoSheet.Cells[row, column].Value = values[0];
+                column++;
+                infoSheet.Cells[row, column].Value = values[1];
+                column++;
+            }
+
+            foreach (var pointItem in points)
+            {
+                infoSheet.Cells[row, column].Value = pointItem;
+                column++;
+            }
+
+            if (values.Length != 0)
+            {
+                infoSheet.Cells[row, column].Value = values[2];
+                column++;
+                infoSheet.Cells[row, column].Value = values[3];
+                column++;
+            }
+
+            return column;
         }
     }
 }

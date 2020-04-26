@@ -323,97 +323,125 @@ namespace VisualisationData
 
         private void allColumnDiagramBtn_Click(object sender, EventArgs e)//+
         {
-            try
+            if (Document != null)
             {
-                string dirPath = CommonService.GetFolderPath();
-                string newDirPath = string.Empty;
-                if (dirPath != null)
+                try
                 {
-                    newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Column);
-
-                    Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
-                    foreach (var excelProfileItem in Document.ProfilesListContent)
+                    string dirPath = CommonService.GetFolderPath();
+                    string newDirPath = string.Empty;
+                    if (dirPath != null)
                     {
-                        excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                        newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Column);
+
+                        Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+                        foreach (var excelProfileItem in Document.ProfilesListContent)
+                        {
+                            excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                        }
+                        DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
                     }
-                    DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Сначала необходимо загрузить анкету.");
             }
         }
 
         private void allPieDiagramBtn_Click(object sender, EventArgs e)//+
         {
-            try
+            if (Document != null)
             {
-                string dirPath = CommonService.GetFolderPath();
-                string newDirPath = string.Empty;
-                if (dirPath != null)
+                try
                 {
-                    newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Pie);
-
-                    Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
-                    foreach (var excelProfileItem in Document.ProfilesListContent)
+                    string dirPath = CommonService.GetFolderPath();
+                    string newDirPath = string.Empty;
+                    if (dirPath != null)
                     {
-                        excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                        newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Pie);
+
+                        Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+                        foreach (var excelProfileItem in Document.ProfilesListContent)
+                        {
+                            excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                        }
+                        DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
                     }
-                    DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Сначала необходимо загрузить анкету.");
             }
         }
 
         private void allDoughnoutDiagramBtn_Click(object sender, EventArgs e)//+
         {
-            try
+            if (Document != null)
             {
-                string dirPath = CommonService.GetFolderPath();
-                string newDirPath = string.Empty;
-                if (dirPath != null)
+                try
                 {
-                    newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Doughnut);
-
-                    Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
-                    foreach (var excelProfileItem in Document.ProfilesListContent)
+                    string dirPath = CommonService.GetFolderPath();
+                    string newDirPath = string.Empty;
+                    if (dirPath != null)
                     {
-                        excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                        newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Doughnut);
+
+                        Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+                        foreach (var excelProfileItem in Document.ProfilesListContent)
+                        {
+                            excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                        }
+                        DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
                     }
-                    DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Сначала необходимо загрузить анкету.");
             }
         }
 
         private void allBarDiagramBtn_Click(object sender, EventArgs e)//+
         {
-            try
+            if (Document != null)
             {
-                string dirPath = CommonService.GetFolderPath();
-                string newDirPath = string.Empty;
-                if (dirPath != null)
+                try
                 {
-                    newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Bar);
-
-                    Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
-                    foreach (var excelProfileItem in Document.ProfilesListContent)
+                    string dirPath = CommonService.GetFolderPath();
+                    string newDirPath = string.Empty;
+                    if (dirPath != null)
                     {
-                        excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                        newDirPath = ProccesingDataService.GroupDiagramSave(Document, dirPath, SeriesChartType.Bar);
+
+                        Dictionary<string, ExcelProfile> excelProfileMap = new Dictionary<string, ExcelProfile>();
+                        foreach (var excelProfileItem in Document.ProfilesListContent)
+                        {
+                            excelProfileMap.Add(excelProfileItem.Name, excelProfileItem);
+                        }
+                        DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
                     }
-                    DataManipulationService.SaveExcel("Опросы", "Ответы", excelProfileMap, Document, newDirPath + "\\" + Document.DocumentName + ".xlsx");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Сначала необходимо загрузить анкету.");
             }
         }
 
@@ -459,6 +487,7 @@ namespace VisualisationData
                 DataGridViewRow selectedDataGridRow = selectedDataGrid.Rows[res.RowIndex];
 
                 showInfoBtn.Tag = selectedDataGridRow;
+                saveQuestionInfoBtn.Tag = selectedDataGridRow;
 
                 infoMenu.Show(Control.MousePosition);
             }
@@ -486,6 +515,24 @@ namespace VisualisationData
                 qif.ShowDialog();
             }
 
+        }
+
+        private void saveQuestionInfoBtn_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedDataGridRow = saveQuestionInfoBtn.Tag as DataGridViewRow;
+            ExcelQuestion selectedQuestion = selectedDataGridRow.Cells["question"].Value as ExcelQuestion;
+            ExcelProfile selectedProfile = mainTab.SelectedTab.Tag as ExcelProfile;
+
+            string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", selectedQuestion.Id + " результаты");
+
+            DataManipulationService.SaveQuestionInfoExcel(selectedQuestion, selectedProfile, Document, filePath);
+        }
+
+        private void saveQuestionInfo_Click(object sender, EventArgs e)
+        {
+            string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", Document.DocumentName + " результаты");
+
+            DataManipulationService.SaveAllQuestionInfoExcel(Document, filePath);
         }
 
         private void DiagramStart(SeriesChartType type)
@@ -602,13 +649,6 @@ namespace VisualisationData
             textBox.AutoCompleteCustomSource = autoCompleteQuestions;
             textBox.AutoCompleteMode = AutoCompleteMode.Suggest;
             textBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
-        }
-
-        private void saveQuestionInfo_Click(object sender, EventArgs e)
-        {
-            string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", Document.DocumentName + " результаты");
-
-            DataManipulationService.SaveQuestionInfoExcel(Document, filePath);
         }
     }
 }
