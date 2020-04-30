@@ -89,19 +89,21 @@ namespace VisualisationData.Services
             return new Tuple<Dictionary<string, int>, int, int>(points, respondedCount, questionedCount);
         }
 
-        public static Chart CreateDefaultChart(Chart currentChart, Tuple<Dictionary<string, int>, int, int> questionInfo, ExcelQuestion excelQuestion, SeriesChartType type)
+        public static Chart CreateDefaultChart(Chart currentChart, Tuple<Dictionary<string, int>, int, int> questionInfo, ExcelQuestion excelQuestion, SeriesChartType seriesType, bool add = false)
         {
             string question = excelQuestion.GetForSeries();
             Dictionary<string, int> points = questionInfo.Item1;
             int respondedCount = questionInfo.Item2;
-            int questionedCount = questionInfo.Item3;
-
+            
             currentChart.Series.Add(question);
-            currentChart.Series[question].ChartType = type;
+            currentChart.Series[question].ChartType = seriesType;
             currentChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[0];
 
-            currentChart.Titles.Add(CommonService.CreateTitle("mainTitle", question));
-            currentChart.Titles.Add(CommonService.CreateTitle("allTitle", "Всего " + respondedCount + " ответивших участников"));
+            if (!add)
+            {
+                currentChart.Titles.Add(CommonService.CreateTitle("mainTitle", question));
+                currentChart.Titles.Add(CommonService.CreateTitle("allTitle", "Всего " + respondedCount + " ответивших участников"));
+            }
 
             foreach (var item in points)
             {
@@ -128,24 +130,27 @@ namespace VisualisationData.Services
                 currentChart.Series[question].LabelForeColor = Color.Black;
             }
 
-            Legend legend = CommonService.CreateLegend(currentChart.Series[question], "mainLegend");
-
-            currentChart.Legends.Add(legend);
+            if (!add)
+            {
+                Legend legend = CommonService.CreateLegend(currentChart.Series[question], "mainLegend");
+                currentChart.Legends.Add(legend);
+            }
 
             return currentChart;
         }
 
-        public static Chart SettingDefaultChart(Chart currentChart, ExcelQuestion excelQuestion)
+        public static Chart SettingDefaultChart(Chart currentChart, List<Series> series)
         {
-            string question = excelQuestion.GetForSeries();
-
             currentChart.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
             currentChart.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
 
-            currentChart.Series[question].IsValueShownAsLabel = true;
-            currentChart.Series[question].Label = "#PERCENT";
-            currentChart.Series[question].Font = new Font("Arial", 14f);
-            currentChart.Series[question].IsVisibleInLegend = false;
+            foreach (var seriesItem in series)
+            {
+                seriesItem.IsValueShownAsLabel = true;
+                seriesItem.Label = "#PERCENT";
+                seriesItem.Font = new Font("Arial", 14f);
+                seriesItem.IsVisibleInLegend = false;
+            }
 
             currentChart.Titles["mainTitle"].Font = new Font("Arial", 14f);
             currentChart.Titles["allTitle"].Font = new Font("Arial", 14f);
@@ -176,7 +181,7 @@ namespace VisualisationData.Services
                     currentChart.ChartAreas.Add(chartArea);
 
                     currentChart = CreateDefaultChart(currentChart, questionInfo, questionItem, type);
-                    currentChart = SettingDefaultChart(currentChart, questionItem);
+                    currentChart = SettingDefaultChart(currentChart, currentChart.Series.ToList());
 
                     currentChart.SaveImage(dirName + "\\Chart" + chartNum + ".png", ChartImageFormat.Png);
                     chartNum++;

@@ -33,6 +33,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savaDiagramBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.showOpenAnswersBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.appearanceSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.BGSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.diagramBGSettingRtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,6 +47,10 @@
             this.showLegendBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.legendsBGSettingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.legendFontBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.legendValBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.legendColPerBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.legendColValBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.legendColNoneBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.заголовокToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTitleMBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.titleFontBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +63,7 @@
             this.markerTypeBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.percentMarkerBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.valuesMarkerBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.noneMarkerBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.markerFontBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.visualChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.seriesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -74,12 +80,10 @@
             this.showLegendMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.legendsBGSettingMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLegendFontBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.noneMarkerBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.legendValBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.legendColPerBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.legendColValBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.legendColNoneBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.showOpenAnswersBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnWidthBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnWidthBigMBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnWidthMiddleMBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnWidthSmallMBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualChart)).BeginInit();
             this.seriesMenu.SuspendLayout();
@@ -116,6 +120,14 @@
             this.savaDiagramBtn.Size = new System.Drawing.Size(273, 22);
             this.savaDiagramBtn.Text = "Сохранить";
             this.savaDiagramBtn.Click += new System.EventHandler(this.savaDiagramBtn_Click);
+            // 
+            // showOpenAnswersBtn
+            // 
+            this.showOpenAnswersBtn.Name = "showOpenAnswersBtn";
+            this.showOpenAnswersBtn.Size = new System.Drawing.Size(273, 22);
+            this.showOpenAnswersBtn.Text = "Показать таблицу открытых ответов";
+            this.showOpenAnswersBtn.Visible = false;
+            this.showOpenAnswersBtn.Click += new System.EventHandler(this.showOpenAnswersBtn_Click);
             // 
             // appearanceSettingBtn
             // 
@@ -220,6 +232,37 @@
             this.legendFontBtn.Text = "Шрифт легенды";
             this.legendFontBtn.Click += new System.EventHandler(this.legendFontBtn_Click);
             // 
+            // legendValBtn
+            // 
+            this.legendValBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.legendColPerBtn,
+            this.legendColValBtn,
+            this.legendColNoneBtn});
+            this.legendValBtn.Name = "legendValBtn";
+            this.legendValBtn.Size = new System.Drawing.Size(187, 22);
+            this.legendValBtn.Text = "Значения в легенде";
+            // 
+            // legendColPerBtn
+            // 
+            this.legendColPerBtn.Name = "legendColPerBtn";
+            this.legendColPerBtn.Size = new System.Drawing.Size(143, 22);
+            this.legendColPerBtn.Text = "Проценты";
+            this.legendColPerBtn.Click += new System.EventHandler(this.legendColPerBtn_Click);
+            // 
+            // legendColValBtn
+            // 
+            this.legendColValBtn.Name = "legendColValBtn";
+            this.legendColValBtn.Size = new System.Drawing.Size(143, 22);
+            this.legendColValBtn.Text = "Значения";
+            this.legendColValBtn.Click += new System.EventHandler(this.legendColValBtn_Click);
+            // 
+            // legendColNoneBtn
+            // 
+            this.legendColNoneBtn.Name = "legendColNoneBtn";
+            this.legendColNoneBtn.Size = new System.Drawing.Size(143, 22);
+            this.legendColNoneBtn.Text = "Отсутствуют";
+            this.legendColNoneBtn.Click += new System.EventHandler(this.legendColNoneBtn_Click);
+            // 
             // заголовокToolStripMenuItem
             // 
             this.заголовокToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -266,7 +309,8 @@
             this.seriesSettingBtn,
             this.pointsSettingBtn,
             this.markerTypeBtn,
-            this.markerFontBtn});
+            this.markerFontBtn,
+            this.columnWidthBtn});
             this.серииToolStripMenuItem.Name = "серииToolStripMenuItem";
             this.серииToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.серииToolStripMenuItem.Text = "Серии";
@@ -305,16 +349,23 @@
             // percentMarkerBtn
             // 
             this.percentMarkerBtn.Name = "percentMarkerBtn";
-            this.percentMarkerBtn.Size = new System.Drawing.Size(180, 22);
+            this.percentMarkerBtn.Size = new System.Drawing.Size(135, 22);
             this.percentMarkerBtn.Text = "Проценты";
             this.percentMarkerBtn.Click += new System.EventHandler(this.percentMarkerBtn_Click);
             // 
             // valuesMarkerBtn
             // 
             this.valuesMarkerBtn.Name = "valuesMarkerBtn";
-            this.valuesMarkerBtn.Size = new System.Drawing.Size(180, 22);
+            this.valuesMarkerBtn.Size = new System.Drawing.Size(135, 22);
             this.valuesMarkerBtn.Text = "Значения";
             this.valuesMarkerBtn.Click += new System.EventHandler(this.valuesMarkerBtn_Click);
+            // 
+            // noneMarkerBtn
+            // 
+            this.noneMarkerBtn.Name = "noneMarkerBtn";
+            this.noneMarkerBtn.Size = new System.Drawing.Size(135, 22);
+            this.noneMarkerBtn.Text = "Отсутствие";
+            this.noneMarkerBtn.Click += new System.EventHandler(this.noneMarkerBtn_Click);
             // 
             // markerFontBtn
             // 
@@ -434,51 +485,36 @@
             this.changeLegendFontBtn.Text = "Изменить шрифт";
             this.changeLegendFontBtn.Click += new System.EventHandler(this.legendFontBtn_Click);
             // 
-            // noneMarkerBtn
+            // columnWidthBtn
             // 
-            this.noneMarkerBtn.Name = "noneMarkerBtn";
-            this.noneMarkerBtn.Size = new System.Drawing.Size(180, 22);
-            this.noneMarkerBtn.Text = "Отсутствие";
-            this.noneMarkerBtn.Click += new System.EventHandler(this.noneMarkerBtn_Click);
+            this.columnWidthBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.columnWidthBigMBtn,
+            this.columnWidthMiddleMBtn,
+            this.columnWidthSmallMBtn});
+            this.columnWidthBtn.Name = "columnWidthBtn";
+            this.columnWidthBtn.Size = new System.Drawing.Size(180, 22);
+            this.columnWidthBtn.Text = "Толщина колонки";
             // 
-            // legendValBtn
+            // columnWidthBigMBtn
             // 
-            this.legendValBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.legendColPerBtn,
-            this.legendColValBtn,
-            this.legendColNoneBtn});
-            this.legendValBtn.Name = "legendValBtn";
-            this.legendValBtn.Size = new System.Drawing.Size(187, 22);
-            this.legendValBtn.Text = "Значения в легенде";
+            this.columnWidthBigMBtn.Name = "columnWidthBigMBtn";
+            this.columnWidthBigMBtn.Size = new System.Drawing.Size(180, 22);
+            this.columnWidthBigMBtn.Text = "Широкие";
+            this.columnWidthBigMBtn.Click += new System.EventHandler(this.columnWidthBigMBtn_Click);
             // 
-            // legendColPerBtn
+            // columnWidthMiddleMBtn
             // 
-            this.legendColPerBtn.Name = "legendColPerBtn";
-            this.legendColPerBtn.Size = new System.Drawing.Size(180, 22);
-            this.legendColPerBtn.Text = "Проценты";
-            this.legendColPerBtn.Click += new System.EventHandler(this.legendColPerBtn_Click);
+            this.columnWidthMiddleMBtn.Name = "columnWidthMiddleMBtn";
+            this.columnWidthMiddleMBtn.Size = new System.Drawing.Size(180, 22);
+            this.columnWidthMiddleMBtn.Text = "Средние";
+            this.columnWidthMiddleMBtn.Click += new System.EventHandler(this.columnWidthMiddleMBtn_Click);
             // 
-            // legendColValBtn
+            // columnWidthSmallMBtn
             // 
-            this.legendColValBtn.Name = "legendColValBtn";
-            this.legendColValBtn.Size = new System.Drawing.Size(180, 22);
-            this.legendColValBtn.Text = "Значения";
-            this.legendColValBtn.Click += new System.EventHandler(this.legendColValBtn_Click);
-            // 
-            // legendColNoneBtn
-            // 
-            this.legendColNoneBtn.Name = "legendColNoneBtn";
-            this.legendColNoneBtn.Size = new System.Drawing.Size(180, 22);
-            this.legendColNoneBtn.Text = "Отсутствуют";
-            this.legendColNoneBtn.Click += new System.EventHandler(this.legendColNoneBtn_Click);
-            // 
-            // showOpenAnswersBtn
-            // 
-            this.showOpenAnswersBtn.Name = "showOpenAnswersBtn";
-            this.showOpenAnswersBtn.Size = new System.Drawing.Size(273, 22);
-            this.showOpenAnswersBtn.Text = "Показать таблицу открытых ответов";
-            this.showOpenAnswersBtn.Visible = false;
-            this.showOpenAnswersBtn.Click += new System.EventHandler(this.showOpenAnswersBtn_Click);
+            this.columnWidthSmallMBtn.Name = "columnWidthSmallMBtn";
+            this.columnWidthSmallMBtn.Size = new System.Drawing.Size(180, 22);
+            this.columnWidthSmallMBtn.Text = "Узкие";
+            this.columnWidthSmallMBtn.Click += new System.EventHandler(this.columnWidthSmallMBtn_Click);
             // 
             // VisualisationForm
             // 
@@ -555,5 +591,9 @@
         private System.Windows.Forms.ToolStripMenuItem legendColValBtn;
         private System.Windows.Forms.ToolStripMenuItem legendColNoneBtn;
         private System.Windows.Forms.ToolStripMenuItem showOpenAnswersBtn;
+        private System.Windows.Forms.ToolStripMenuItem columnWidthBtn;
+        private System.Windows.Forms.ToolStripMenuItem columnWidthBigMBtn;
+        private System.Windows.Forms.ToolStripMenuItem columnWidthMiddleMBtn;
+        private System.Windows.Forms.ToolStripMenuItem columnWidthSmallMBtn;
     }
 }

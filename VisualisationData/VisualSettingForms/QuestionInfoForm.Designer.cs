@@ -28,51 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.infoDG = new System.Windows.Forms.DataGridView();
-            this.questionLbl = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.infoDG)).BeginInit();
+            this.mainTC = new System.Windows.Forms.TabControl();
             this.SuspendLayout();
             // 
-            // infoDG
+            // mainTC
             // 
-            this.infoDG.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.infoDG.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.infoDG.Location = new System.Drawing.Point(12, 110);
-            this.infoDG.Name = "infoDG";
-            this.infoDG.Size = new System.Drawing.Size(660, 192);
-            this.infoDG.TabIndex = 0;
-            // 
-            // questionLbl
-            // 
-            this.questionLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.questionLbl.Location = new System.Drawing.Point(14, 14);
-            this.questionLbl.Margin = new System.Windows.Forms.Padding(5);
-            this.questionLbl.Name = "questionLbl";
-            this.questionLbl.Size = new System.Drawing.Size(656, 88);
-            this.questionLbl.TabIndex = 1;
-            this.questionLbl.Text = "label1";
+            this.mainTC.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainTC.Location = new System.Drawing.Point(0, 0);
+            this.mainTC.Name = "mainTC";
+            this.mainTC.SelectedIndex = 0;
+            this.mainTC.Size = new System.Drawing.Size(684, 314);
+            this.mainTC.TabIndex = 0;
             // 
             // QuestionInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 314);
-            this.Controls.Add(this.questionLbl);
-            this.Controls.Add(this.infoDG);
+            this.Controls.Add(this.mainTC);
             this.Name = "QuestionInfoForm";
             this.Text = "Информация о вопросе";
             this.Load += new System.EventHandler(this.QuestionInfoForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.infoDG)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView infoDG;
-        private System.Windows.Forms.Label questionLbl;
+        private System.Windows.Forms.TabControl mainTC;
     }
 }

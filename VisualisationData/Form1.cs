@@ -500,18 +500,14 @@ namespace VisualisationData
             ExcelQuestion selectedQuestion = selectedDataGridRow.Cells["question"].Value as ExcelQuestion;
             ExcelProfile selectedProfile = mainTab.SelectedTab.Tag as ExcelProfile;
 
-            var questionInfo = ProccesingDataService.GetQuestionInfo(selectedQuestion, selectedProfile, Document);
 
-            var points = questionInfo.Item1;
-            var respondedCount = questionInfo.Item2;
-            var questionedCount = questionInfo.Item3;
+            Dictionary<ExcelQuestion, Tuple<Dictionary<string, int>, int, int>> questionInfoMap = new Dictionary<ExcelQuestion, Tuple<Dictionary<string, int>, int, int>>();
+
+            questionInfoMap.Add(selectedQuestion, ProccesingDataService.GetQuestionInfo(selectedQuestion, selectedProfile, Document));
 
             using(QuestionInfoForm qif = new QuestionInfoForm())
             {
-                qif.Points = points;
-                qif.RespondedCount = respondedCount;
-                qif.QuestionedCount = questionedCount;
-                qif.Question = selectedQuestion;
+                qif.QuestionInfoMap = questionInfoMap;
                 qif.ShowDialog();
             }
 
@@ -538,13 +534,21 @@ namespace VisualisationData
         private void DiagramStart(SeriesChartType type)
         {
             TabPage currentTab = mainTab.SelectedTab;
-
             DataGridView infoDG = currentTab.Controls[0] as DataGridView;
-            var selectedQuestion = infoDG.SelectedRows.Cast<DataGridViewRow>().ToList()[0].Cells["question"].Value as ExcelQuestion;
+
+            List<ExcelQuestion> selectedQuestions = new List<ExcelQuestion>();
+            foreach (var rowItem in infoDG.SelectedRows.Cast<DataGridViewRow>().ToList())
+            {
+                selectedQuestions.Add(rowItem.Cells["question"].Value as ExcelQuestion);
+            }
             var selectedProfile = Document.ProfilesListContent.SingleOrDefault(p => p.Name == currentTab.Text);
 
-            VisualisationForm visualisationForm = new VisualisationForm(selectedQuestion, selectedProfile, Document, type);
-            visualisationForm.Show();
+            VisualisationForm vf = new VisualisationForm();
+            vf.Questions = selectedQuestions;
+            vf.Profile = selectedProfile;
+            vf.Document = Document;
+            vf.DiagramType = type;
+            vf.Show();
         }
 
         private ExcelDocument SortDocument(ExcelDocument document)
@@ -593,7 +597,7 @@ namespace VisualisationData
                 infoDG.Anchor = AnchorStyles.Left;
                 infoDG.Dock = DockStyle.Fill;
                 infoDG.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                infoDG.MultiSelect = false;
+                infoDG.MultiSelect = true;//!!!!!!!!!!!!!!!!!!!!!!!!!
                 infoDG.AllowUserToAddRows = false;
                 infoDG.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 infoDG.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;

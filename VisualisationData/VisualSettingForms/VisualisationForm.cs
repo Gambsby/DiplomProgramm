@@ -28,36 +28,61 @@ namespace VisualisationData.VisualSettingForms
 
         };
 
-        private ExcelQuestion selectedQuestion;
-        private ExcelProfile selectedProfile;
-        private ExcelDocument selectedDocument;
-        private SeriesChartType diagramType;
+        public List<ExcelQuestion> Questions;
+        public ExcelProfile Profile;
+        public ExcelDocument Document;
+        public SeriesChartType DiagramType;
+
         private Title allTitle;
         private Legend legend;
         private Title mainTitle;
+        private List<LegendItem> legendItems;
         private Dictionary<string, int> points;
         private int responded;
 
-        public VisualisationForm(ExcelQuestion selectedQuestion, ExcelProfile selectedProfile, ExcelDocument selectedDocument, SeriesChartType diagramType)
+        public VisualisationForm()
         {
             InitializeComponent();
-            this.selectedDocument = selectedDocument;
-            this.selectedProfile = selectedProfile;
-            this.selectedQuestion = selectedQuestion;
-            this.diagramType = diagramType;
         }
 
         private void VisualisationForm_Load(object sender, EventArgs e)
         {
-            var questionInfo = ProccesingDataService.GetQuestionInfo(selectedQuestion, selectedProfile, selectedDocument);
-            points = questionInfo.Item1;
-            responded = questionInfo.Item2;
+            bool first = true;
+            foreach (var questionItem in Questions)
+            {
+                if (first)
+                {
+                    var questionInfo = ProccesingDataService.GetQuestionInfo(questionItem, Profile, Document);
+                    points = questionInfo.Item1;
+                    responded = questionInfo.Item2;
 
-            visualChart = ProccesingDataService.CreateDefaultChart(visualChart, questionInfo, selectedQuestion, diagramType);
-            visualChart = ProccesingDataService.SettingDefaultChart(visualChart, selectedQuestion);
-            allTitle = visualChart.Titles["allTitle"];
-            legend = visualChart.Legends["mainLegend"];
-            mainTitle = visualChart.Titles["mainTitle"];
+                    visualChart = ProccesingDataService.CreateDefaultChart(visualChart, questionInfo, questionItem, DiagramType);
+                    allTitle = visualChart.Titles["allTitle"];
+                    legend = visualChart.Legends["mainLegend"];
+                    mainTitle = visualChart.Titles["mainTitle"];
+
+                    first = false;
+                }
+                else
+                {
+                    var questionInfo = ProccesingDataService.GetQuestionInfo(questionItem, Profile, Document);
+                    points = questionInfo.Item1;
+                    responded = questionInfo.Item2;
+
+                    visualChart = ProccesingDataService.CreateDefaultChart(visualChart, questionInfo, questionItem, DiagramType, true);
+                }
+            }
+            visualChart = ProccesingDataService.SettingDefaultChart(visualChart, visualChart.Series.ToList());
+
+            if (Questions.Count != 1)
+            {
+                legendItems = legend.CustomItems.ToList();
+                legend.CustomItems.Clear();
+                foreach (var seriesItem in visualChart.Series)
+                {
+                    seriesItem.IsVisibleInLegend = true;
+                }
+            }
 
             showGridBtn.Checked = (visualChart.ChartAreas[0].AxisX.MajorGrid.Enabled && visualChart.ChartAreas[0].AxisY.MajorGrid.Enabled);
             if (visualChart.ChartAreas[0].AxisX.Enabled == AxisEnabled.False)
@@ -80,11 +105,11 @@ namespace VisualisationData.VisualSettingForms
             showLegendBtn.Checked = visualChart.Legends.Select(x => x.Name).Contains("mainLegend");
             allItemBtn.Checked = visualChart.Titles.Select(x => x.Name).Contains("allTitle");
             showTitleMBtn.Checked = visualChart.Titles.Select(x => x.Name).Contains("mainTitle");
-            if (visualChart.Series[selectedQuestion.GetForSeries()].Label == "#PERCENT")
+            if (visualChart.Series[0].Label == "#PERCENT")
             {
                 percentMarkerBtn.Checked = true;
             }
-            else if (visualChart.Series[selectedQuestion.GetForSeries()].Label == "#VAL")
+            else if (visualChart.Series[0].Label == "#VAL")
             {
                 valuesMarkerBtn.Checked = true;
             }
@@ -399,19 +424,37 @@ namespace VisualisationData.VisualSettingForms
             {
                 dsf.NameGroupBox = "Настройка типа диаграммы";
                 dsf.TypeSettings = "diagramType";
-                dsf.SeriesItem = visualChart.Series[selectedQuestion.GetForSeries()];
+                dsf.SeriesItem = visualChart.Series[0];
                 dsf.ShowDialog();
                 if (dsf.Status)
                 {
                     string selectedType = dsf.SelectedItem as string;
-                    visualChart.Series[selectedQuestion.GetForSeries()].ChartType = seriesTypeMap[selectedType];
+                    if (seriesTypeMap[selectedType] == SeriesChartType.Pie || seriesTypeMap[selectedType] == SeriesChartType.Doughnut)
+                    {
+                        Series series = visualChart.Series[0];
+
+                        visualChart.Series.Clear();
+                        visualChart.Series.Add(series);
+                        foreach (var item in legendItems)
+                        {
+                            legend.CustomItems.Add(item);
+                        }
+                        series.IsVisibleInLegend = false;
+                    }
+                    else
+                    {
+                        foreach (var item in visualChart.Series)
+                        {
+                            item.ChartType = seriesTypeMap[selectedType];
+                        }
+                    }
                 }
             }
         }
 
         private void seriesSettingBtn_Click(object sender, EventArgs e)//+
         {
-            Series series = visualChart.Series[selectedQuestion.GetForSeries()];
+            Series series = visualChart.Series[0];
             
             SeriesColor(series);
         }
@@ -422,17 +465,17 @@ namespace VisualisationData.VisualSettingForms
             {
                 dsf.NameGroupBox = "Настройка цвета точек";
                 dsf.TypeSettings = "color";
-                dsf.SeriesItem = visualChart.Series[selectedQuestion.GetForSeries()];
+                dsf.SeriesItem = visualChart.Series[0];
                 dsf.ShowDialog();
                 if (dsf.Status)
                 {
                     string selectedPointName = dsf.SelectedItem as string;
                     Color selectedColor = dsf.Color;
 
-                    DataPoint selectedPoint = visualChart.Series[selectedQuestion.GetForSeries()].Points.SingleOrDefault(x => x.AxisLabel == selectedPointName);
+                    DataPoint selectedPoint = visualChart.Series[0].Points.SingleOrDefault(x => x.AxisLabel == selectedPointName);
 
                     selectedPoint.Color = selectedColor;
-                    RefreshLegend();
+                    RefreshLegend(visualChart.Series[0]);
                 }
             }
         }
@@ -444,7 +487,10 @@ namespace VisualisationData.VisualSettingForms
                 item.Checked = false;
             }
             percentMarkerBtn.Checked = true;
-            visualChart.Series[selectedQuestion.GetForSeries()].Label = "#PERCENT";
+            foreach (var seriesItem in visualChart.Series)
+            {
+                seriesItem.Label = "#PERCENT";
+            }
         }
 
         private void valuesMarkerBtn_Click(object sender, EventArgs e)//+
@@ -454,7 +500,10 @@ namespace VisualisationData.VisualSettingForms
                 item.Checked = false;
             }
             valuesMarkerBtn.Checked = true;
-            visualChart.Series[selectedQuestion.GetForSeries()].Label = "#VAL";
+            foreach (var seriesItem in visualChart.Series)
+            {
+                seriesItem.Label = "#VAL";
+            }
         }
 
         private void noneMarkerBtn_Click(object sender, EventArgs e)//+
@@ -466,15 +515,55 @@ namespace VisualisationData.VisualSettingForms
 
             noneMarkerBtn.Checked = true;
 
-            visualChart.Series[selectedQuestion.GetForSeries()].Label = "";
-            visualChart.Series[selectedQuestion.GetForSeries()].IsValueShownAsLabel = false;
+            foreach (var seriesItem in visualChart.Series)
+            {
+                seriesItem.Label = "";
+                seriesItem.IsValueShownAsLabel = false;
+            }
         }
 
         private void markerFontBtn_Click(object sender, EventArgs e)//+
         {
-            Series series = visualChart.Series[selectedQuestion.GetForSeries()];
+            SeriesFont(visualChart.Series.ToList());
+        }
 
-            SeriesFont(series);
+        private void columnWidthBigMBtn_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripMenuItem item in columnWidthBtn.DropDownItems)
+            {
+                item.Checked = false;
+            }
+            columnWidthBigMBtn.Checked = true;
+            foreach (var seriesItem in visualChart.Series)
+            {
+                seriesItem["PointWidth"] = "0.8";
+            }
+        }
+
+        private void columnWidthMiddleMBtn_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripMenuItem item in columnWidthBtn.DropDownItems)
+            {
+                item.Checked = false;
+            }
+            columnWidthMiddleMBtn.Checked = true;
+            foreach (var seriesItem in visualChart.Series)
+            {
+                seriesItem["PointWidth"] = "0.5";
+            }
+        }
+
+        private void columnWidthSmallMBtn_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripMenuItem item in columnWidthBtn.DropDownItems)
+            {
+                item.Checked = false;
+            }
+            columnWidthSmallMBtn.Checked = true;
+            foreach (var seriesItem in visualChart.Series)
+            {
+                seriesItem["PointWidth"] = "0.25";
+            }
         }
 
         //---------------------------------------------------------------------
@@ -527,7 +616,6 @@ namespace VisualisationData.VisualSettingForms
                         {
                             seriesColorBtn.Tag = res.Series;
                             pointColorBtn.Tag = res.Series.Points[res.PointIndex];
-                            markFontBtn.Tag = res.Series;
                             selectMarkFontDtn.Tag = res.Series.Points[res.PointIndex];
                             seriesMenu.Show(Control.MousePosition);
 
@@ -564,14 +652,12 @@ namespace VisualisationData.VisualSettingForms
         {
             DataPoint point = pointColorBtn.Tag as DataPoint;
             point.Color = CommonService.ChooseColor(colorDialog, point.Color);
-            RefreshLegend();
+            RefreshLegend(visualChart.Series[0]);
         }
 
         private void markFontBtn_Click(object sender, EventArgs e)//+
         {
-            Series series = markFontBtn.Tag as Series;
-
-            SeriesFont(series);
+            SeriesFont(visualChart.Series.ToList());
         }
 
         private void changeTtileBtn_Click(object sender, EventArgs e)//+
@@ -634,14 +720,14 @@ namespace VisualisationData.VisualSettingForms
             }
         }
 
-        private void RefreshLegend()
+        private void RefreshLegend(Series series)
         {
             if (visualChart.Legends.Select(x => x.Name).Contains("mainLegend"))
             {
-                for (int i = 0; i < visualChart.Series[selectedQuestion.GetForSeries()].Points.Count; i++)
+                for (int i = 0; i < series.Points.Count; i++)
                 {
                     LegendItem currentLegendItem = visualChart.Legends["mainLegend"].CustomItems.SingleOrDefault(x => x.SeriesPointIndex == i);
-                    currentLegendItem.Color = visualChart.Series[selectedQuestion.GetForSeries()].Points[i].Color;
+                    currentLegendItem.Color = series.Points[i].Color;
                 }
             }
         }
@@ -694,29 +780,32 @@ namespace VisualisationData.VisualSettingForms
                 {
                     dataPointItem.Color = selectedColor;
                 }
-                RefreshLegend();
+                RefreshLegend(visualChart.Series[0]);
             }
         }
     
-        private void SeriesFont(Series series)
+        private void SeriesFont(List<Series> series)
         {
             using (FontDialog fd = new FontDialog())
             {
                 fd.ShowColor = true;
-                fd.Font = series.Font;
-                fd.Color = series.LabelForeColor;
+                fd.Font = series[0].Font;
+                fd.Color = series[0].LabelForeColor;
                 if (fd.ShowDialog() == DialogResult.Cancel)
                 {
                     return;
                 }
                 else
                 {
-                    series.Font = fd.Font;
-                    series.LabelForeColor = fd.Color;
-                    foreach (var pointItem in series.Points)
+                    foreach (var seriesItem in series)
                     {
-                        pointItem.Font = fd.Font;
-                        pointItem.LabelForeColor = fd.Color;
+                        seriesItem.Font = fd.Font;
+                        seriesItem.LabelForeColor = fd.Color;
+                        foreach (var pointItem in seriesItem.Points)
+                        {
+                            pointItem.Font = fd.Font;
+                            pointItem.LabelForeColor = fd.Color;
+                        }
                     }
                 }
             }
@@ -724,18 +813,15 @@ namespace VisualisationData.VisualSettingForms
 
         private void showOpenAnswersBtn_Click(object sender, EventArgs e)
         {
-            var questionInfo = ProccesingDataService.GetOpenInfo(selectedQuestion, selectedProfile, selectedDocument);
-
-            var points = questionInfo.Item1;
-            var respondedCount = questionInfo.Item2;
-            var questionedCount = questionInfo.Item3;
+            Dictionary<ExcelQuestion, Tuple<Dictionary<string, int>, int, int>> questionInfoMap = new Dictionary<ExcelQuestion, Tuple<Dictionary<string, int>, int, int>>();
+            foreach (var questionItem in Questions)
+            {
+                questionInfoMap.Add(questionItem, ProccesingDataService.GetOpenInfo(questionItem, Profile, Document));
+            }
 
             using (QuestionInfoForm qif = new QuestionInfoForm())
             {
-                qif.Points = points;
-                qif.RespondedCount = respondedCount;
-                qif.QuestionedCount = questionedCount;
-                qif.Question = selectedQuestion;
+                qif.QuestionInfoMap = questionInfoMap;
                 qif.ShowDialog();
             }
         }
