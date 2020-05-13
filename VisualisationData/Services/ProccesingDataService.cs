@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 using VisualisationData.Excel;
 
@@ -85,7 +83,7 @@ namespace VisualisationData.Services
 
             int questionedCount = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id).Count();
             int respondedCount = selectedDocument.AnswerListContent.Where(a => a.ProfileNum == selectedProfile.Id && a.QuestionNum == selectedQuestion.Id && a.Answer != "").Count();
-            
+
             return new Tuple<Dictionary<string, int>, int, int>(points, respondedCount, questionedCount);
         }
 
@@ -94,7 +92,7 @@ namespace VisualisationData.Services
             string question = excelQuestion.GetForSeries();
             Dictionary<string, int> points = questionInfo.Item1;
             int respondedCount = questionInfo.Item2;
-            
+
             currentChart.Series.Add(question);
             currentChart.Series[question].ChartType = seriesType;
             currentChart.Series[question].Color = Form1.CompanyColor.Values.ToList()[0];

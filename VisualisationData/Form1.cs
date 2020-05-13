@@ -519,16 +519,20 @@ namespace VisualisationData
             ExcelQuestion selectedQuestion = selectedDataGridRow.Cells["question"].Value as ExcelQuestion;
             ExcelProfile selectedProfile = mainTab.SelectedTab.Tag as ExcelProfile;
 
-            string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", selectedQuestion.Id + " результаты");
-
-            DataManipulationService.SaveQuestionInfoExcel(selectedQuestion, selectedProfile, Document, filePath);
+            string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", "Вопрос " + selectedQuestion.Id + " результаты");
+            if (filePath != null)
+            {
+                DataManipulationService.SaveQuestionInfoExcel(selectedQuestion, selectedProfile, Document, filePath);
+            }
         }
 
         private void saveQuestionInfo_Click(object sender, EventArgs e)
         {
             string filePath = CommonService.SaveFilePath("*.xlsx|*.xlsx", Document.DocumentName + " результаты");
-
-            DataManipulationService.SaveAllQuestionInfoExcel(Document, filePath);
+            if (filePath != null)
+            {
+                DataManipulationService.SaveAllQuestionInfoExcel(Document, filePath);
+            }
         }
 
         private void DiagramStart(SeriesChartType type)
@@ -653,6 +657,22 @@ namespace VisualisationData
             textBox.AutoCompleteCustomSource = autoCompleteQuestions;
             textBox.AutoCompleteMode = AutoCompleteMode.Suggest;
             textBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        }
+
+        private void openAnswerInfoBtn_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedDataGridRow = saveQuestionInfoBtn.Tag as DataGridViewRow;
+            ExcelQuestion selectedQuestion = selectedDataGridRow.Cells["question"].Value as ExcelQuestion;
+            ExcelProfile selectedProfile = mainTab.SelectedTab.Tag as ExcelProfile;
+
+            Dictionary<ExcelQuestion, Tuple<Dictionary<string, int>, int, int>> questionInfoMap = new Dictionary<ExcelQuestion, Tuple<Dictionary<string, int>, int, int>>();
+            questionInfoMap.Add(selectedQuestion, ProccesingDataService.GetOpenInfo(selectedQuestion, selectedProfile, Document));
+
+            using (QuestionInfoForm qif = new QuestionInfoForm())
+            {
+                qif.QuestionInfoMap = questionInfoMap;
+                qif.ShowDialog();
+            }
         }
     }
 }

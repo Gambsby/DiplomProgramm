@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VisualisationData.Models;
-using System.Windows.Forms;
-using System.Data;
-using MySql.Data.MySqlClient;
-using Z.BulkOperations;
-using VisualisationData.Excel;
-using OfficeOpenXml;
-using System.IO;
-using CsvHelper;
+﻿using CsvHelper;
 using CsvHelper.Configuration;
+using MySql.Data.MySqlClient;
+using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using VisualisationData.Excel;
+using VisualisationData.Models;
+using Z.BulkOperations;
 
 namespace VisualisationData.Services
 {
@@ -218,6 +216,8 @@ namespace VisualisationData.Services
                     }
 
                     rowInfoNumber++;
+
+                    questionSheet.Cells[questionSheet.Dimension.Address].AutoFitColumns();
                 }
 
                 ExcelWorksheet resultSheet = excelPackage.Workbook.Worksheets.Add(resultFileName);
@@ -236,6 +236,9 @@ namespace VisualisationData.Services
 
                     rowResultNumber++;
                 }
+
+                infoSheet.Cells[infoSheet.Dimension.Address].AutoFitColumns();
+                resultSheet.Cells[resultSheet.Dimension.Address].AutoFitColumns();
 
                 FileInfo fi = new FileInfo(filePath);
 
@@ -393,7 +396,7 @@ namespace VisualisationData.Services
                 return new ExcelDocument { DocumentName = mainProfile.Name, AnswerListContent = answerListContent, ProfilesListContent = profilesListContent };
             }
         }
-    
+
         public static ExcelDocument LoadMainProfileExcel(string filePath, string infoFileName, string resultFileName, Dictionary<string, string> excelProfileMap)
         {
             List<ExcelQuestionType> infoListContent;
@@ -427,7 +430,7 @@ namespace VisualisationData.Services
                 ProfilesListContent = profilesListContent
             };
         }
-    
+
         public static void SaveAllQuestionInfoExcel(ExcelDocument document, string filePath)
         {
             using (ExcelPackage excelPackage = new ExcelPackage())
@@ -482,12 +485,18 @@ namespace VisualisationData.Services
                     rowInfoNumber++;
                 }
 
+
+                infoSheet.Cells[infoSheet.Dimension.Address].AutoFitColumns();
+                infoSheet.Cells[infoSheet.Dimension.Address].AutoFitColumns();
+                infoSheet.Column(2).Width = 125;
+                infoSheet.Column(2).Style.WrapText = true;
+
                 FileInfo fi = new FileInfo(filePath);
 
                 excelPackage.SaveAs(fi);
             }
         }
-    
+
         public static void SaveQuestionInfoExcel(ExcelQuestion excelQuestion, ExcelProfile excelProfile, ExcelDocument document, string filePath)
         {
             using (ExcelPackage excelPackage = new ExcelPackage())
@@ -511,7 +520,7 @@ namespace VisualisationData.Services
                 int column = WriteRowExcel(new string[] { "Номер вопроса", "Вопрос", "Число ответивших", "Число прошедших" }, points.Keys.ToArray(), infoSheet, 1, rowInfoNumber);
                 if (points.ContainsKey("другое"))
                 {
-                    var questionOpenInfo = ProccesingDataService.GetOpenInfo(excelQuestion, excelProfile, document);;
+                    var questionOpenInfo = ProccesingDataService.GetOpenInfo(excelQuestion, excelProfile, document); ;
                     var openPoints = questionOpenInfo.Item1;
                     WriteRowExcel(new string[] { }, openPoints.Keys.ToArray(), infoSheet, column, rowInfoNumber);
                 }
@@ -528,6 +537,10 @@ namespace VisualisationData.Services
                     column = WriteRowExcel(new string[] { }, openPointsValue, infoSheet, column, rowInfoNumber);
                 }
 
+
+                infoSheet.Cells[infoSheet.Dimension.Address].AutoFitColumns();
+                infoSheet.Column(2).Width = 125;
+                infoSheet.Column(2).Style.WrapText = true;
                 FileInfo fi = new FileInfo(filePath);
 
                 excelPackage.SaveAs(fi);

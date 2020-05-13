@@ -58,8 +58,9 @@
             this.questionBtn = new System.Windows.Forms.Button();
             this.infoMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showInfoBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAllQuestionInfoBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.saveQuestionInfoBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllQuestionInfoBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.openAnswerInfoBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableL1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -316,9 +317,10 @@
             this.infoMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showInfoBtn,
             this.saveQuestionInfoBtn,
-            this.saveAllQuestionInfoBtn});
+            this.saveAllQuestionInfoBtn,
+            this.openAnswerInfoBtn});
             this.infoMenu.Name = "infoMenu";
-            this.infoMenu.Size = new System.Drawing.Size(305, 92);
+            this.infoMenu.Size = new System.Drawing.Size(320, 114);
             // 
             // showInfoBtn
             // 
@@ -327,6 +329,13 @@
             this.showInfoBtn.Text = "Показать информацию";
             this.showInfoBtn.Click += new System.EventHandler(this.showInfoBtn_Click);
             // 
+            // saveQuestionInfoBtn
+            // 
+            this.saveQuestionInfoBtn.Name = "saveQuestionInfoBtn";
+            this.saveQuestionInfoBtn.Size = new System.Drawing.Size(304, 22);
+            this.saveQuestionInfoBtn.Text = "Сохранить информацию для выбранного";
+            this.saveQuestionInfoBtn.Click += new System.EventHandler(this.saveQuestionInfoBtn_Click);
+            // 
             // saveAllQuestionInfoBtn
             // 
             this.saveAllQuestionInfoBtn.Name = "saveAllQuestionInfoBtn";
@@ -334,12 +343,12 @@
             this.saveAllQuestionInfoBtn.Text = "Сохранить информацию для всех";
             this.saveAllQuestionInfoBtn.Click += new System.EventHandler(this.saveQuestionInfo_Click);
             // 
-            // saveQuestionInfoBtn
+            // openAnswerInfoBtn
             // 
-            this.saveQuestionInfoBtn.Name = "saveQuestionInfoBtn";
-            this.saveQuestionInfoBtn.Size = new System.Drawing.Size(304, 22);
-            this.saveQuestionInfoBtn.Text = "Сохранить информацию для выбранного";
-            this.saveQuestionInfoBtn.Click += new System.EventHandler(this.saveQuestionInfoBtn_Click);
+            this.openAnswerInfoBtn.Name = "openAnswerInfoBtn";
+            this.openAnswerInfoBtn.Size = new System.Drawing.Size(319, 22);
+            this.openAnswerInfoBtn.Text = "Показать информацию об открытых ответах";
+            this.openAnswerInfoBtn.Click += new System.EventHandler(this.openAnswerInfoBtn_Click);
             // 
             // Form1
             // 
@@ -396,6 +405,7 @@
         private System.Windows.Forms.ToolStripMenuItem showInfoBtn;
         private System.Windows.Forms.ToolStripMenuItem saveAllQuestionInfoBtn;
         private System.Windows.Forms.ToolStripMenuItem saveQuestionInfoBtn;
+        private System.Windows.Forms.ToolStripMenuItem openAnswerInfoBtn;
     }
 }
 

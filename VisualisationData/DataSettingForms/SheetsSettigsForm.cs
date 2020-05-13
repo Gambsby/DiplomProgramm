@@ -43,7 +43,7 @@ namespace VisualisationData.DataSettingForms
                 {
                     case "load":
                         {
-                            if (acceptBtn.Text == "Дальше")
+                            if (acceptBtn.Text == "Далее")
                             {
                                 LoadFunctionNext();
                                 return;
@@ -219,7 +219,7 @@ namespace VisualisationData.DataSettingForms
         {
             firstInfoLbl.Text = "Выберите лист с информацией о возможных ответах:";
             secondInfoLbl.Text = "Выберите лист с результатами анкетирования:";
-            acceptBtn.Text = "Дальше";
+            acceptBtn.Text = "Далее";
             using (var excelPack = new ExcelPackage())
             {
                 using (var stream = File.OpenRead(FilePath))
